@@ -8,7 +8,7 @@ This project provides a datetime picker component that can be easily integrated 
 
 ## Installation
 This project library do not available in maven central. so you can install with the jar library
-- Copy jar library file to the root project. ex : `library/swing-datetime-picker-1.0.0.jar`
+- Copy jar library file to the root project. exp : `library/swing-datetime-picker-1.0.0.jar`
 - Add this code to `pom.xml`
 ``` xml
 <dependency>
