@@ -1,9 +1,11 @@
 # Swing Datetime Picker
 A simple datetime picker implementation using Java Swing, built with the `flatlaf` UI library and `miglayout` for layout management.
 
-
-## Overview
 This project provides a datetime picker component that can be easily integrated into Java Swing applications. It leverages flatlaf for a modern look and miglayout for flexible and easy-to-use layout management.
+
+<img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/timepicker-dark.png" alt="timepicker dark" width="300"/>&nbsp;
+<img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/timepicker-light.png" alt="timepicker light" width="300"/>
+
 ## Installation
 This project library do not available in maven central. so you can install with the jar library
 - Copy jar library file to the root project. ex : `library/swing-datetime-picker-1.0.0.jar`
@@ -37,9 +39,10 @@ This project library do not available in maven central. so you can install with 
     <version>11.3</version>
 </dependency>
 ```
-## Usage
+## Usage TimePicker
 
-## Example
+## Usage DatePicker
+- Next Coming
 
 ## Library Resources
 - [FlatLaf](https://github.com/JFormDesigner/FlatLaf) - FlatLaf library for the modern UI design theme
