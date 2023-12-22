@@ -40,6 +40,23 @@ This project library do not available in maven central. so you can install with 
 </dependency>
 ```
 ## Usage TimePicker
+| Method | Description | Return Value |
+| ------------ | ------------ | ------------ |
+| now() | `void` | set the time to current local time |
+| setSelectedTime(LocalTime time) | `void` | set the time to a specific value |
+| clearSelectedTime() | `void` | clear the selected time |
+| isTimeSelected() | `boolean` | check time is selected |
+| getSelectedTime() | `LocalTime` | get the selected time |
+| getSelectedTimeAsString() | `String` | get selected time as string |
+| addTimeSelectionListener(TimeSelectionListener event) | `void` | add event time selection |
+| removeTimeSelectionListener(TimeSelectionListener event) | `void` | remove event time selection |
+| removeAllTimeSelectionListener() | `void` | remove all event tiem selection |
+| setOrientation(int orientation) | `void` | `SwingConstants.VERTICAL` or `SwingConstants.HORIZONTAL` |
+| setEditor(JFormattedTextField editor) | `void` | disply the selected time on the editor and allow to edit time |
+| set24HourView(boolean hour24) | `void` | set time to 24h selection view |
+| is24HourView() | `boolean` | return `ture` is 24h selection view |
+| showPopup() | `void` | if time have editor, timepicker will show up with popup menu |
+
 
 ## Usage DatePicker
 - Next Coming
