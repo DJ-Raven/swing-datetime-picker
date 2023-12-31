@@ -40,7 +40,7 @@ This project library do not available in maven central. so you can install with 
 </dependency>
 ```
 ## Usage TimePicker
-| Method | Description | Return Value |
+| Method | Return Value | Description |
 | ------------ | ------------ | ------------ |
 | now() | `void` | set the time to current local time |
 | setSelectedTime(LocalTime time) | `void` | set the time to a specific value |
