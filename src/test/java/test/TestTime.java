@@ -1,8 +1,10 @@
 package test;
 
 import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.formdev.flatlaf.util.UIScale;
 import net.miginfocom.swing.MigLayout;
 import raven.datetime.component.time.TimeEvent;
@@ -46,6 +48,29 @@ public class TestTime extends JFrame {
         add(change);
         timePicker.setOrientation(SwingConstants.HORIZONTAL);
         timePicker.now();
+        createThemeButton();
+    }
+
+    private void createThemeButton() {
+        JButton cmd = new JButton("Change themes");
+        cmd.addActionListener(e -> {
+            if (FlatLaf.isLafDark()) {
+                EventQueue.invokeLater(() -> {
+                    FlatAnimatedLafChange.showSnapshot();
+                    FlatMacLightLaf.setup();
+                    FlatLaf.updateUI();
+                    FlatAnimatedLafChange.hideSnapshotWithAnimation();
+                });
+            } else {
+                EventQueue.invokeLater(() -> {
+                    FlatAnimatedLafChange.showSnapshot();
+                    FlatMacDarkLaf.setup();
+                    FlatLaf.updateUI();
+                    FlatAnimatedLafChange.hideSnapshotWithAnimation();
+                });
+            }
+        });
+        add(cmd);
     }
 
     public static void main(String[] args) {

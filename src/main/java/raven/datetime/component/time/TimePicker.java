@@ -69,6 +69,7 @@ public class TimePicker extends JPanel {
                     "borderInsets:1,1,1,1");
             popupMenu.add(this);
         }
+        SwingUtilities.updateComponentTreeUI(popupMenu);
         popupMenu.show(editor, 0, editor.getHeight());
     }
 
