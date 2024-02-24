@@ -10,7 +10,10 @@ public class SingleDate {
     private int year;
 
     public SingleDate() {
-        LocalDate date = LocalDate.now();
+        this(LocalDate.now());
+    }
+
+    public SingleDate(LocalDate date) {
         this.day = date.getDayOfMonth();
         this.month = date.getMonthValue();
         this.year = date.getYear();

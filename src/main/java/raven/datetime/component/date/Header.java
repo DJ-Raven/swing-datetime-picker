@@ -10,8 +10,6 @@ import java.text.DateFormatSymbols;
 public class Header extends JPanel {
 
     private final EventHeaderChanged headerChanged;
-    private int month = 10;
-    private int year = 2023;
 
     public void setDate(int month, int year) {
         buttonMonth.setText(DateFormatSymbols.getInstance().getMonths()[month]);

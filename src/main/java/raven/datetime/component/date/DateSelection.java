@@ -35,9 +35,12 @@ public class DateSelection {
         if (dateSelectionMode == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
             setDate(date);
         } else {
-            if (getDate() == null) {
+            if (getDate() == null || toDate != null) {
                 setDate(date);
                 setHoverDate(date);
+                if (toDate != null) {
+                    setToDate(null);
+                }
             } else {
                 setToDate(date);
             }

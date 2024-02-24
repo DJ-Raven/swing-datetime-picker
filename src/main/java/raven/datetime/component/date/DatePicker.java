@@ -5,6 +5,7 @@ import raven.swing.slider.PanelSlider;
 import raven.swing.slider.SimpleTransition;
 
 import javax.swing.*;
+import java.time.LocalDate;
 
 public class DatePicker extends JPanel {
 
@@ -33,8 +34,8 @@ public class DatePicker extends JPanel {
         eventYearChanged = createEventYearChanged();
         add(header);
         add(panelSlider, "width 260,height 250");
-        panelSlider.addSlide(createPanelDate(10, 2023), null);
-        add(new PanelDateOption(),"dock east,gap 0 10 10 10");
+        now();
+        add(new PanelDateOption(this), "dock east,gap 0 10 10 10");
     }
 
     private Header.EventHeaderChanged getEventHeader() {
@@ -167,6 +168,62 @@ public class DatePicker extends JPanel {
 
     public void setDateSelectionMode(DateSelectionMode dateSelectionMode) {
         this.dateSelection.dateSelectionMode = dateSelectionMode;
+    }
+
+    public void now() {
+        LocalDate date = LocalDate.now();
+        int month = date.getMonthValue() - 1;
+        int year = date.getYear();
+        this.month = month;
+        this.year = year;
+        header.setDate(month, year);
+        panelSlider.addSlide(createPanelDate(month, year), null);
+    }
+
+    public void setSelectedDate(LocalDate date) {
+        dateSelection.setDate(new SingleDate(date));
+        if (dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED) {
+            dateSelection.setToDate(new SingleDate(date));
+        }
+        panelSlider.repaint();
+        slideTo(date);
+    }
+
+    public void setSelectedDateRange(LocalDate from, LocalDate to) {
+        if (dateSelection.dateSelectionMode == DateSelectionMode.SINGLE_DATE_SELECTED) {
+            throw new IllegalArgumentException("Single date mode can't accept the range date");
+        }
+        dateSelection.setDate(new SingleDate(from));
+        dateSelection.setToDate(new SingleDate(to));
+        panelSlider.repaint();
+        slideTo(from);
+    }
+
+    public void clearSelectedDate() {
+        dateSelection.setDate(null);
+        dateSelection.setToDate(null);
+        panelSlider.repaint();
+    }
+
+    public void slideTo(LocalDate date) {
+        int m = date.getMonthValue() - 1;
+        int y = date.getYear();
+        if (year != y || month != m) {
+            if (year < y || (year <= y && month < m)) {
+                panelSlider.addSlide(createPanelDate(m, y), SimpleTransition.get(SimpleTransition.SliderType.FORWARD));
+            } else {
+                panelSlider.addSlide(createPanelDate(m, y), SimpleTransition.get(SimpleTransition.SliderType.BACK));
+            }
+            month = m;
+            year = y;
+            panelSelect = 0;
+            header.setDate(month, year);
+        } else {
+            if (panelSelect != 0) {
+                panelSlider.addSlide(createPanelDate(m, y), SimpleTransition.get(SimpleTransition.SliderType.DOWN_TOP));
+                panelSelect = 0;
+            }
+        }
     }
 
     public enum DateSelectionMode {
