@@ -7,12 +7,19 @@ public class DateSelection {
     private SingleDate toDate;
     private SingleDate hoverDate;
 
+    private final DatePicker datePicker;
+
+    protected DateSelection(DatePicker datePicker) {
+        this.datePicker = datePicker;
+    }
+
     public SingleDate getDate() {
         return date;
     }
 
     public void setDate(SingleDate date) {
         this.date = date;
+        datePicker.runEventDateChanged();
     }
 
     public SingleDate getToDate() {
@@ -31,18 +38,25 @@ public class DateSelection {
         this.hoverDate = hoverDate;
     }
 
+    protected void setSelectDate(SingleDate from, SingleDate to) {
+        date = from;
+        toDate = to;
+        datePicker.runEventDateChanged();
+    }
+
     protected void selectDate(SingleDate date) {
         if (dateSelectionMode == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
             setDate(date);
         } else {
             if (getDate() == null || toDate != null) {
-                setDate(date);
-                setHoverDate(date);
+                this.date = date;
+                hoverDate = date;
                 if (toDate != null) {
-                    setToDate(null);
+                    toDate = null;
                 }
             } else {
-                setToDate(date);
+                toDate = date;
+                datePicker.runEventDateChanged();
             }
         }
     }

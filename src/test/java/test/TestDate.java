@@ -8,11 +8,15 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.formdev.flatlaf.util.UIScale;
 import net.miginfocom.swing.MigLayout;
+import raven.datetime.component.date.DateEvent;
 import raven.datetime.component.date.DatePicker;
+import raven.datetime.component.date.DateSelectionListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.text.DateFormatSymbols;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class TestDate extends JFrame {
@@ -33,8 +37,27 @@ public class TestDate extends JFrame {
         add(datePicker);
         JButton change = new JButton("Change");
         change.addActionListener(e -> {
-            // panelTimePicker.set24HourView(!panelTimePicker.is24HourView());
+            DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate dates[] = datePicker.getSelectedDateRange();
+            if (dates != null) {
+                System.out.println("date change " + df.format(dates[0]) + " -> " + df.format(dates[1]));
+            } else {
+                System.out.println("date change to null");
+            }
         });
+        datePicker.addDateSelectionListener(new DateSelectionListener() {
+            @Override
+            public void dateSelected(DateEvent dateEvent) {
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                LocalDate dates[] = datePicker.getSelectedDateRange();
+                if (dates != null) {
+                    System.out.println("date change " + df.format(dates[0]) + " -> " + df.format(dates[1]));
+                } else {
+                    System.out.println("date change to null");
+                }
+            }
+        });
+        datePicker.now();
         add(change);
     }
 

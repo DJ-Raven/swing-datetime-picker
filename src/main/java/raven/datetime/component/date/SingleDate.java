@@ -100,6 +100,10 @@ public class SingleDate {
         }
     }
 
+    public LocalDate toLocalDate() {
+        return LocalDate.of(year, month, day);
+    }
+
     @Override
     public String toString() {
         return day + "/" + month + "/" + year;

@@ -14,7 +14,6 @@ public class PanelDateOption extends JPanel {
     public PanelDateOption(DatePicker datePicker) {
         this.datePicker = datePicker;
         init();
-        // setBackground(new Color(155, 110, 110));
     }
 
     private void init() {
@@ -110,6 +109,11 @@ public class PanelDateOption extends JPanel {
             int day = calendar.get(Calendar.DATE);
             return LocalDate.of(year, month, day);
         }
+    }
+
+    public void setSelectedCustom() {
+        JToggleButton button = (JToggleButton) (getComponent(getComponentCount() - 1));
+        button.setSelected(true);
     }
 
     private ButtonGroup buttonGroup;

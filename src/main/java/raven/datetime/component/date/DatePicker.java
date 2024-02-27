@@ -6,10 +6,13 @@ import raven.swing.slider.SimpleTransition;
 
 import javax.swing.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatePicker extends JPanel {
 
-    private final DateSelection dateSelection = new DateSelection();
+    private final List<DateSelectionListener> events = new ArrayList<>();
+    private final DateSelection dateSelection = new DateSelection(this);
     private PanelMonth.EventMonthChanged eventMonthChanged;
     private PanelYear.EventYearChanged eventYearChanged;
     private int month = 10;
@@ -34,7 +37,7 @@ public class DatePicker extends JPanel {
         eventYearChanged = createEventYearChanged();
         add(header);
         add(panelSlider, "width 260,height 250");
-        now();
+        initDate();
         add(new PanelDateOption(this), "dock east,gap 0 10 10 10");
     }
 
@@ -159,6 +162,14 @@ public class DatePicker extends JPanel {
         return new PanelYear(eventYearChanged, dateSelection, year);
     }
 
+    protected void runEventDateChanged() {
+        SwingUtilities.invokeLater(() -> {
+            for (DateSelectionListener event : events) {
+                event.dateSelected(new DateEvent(this));
+            }
+        });
+    }
+
     private Header header;
     private PanelSlider panelSlider;
 
@@ -170,7 +181,7 @@ public class DatePicker extends JPanel {
         this.dateSelection.dateSelectionMode = dateSelectionMode;
     }
 
-    public void now() {
+    private void initDate() {
         LocalDate date = LocalDate.now();
         int month = date.getMonthValue() - 1;
         int year = date.getYear();
@@ -178,6 +189,15 @@ public class DatePicker extends JPanel {
         this.year = year;
         header.setDate(month, year);
         panelSlider.addSlide(createPanelDate(month, year), null);
+    }
+
+    public void now() {
+        LocalDate date = LocalDate.now();
+        if (dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED) {
+            setSelectedDateRange(date, date);
+        } else {
+            setSelectedDate(date);
+        }
     }
 
     public void setSelectedDate(LocalDate date) {
@@ -193,16 +213,36 @@ public class DatePicker extends JPanel {
         if (dateSelection.dateSelectionMode == DateSelectionMode.SINGLE_DATE_SELECTED) {
             throw new IllegalArgumentException("Single date mode can't accept the range date");
         }
-        dateSelection.setDate(new SingleDate(from));
-        dateSelection.setToDate(new SingleDate(to));
+        dateSelection.setSelectDate(new SingleDate(from), new SingleDate(to));
         panelSlider.repaint();
         slideTo(from);
     }
 
     public void clearSelectedDate() {
-        dateSelection.setDate(null);
-        dateSelection.setToDate(null);
+        dateSelection.setSelectDate(null, null);
         panelSlider.repaint();
+    }
+
+    public LocalDate getSelectedDate() {
+        SingleDate date = dateSelection.getDate();
+        if (date != null) {
+            return date.toLocalDate();
+        }
+        return null;
+    }
+
+    public LocalDate[] getSelectedDateRange() {
+        SingleDate from = dateSelection.getDate();
+        if (from != null) {
+            LocalDate[] dates = new LocalDate[2];
+            dates[0] = from.toLocalDate();
+            SingleDate to = dateSelection.getToDate();
+            if (to != null) {
+                dates[1] = to.toLocalDate();
+                return dates;
+            }
+        }
+        return null;
     }
 
     public void slideTo(LocalDate date) {
@@ -223,6 +263,22 @@ public class DatePicker extends JPanel {
                 panelSlider.addSlide(createPanelDate(m, y), SimpleTransition.get(SimpleTransition.SliderType.DOWN_TOP));
                 panelSelect = 0;
             }
+        }
+    }
+
+    public void addDateSelectionListener(DateSelectionListener event) {
+        events.add(event);
+    }
+
+    public void removeDateSelectionListener(DateSelectionListener event) {
+        if (events != null) {
+            events.remove(event);
+        }
+    }
+
+    public void removeAllDateSelectionListener() {
+        if (events != null) {
+            events.clear();
         }
     }
 
