@@ -10,6 +10,7 @@ import java.util.Calendar;
 public class PanelDateOption extends JPanel {
 
     private final DatePicker datePicker;
+    private boolean disableChange;
 
     public PanelDateOption(DatePicker datePicker) {
         this.datePicker = datePicker;
@@ -41,6 +42,7 @@ public class PanelDateOption extends JPanel {
 
         if (useType) {
             button.addActionListener(e -> {
+                disableChange = true;
                 if (date == -1) {
                     datePicker.clearSelectedDate();
                 } else if (date == 1) {
@@ -67,6 +69,7 @@ public class PanelDateOption extends JPanel {
 
         } else {
             button.addActionListener(e -> {
+                disableChange = true;
                 if (date == 0 || date == -1 || datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
                     datePicker.setSelectedDate(calculateDate(date));
                 } else {
@@ -112,8 +115,11 @@ public class PanelDateOption extends JPanel {
     }
 
     public void setSelectedCustom() {
-        JToggleButton button = (JToggleButton) (getComponent(getComponentCount() - 1));
-        button.setSelected(true);
+        if (!disableChange) {
+            JToggleButton button = (JToggleButton) (getComponent(getComponentCount() - 1));
+            button.setSelected(true);
+        }
+        disableChange = false;
     }
 
     private ButtonGroup buttonGroup;

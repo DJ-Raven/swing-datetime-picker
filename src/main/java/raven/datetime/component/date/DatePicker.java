@@ -15,6 +15,7 @@ public class DatePicker extends JPanel {
     private final DateSelection dateSelection = new DateSelection(this);
     private PanelMonth.EventMonthChanged eventMonthChanged;
     private PanelYear.EventYearChanged eventYearChanged;
+    private PanelDateOption panelDateOption;
     private int month = 10;
     private int year = 2023;
 
@@ -38,7 +39,8 @@ public class DatePicker extends JPanel {
         add(header);
         add(panelSlider, "width 260,height 250");
         initDate();
-        add(new PanelDateOption(this), "dock east,gap 0 10 10 10");
+        panelDateOption = new PanelDateOption(this);
+        add(panelDateOption, "dock east,gap 0 10 10 10");
     }
 
     private Header.EventHeaderChanged getEventHeader() {
@@ -166,6 +168,9 @@ public class DatePicker extends JPanel {
         SwingUtilities.invokeLater(() -> {
             for (DateSelectionListener event : events) {
                 event.dateSelected(new DateEvent(this));
+            }
+            if (panelDateOption != null) {
+                panelDateOption.setSelectedCustom();
             }
         });
     }
