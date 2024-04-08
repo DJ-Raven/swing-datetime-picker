@@ -1,11 +1,9 @@
 package test;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
-import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.formdev.flatlaf.util.UIScale;
 import net.miginfocom.swing.MigLayout;
 import raven.datetime.component.date.DateEvent;
@@ -32,32 +30,39 @@ public class TestDate extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new MigLayout());
         DatePicker datePicker = new DatePicker();
-        datePicker.putClientProperty(FlatClientProperties.STYLE, "" +
-                "border:0,0,0,0,$Component.borderColor,,10");
-        add(datePicker);
+
         JButton change = new JButton("Change");
         change.addActionListener(e -> {
-            DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            LocalDate dates[] = datePicker.getSelectedDateRange();
-            if (dates != null) {
-                System.out.println("date change " + df.format(dates[0]) + " -> " + df.format(dates[1]));
-            } else {
-                System.out.println("date change to null");
-            }
+            datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED);
         });
         datePicker.addDateSelectionListener(new DateSelectionListener() {
             @Override
             public void dateSelected(DateEvent dateEvent) {
+
                 DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                LocalDate dates[] = datePicker.getSelectedDateRange();
-                if (dates != null) {
-                    System.out.println("date change " + df.format(dates[0]) + " -> " + df.format(dates[1]));
+                if (datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
+                    LocalDate date = datePicker.getSelectedDate();
+                    if (date != null) {
+                        System.out.println("date change " + df.format(datePicker.getSelectedDate()));
+                    } else {
+                        System.out.println("date change to null");
+                    }
                 } else {
-                    System.out.println("date change to null");
+                    LocalDate dates[] = datePicker.getSelectedDateRange();
+                    if (dates != null) {
+                        System.out.println("date change " + df.format(dates[0]) + " to " + df.format(dates[1]));
+                    } else {
+                        System.out.println("date change to null");
+                    }
                 }
             }
         });
+
+        datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);
         datePicker.now();
+        JFormattedTextField editor = new JFormattedTextField();
+        datePicker.setEditor(editor);
+        add(editor, "width 250");
         add(change);
     }
 

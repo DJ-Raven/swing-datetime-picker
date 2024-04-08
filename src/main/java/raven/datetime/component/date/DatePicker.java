@@ -1,21 +1,31 @@
 package raven.datetime.component.date;
 
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import net.miginfocom.swing.MigLayout;
+import raven.datetime.util.InputUtils;
 import raven.swing.slider.PanelSlider;
 import raven.swing.slider.SimpleTransition;
 
 import javax.swing.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatePicker extends JPanel {
 
+    private final DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final List<DateSelectionListener> events = new ArrayList<>();
+    private DateSelectionListener dateSelectionListener;
     private final DateSelection dateSelection = new DateSelection(this);
     private PanelMonth.EventMonthChanged eventMonthChanged;
     private PanelYear.EventYearChanged eventYearChanged;
     private PanelDateOption panelDateOption;
+    private InputUtils.ValueCallback valueCallback;
+    private JFormattedTextField editor;
+    private JPopupMenu popupMenu;
+    private String separator = " to ";
     private int month = 10;
     private int year = 2023;
 
@@ -183,7 +193,13 @@ public class DatePicker extends JPanel {
     }
 
     public void setDateSelectionMode(DateSelectionMode dateSelectionMode) {
-        this.dateSelection.dateSelectionMode = dateSelectionMode;
+        if (this.dateSelection.dateSelectionMode != dateSelectionMode) {
+            this.dateSelection.dateSelectionMode = dateSelectionMode;
+            if (editor != null) {
+                InputUtils.useDateInput(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
+                runEventDateChanged();
+            }
+        }
     }
 
     private void initDate() {
@@ -223,9 +239,55 @@ public class DatePicker extends JPanel {
         slideTo(from);
     }
 
+    public void setEditor(JFormattedTextField editor) {
+        if (this.editor != null) {
+            uninstallEditor(this.editor);
+        }
+        if (editor != null) {
+            installEditor(editor);
+        }
+        this.editor = editor;
+    }
+
+    public void showPopup() {
+        if (popupMenu == null) {
+            popupMenu = new JPopupMenu();
+            popupMenu.putClientProperty(FlatClientProperties.STYLE, "" +
+                    "borderInsets:1,1,1,1");
+            popupMenu.add(this);
+        }
+        SwingUtilities.updateComponentTreeUI(popupMenu);
+        popupMenu.show(editor, 0, editor.getHeight());
+    }
+
+    public void setSeparator(String separator) {
+        if (separator == null) {
+            throw new IllegalArgumentException("separator can't be null");
+        }
+        if (!this.separator.equals(separator)) {
+            this.separator = separator;
+            if (editor != null) {
+                InputUtils.useDateInput(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
+                runEventDateChanged();
+            }
+        }
+    }
+
+    public String getSeparator() {
+        return separator;
+    }
+
     public void clearSelectedDate() {
         dateSelection.setSelectDate(null, null);
         panelSlider.repaint();
+    }
+
+    public boolean isDateSelected() {
+        if (dateSelection.dateSelectionMode == DateSelectionMode.SINGLE_DATE_SELECTED) {
+            return dateSelection.getDate() != null;
+        } else {
+            return dateSelection.getDate() != null && dateSelection.getToDate() != null;
+        }
     }
 
     public LocalDate getSelectedDate() {
@@ -285,6 +347,63 @@ public class DatePicker extends JPanel {
         if (events != null) {
             events.clear();
         }
+    }
+
+
+    private void installEditor(JFormattedTextField editor) {
+        JToolBar toolBar = new JToolBar();
+        JButton button = new JButton(new FlatSVGIcon("raven/datetime/icon/calendar.svg", 0.8f));
+        toolBar.add(button);
+        button.addActionListener(e -> {
+            showPopup();
+        });
+        editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
+        addDateSelectionListener(getDateSelectionListener());
+        InputUtils.useDateInput(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
+    }
+
+    private void uninstallEditor(JFormattedTextField editor) {
+        if (editor != null) {
+            editor.setFormatterFactory(null);
+            editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, null);
+            if (dateSelectionListener != null) {
+                removeDateSelectionListener(dateSelectionListener);
+            }
+        }
+    }
+
+    private InputUtils.ValueCallback getValueCallback() {
+        if (valueCallback == null) {
+            valueCallback = value -> {
+
+            };
+        }
+        return valueCallback;
+    }
+
+    private DateSelectionListener getDateSelectionListener() {
+        if (dateSelectionListener == null) {
+            dateSelectionListener = new DateSelectionListener() {
+                @Override
+                public void dateSelected(DateEvent dateEvent) {
+                    if (isDateSelected()) {
+                        String value;
+                        if (dateSelection.dateSelectionMode == DateSelectionMode.SINGLE_DATE_SELECTED) {
+                            value = format.format(getSelectedDate());
+                        } else {
+                            LocalDate dates[] = getSelectedDateRange();
+                            value = format.format(dates[0]) + separator + format.format(dates[1]);
+                        }
+                        if (!editor.getText().toUpperCase().equals(value)) {
+                            editor.setValue(value);
+                        }
+                    } else {
+                        editor.setValue(null);
+                    }
+                }
+            };
+        }
+        return dateSelectionListener;
     }
 
     public enum DateSelectionMode {

@@ -2,7 +2,7 @@ package raven.datetime.component.date;
 
 public class DateSelection {
 
-    protected DatePicker.DateSelectionMode dateSelectionMode = DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED;
+    protected DatePicker.DateSelectionMode dateSelectionMode = DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED;
     private SingleDate date;
     private SingleDate toDate;
     private SingleDate hoverDate;

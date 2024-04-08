@@ -229,7 +229,6 @@ public class TimePicker extends JPanel {
         return timeSelectionListener;
     }
 
-
     private void runEventTimeChanged() {
         SwingUtilities.invokeLater(() -> {
             for (TimeSelectionListener event : events) {
