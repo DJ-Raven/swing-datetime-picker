@@ -77,6 +77,9 @@ public class SingleDate {
     }
 
     public boolean before(SingleDate date) {
+        if (date == null) {
+            return false;
+        }
         if (year < date.year) {
             return true;
         } else if (year > date.year) {

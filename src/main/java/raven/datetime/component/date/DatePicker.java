@@ -8,6 +8,7 @@ import raven.swing.slider.PanelSlider;
 import raven.swing.slider.SimpleTransition;
 
 import javax.swing.*;
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -198,7 +199,7 @@ public class DatePicker extends JPanel {
             this.dateSelection.dateSelectionMode = dateSelectionMode;
             if (editor != null) {
                 InputUtils.useDateInput(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
-                runEventDateChanged();
+                clearSelectedDate();
             }
         }
     }
@@ -280,6 +281,7 @@ public class DatePicker extends JPanel {
 
     public void clearSelectedDate() {
         dateSelection.setSelectDate(null, null);
+        updateSelected();
         panelSlider.repaint();
     }
 
@@ -345,6 +347,7 @@ public class DatePicker extends JPanel {
                 panelSelect = 0;
             }
         }
+        updateSelected();
     }
 
     public void addDateSelectionListener(DateSelectionListener event) {
@@ -363,6 +366,14 @@ public class DatePicker extends JPanel {
         }
     }
 
+    private void updateSelected() {
+        Component com = panelSlider.getSlideComponent();
+        if (com instanceof PanelDate) {
+            ((PanelDate) com).checkSelection();
+        } else if (com instanceof PanelMonth) {
+            ((PanelMonth) com).checkSelection();
+        }
+    }
 
     private void installEditor(JFormattedTextField editor) {
         JToolBar toolBar = new JToolBar();

@@ -13,6 +13,10 @@ import java.awt.event.MouseEvent;
 
 public class ButtonMonthYear extends JButton {
 
+    public int getValue() {
+        return value;
+    }
+
     private final DateSelection dateSelection;
     private final int value;
     private final boolean isYear;

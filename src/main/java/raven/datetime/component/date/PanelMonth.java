@@ -3,6 +3,7 @@ package raven.datetime.component.date;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.text.DateFormatSymbols;
 
 public class PanelMonth extends JPanel {
@@ -43,6 +44,16 @@ public class PanelMonth extends JPanel {
         } else {
             return (dateSelection.getDate() != null && year == dateSelection.getDate().getYear() && month == dateSelection.getDate().getMonth()) ||
                     (dateSelection.getToDate() != null && year == dateSelection.getToDate().getYear() && month == dateSelection.getToDate().getMonth());
+        }
+    }
+
+    protected void checkSelection() {
+        for (int i = 0; i < getComponentCount(); i++) {
+            Component com = getComponent(i);
+            if (com instanceof ButtonMonthYear) {
+                ButtonMonthYear button = (ButtonMonthYear) com;
+                button.setSelected(checkSelected(button.getValue() + 1));
+            }
         }
     }
 

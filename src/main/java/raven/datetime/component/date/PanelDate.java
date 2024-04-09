@@ -66,6 +66,9 @@ public class PanelDate extends JPanel {
 
     protected JButton createButton(SingleDate date, boolean enable, int rowIndex) {
         ButtonDate button = new ButtonDate(dateSelection, date, enable, rowIndex);
+        if (button.isDateSelected()) {
+            button.setSelected(true);
+        }
         return button;
     }
 

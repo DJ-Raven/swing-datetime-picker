@@ -9,7 +9,12 @@ import java.awt.image.VolatileImage;
 
 public class PanelSlider extends JLayeredPane {
 
+    public Component getSlideComponent() {
+        return slideComponent;
+    }
+
     private PanelSnapshot panelSnapshot;
+    private Component slideComponent;
 
     public PanelSlider() {
         init();
@@ -24,6 +29,7 @@ public class PanelSlider extends JLayeredPane {
     }
 
     public void addSlide(Component component, SliderTransition transition) {
+        this.slideComponent = component;
         if (getComponentCount() == 1) {
             add(component);
             repaint();

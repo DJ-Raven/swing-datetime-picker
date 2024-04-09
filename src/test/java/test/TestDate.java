@@ -1,6 +1,6 @@
 package test;
 
-import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
@@ -33,7 +33,7 @@ public class TestDate extends JFrame {
 
         JButton change = new JButton("Change");
         change.addActionListener(e -> {
-            datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED);
+            datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);
         });
         datePicker.addDateSelectionListener(new DateSelectionListener() {
             @Override
@@ -58,7 +58,7 @@ public class TestDate extends JFrame {
             }
         });
 
-        datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);
+      //  datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);
         datePicker.now();
         JFormattedTextField editor = new JFormattedTextField();
         datePicker.setEditor(editor);
@@ -70,7 +70,7 @@ public class TestDate extends JFrame {
         FlatRobotoFont.install();
         FlatLaf.registerCustomDefaultsSource("themes");
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-        FlatMacDarkLaf.setup();
+        FlatIntelliJLaf.setup();
         EventQueue.invokeLater(() -> new TestDate().setVisible(true));
     }
 }

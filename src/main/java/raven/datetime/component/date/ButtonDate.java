@@ -178,7 +178,7 @@ public class ButtonDate extends JButton {
         return ColorFunctions.mix(color, getParent().getBackground(), 0.45f);
     }
 
-    private boolean isDateSelected() {
+    protected boolean isDateSelected() {
         if (dateSelection.dateSelectionMode == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
             return date.same(dateSelection.getDate());
         } else {
