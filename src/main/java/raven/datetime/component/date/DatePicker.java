@@ -10,7 +10,6 @@ import raven.swing.slider.SimpleTransition;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +27,7 @@ public class DatePicker extends JPanel {
     private JFormattedTextField editor;
     private JPopupMenu popupMenu;
     private String separator = " to ";
+    private boolean usePanelOption;
     private int month = 10;
     private int year = 2023;
 
@@ -51,8 +51,6 @@ public class DatePicker extends JPanel {
         add(header);
         add(panelSlider, "width 260,height 250");
         initDate();
-        panelDateOption = new PanelDateOption(this);
-        add(panelDateOption, "dock east,gap 0 10 10 10");
     }
 
     private Header.EventHeaderChanged getEventHeader() {
@@ -275,6 +273,31 @@ public class DatePicker extends JPanel {
         }
     }
 
+    public boolean isUsePanelOption() {
+        return usePanelOption;
+    }
+
+    public void setUsePanelOption(boolean usePanelOption) {
+        if (this.usePanelOption != usePanelOption) {
+            this.usePanelOption = usePanelOption;
+            if (usePanelOption) {
+                if (panelDateOption == null) {
+                    panelDateOption = new PanelDateOption(this);
+                }
+                add(panelDateOption, "dock east,gap 0 10 10 10");
+                repaint();
+                revalidate();
+            } else {
+                if (panelDateOption != null) {
+                    remove(panelDateOption);
+                    panelDateOption = null;
+                    repaint();
+                    revalidate();
+                }
+            }
+        }
+    }
+
     public String getSeparator() {
         return separator;
     }
@@ -372,6 +395,8 @@ public class DatePicker extends JPanel {
             ((PanelDate) com).checkSelection();
         } else if (com instanceof PanelMonth) {
             ((PanelMonth) com).checkSelection();
+        } else if (com instanceof PanelYear) {
+            ((PanelYear) com).checkSelection();
         }
     }
 

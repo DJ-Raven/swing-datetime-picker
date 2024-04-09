@@ -3,6 +3,7 @@ package raven.datetime.component.date;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class PanelYear extends JPanel {
 
@@ -23,13 +24,17 @@ public class PanelYear extends JPanel {
         int count = YEAR_CELL;
         for (int i = 0; i < count; i++) {
             final int y = getStartYear(year) + i;
-            ButtonMonthYear button = new ButtonMonthYear(dateSelection, i, true);
+            ButtonMonthYear button = new ButtonMonthYear(dateSelection, y, true);
             button.setText(y + "");
+            if (checkSelected(y)) {
+                button.setSelected(true);
+            }
             button.addActionListener(e -> {
                 yearChanged.yearSelected(y);
             });
             add(button);
         }
+        checkSelection();
     }
 
     private int getStartYear(int year) {
@@ -40,6 +45,25 @@ public class PanelYear extends JPanel {
         int pages = yearsPassed / yearsPerPage;
         int startingYearOnPage = initYear + (pages * yearsPerPage);
         return startingYearOnPage;
+    }
+
+    protected boolean checkSelected(int year) {
+        if (dateSelection.dateSelectionMode == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
+            return dateSelection.getDate() != null && year == dateSelection.getDate().getYear();
+        } else {
+            return (dateSelection.getDate() != null && year == dateSelection.getDate().getYear()) ||
+                    (dateSelection.getToDate() != null && year == dateSelection.getToDate().getYear());
+        }
+    }
+
+    protected void checkSelection() {
+        for (int i = 0; i < getComponentCount(); i++) {
+            Component com = getComponent(i);
+            if (com instanceof ButtonMonthYear) {
+                ButtonMonthYear button = (ButtonMonthYear) com;
+                button.setSelected(checkSelected(button.getValue()));
+            }
+        }
     }
 
     public int getYear() {

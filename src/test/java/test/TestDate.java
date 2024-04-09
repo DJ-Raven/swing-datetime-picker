@@ -33,6 +33,7 @@ public class TestDate extends JFrame {
 
         JButton change = new JButton("Change");
         change.addActionListener(e -> {
+            datePicker.setUsePanelOption(!datePicker.isUsePanelOption());
             datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);
         });
         datePicker.addDateSelectionListener(new DateSelectionListener() {
@@ -58,7 +59,7 @@ public class TestDate extends JFrame {
             }
         });
 
-      //  datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);
+        //  datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);
         datePicker.now();
         JFormattedTextField editor = new JFormattedTextField();
         datePicker.setEditor(editor);
