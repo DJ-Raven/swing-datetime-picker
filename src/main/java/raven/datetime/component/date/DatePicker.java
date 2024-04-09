@@ -9,6 +9,7 @@ import raven.swing.slider.SimpleTransition;
 
 import javax.swing.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -312,6 +313,19 @@ public class DatePicker extends JPanel {
         return null;
     }
 
+    public String getSelectedDateAsString() {
+        if (isDateSelected()) {
+            if (dateSelection.dateSelectionMode == DateSelectionMode.SINGLE_DATE_SELECTED) {
+                return format.format(getSelectedDate());
+            } else {
+                LocalDate[] dates = getSelectedDateRange();
+                return format.format(dates[0]) + separator + format.format(dates[1]);
+            }
+        } else {
+            return null;
+        }
+    }
+
     public void slideTo(LocalDate date) {
         int m = date.getMonthValue() - 1;
         int y = date.getYear();
@@ -375,7 +389,23 @@ public class DatePicker extends JPanel {
     private InputUtils.ValueCallback getValueCallback() {
         if (valueCallback == null) {
             valueCallback = value -> {
-
+                if (value == null && isDateSelected()) {
+                    clearSelectedDate();
+                } else {
+                    if (value != null && !value.equals(getSelectedDateAsString())) {
+                        if (dateSelection.dateSelectionMode == DateSelectionMode.SINGLE_DATE_SELECTED) {
+                            LocalDate date = InputUtils.stringToDate(format, value.toString());
+                            if (date != null) {
+                                setSelectedDate(date);
+                            }
+                        } else {
+                            LocalDate[] dates = InputUtils.stringToDate(format, separator, value.toString());
+                            if (dates != null) {
+                                setSelectedDateRange(dates[0], dates[1]);
+                            }
+                        }
+                    }
+                }
             };
         }
         return valueCallback;

@@ -10,6 +10,7 @@ import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -29,6 +30,25 @@ public class InputUtils extends MaskFormatter {
                 final DateTimeFormatter format12h = DateTimeFormatter.ofPattern("hh:mm a");
                 return LocalTime.from(format12h.parse(value.toUpperCase()));
             }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static LocalDate stringToDate(DateTimeFormatter format, String value) {
+        try {
+            return LocalDate.from(format.parse(value));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static LocalDate[] stringToDate(DateTimeFormatter format, String separator, String value) {
+        try {
+            String[] dates = value.split(separator);
+            LocalDate from = LocalDate.from(format.parse(dates[0]));
+            LocalDate to = LocalDate.from(format.parse(dates[1]));
+            return new LocalDate[]{from, to};
         } catch (Exception e) {
             return null;
         }

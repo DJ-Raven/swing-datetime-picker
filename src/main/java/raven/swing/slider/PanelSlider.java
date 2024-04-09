@@ -49,7 +49,9 @@ public class PanelSlider extends JLayeredPane {
 
     private Image createImage(Component component) {
         VolatileImage snapshot = component.createVolatileImage(getWidth(), getHeight());
-        component.paint(snapshot.getGraphics());
+        if (snapshot != null) {
+            component.paint(snapshot.getGraphics());
+        }
         return snapshot;
     }
 
