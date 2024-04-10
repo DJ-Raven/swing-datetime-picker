@@ -1,6 +1,5 @@
 package test;
 
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
@@ -11,6 +10,7 @@ import raven.datetime.component.date.DatePicker;
 import raven.datetime.component.date.DateSelectionListener;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
@@ -18,6 +18,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class TestDate extends JFrame {
+
+    private DatePicker datePicker;
 
     public TestDate() {
         String[] customMonths = {
@@ -28,14 +30,8 @@ public class TestDate extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(UIScale.scale(new Dimension(800, 600)));
         setLocationRelativeTo(null);
-        setLayout(new MigLayout());
-        DatePicker datePicker = new DatePicker();
-
-        JButton change = new JButton("Change");
-        change.addActionListener(e -> {
-            datePicker.setUsePanelOption(!datePicker.isUsePanelOption());
-            datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);
-        });
+        setLayout(new MigLayout("wrap"));
+        datePicker = new DatePicker();
         datePicker.addDateSelectionListener(new DateSelectionListener() {
             @Override
             public void dateSelected(DateEvent dateEvent) {
@@ -59,19 +55,37 @@ public class TestDate extends JFrame {
             }
         });
 
-        //  datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);
         datePicker.now();
         JFormattedTextField editor = new JFormattedTextField();
         datePicker.setEditor(editor);
         add(editor, "width 250");
-        add(change);
+        createDateOption();
+    }
+
+    private void createDateOption() {
+        JPanel panel = new JPanel(new MigLayout("wrap"));
+        panel.setBorder(new TitledBorder("Option"));
+        JCheckBox chBtw = new JCheckBox("Use Date between");
+        chBtw.addActionListener(e -> {
+            if (chBtw.isSelected()) {
+                datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED);
+            } else {
+                datePicker.setDateSelectionMode(DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED);
+            }
+        });
+        JCheckBox chDateOpt = new JCheckBox("Use Panel Option");
+        chDateOpt.addActionListener(e -> datePicker.setUsePanelOption(chDateOpt.isSelected()));
+
+        panel.add(chBtw);
+        panel.add(chDateOpt);
+        add(panel);
     }
 
     public static void main(String[] args) {
         FlatRobotoFont.install();
         FlatLaf.registerCustomDefaultsSource("themes");
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-        FlatIntelliJLaf.setup();
+        FlatMacDarkLaf.setup();
         EventQueue.invokeLater(() -> new TestDate().setVisible(true));
     }
 }
