@@ -18,6 +18,8 @@ public class PanelDateOption extends JPanel {
     }
 
     private void init() {
+        putClientProperty(FlatClientProperties.STYLE, "" +
+                "background:null");
         setLayout(new MigLayout("wrap,insets 5,fillx", "[fill]", "[][][][][][][]push[]"));
         add(new JSeparator(SwingConstants.VERTICAL), "dock west");
         buttonGroup = new ButtonGroup();

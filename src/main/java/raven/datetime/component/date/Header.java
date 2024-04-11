@@ -22,6 +22,8 @@ public class Header extends JPanel {
     }
 
     private void init() {
+        putClientProperty(FlatClientProperties.STYLE, "" +
+                "background:null");
         setLayout(new MigLayout("fill,insets 3", "[]push[][]push[]", "fill"));
 
         JButton cmdBack = createButton();

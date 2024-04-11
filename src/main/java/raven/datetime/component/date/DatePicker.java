@@ -43,6 +43,9 @@ public class DatePicker extends JPanel {
     }
 
     private void init() {
+        putClientProperty(FlatClientProperties.STYLE, "" +
+                "[light]background:darken(@background,2%);" +
+                "[dark]background:lighten(@background,2%);");
         setLayout(new MigLayout("wrap,insets 10,fill", "[fill]"));
         panelSlider = new PanelSlider();
         header = new Header(getEventHeader());
@@ -199,6 +202,7 @@ public class DatePicker extends JPanel {
                 InputUtils.useDateInput(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
                 clearSelectedDate();
             }
+            repaint();
         }
     }
 

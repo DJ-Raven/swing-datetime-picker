@@ -1,5 +1,6 @@
 package raven.datetime.component.date;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -22,6 +23,8 @@ public class PanelMonth extends JPanel {
     }
 
     private void init() {
+        putClientProperty(FlatClientProperties.STYLE, "" +
+                "background:null");
         setLayout(new MigLayout("wrap 3,insets 3,fillx,gap 3,al center center", "fill,sg main", "fill"));
         int count = 12;
         for (int i = 0; i < count; i++) {
