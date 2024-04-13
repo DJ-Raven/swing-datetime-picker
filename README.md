@@ -5,18 +5,20 @@ This project provides a datetime picker component that can be easily integrated 
 
 <img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/timepicker-dark.png" alt="timepicker dark" width="300"/>&nbsp;
 <img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/timepicker-light.png" alt="timepicker light" width="300"/>
-
+<br/>
+<img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/datepicker-dark.png" alt="datepicker dark" width="300"/>&nbsp;
+<img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/datepicker-light.png" alt="datepicker light" width="300"/>
 ## Installation
 This project library do not available in maven central. so you can install with the jar library
-- Copy jar library file to the root project. exp : `library/swing-datetime-picker-1.0.0.jar`
+- Copy jar library file to the root project. exp : `library/swing-datetime-picker-1.1.0.jar`
 - Add this code to `pom.xml`
 ``` xml
 <dependency>
     <groupId>raven.datetime</groupId>
     <artifactId>swing-datetime-picker</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <scope>system</scope>
-    <systemPath>${basedir}/library/swing-datetime-picker-1.0.0.jar</systemPath>
+    <systemPath>${basedir}/library/swing-datetime-picker-1.1.0.jar</systemPath>
 </dependency>
 ```
 - Other library are use with this library
@@ -24,13 +26,13 @@ This project library do not available in maven central. so you can install with 
 <dependency>
   <groupId>com.formdev</groupId>
   <artifactId>flatlaf</artifactId>
-  <version>3.2.5</version>
+  <version>3.4.1</version>
 </dependency>
 
 <dependency>
   <groupId>com.formdev</groupId>
   <artifactId>flatlaf-extras</artifactId>
-  <version>3.2.5</version>
+  <version>3.4.1</version>
 </dependency>
 
 <dependency>
@@ -46,8 +48,8 @@ This project library do not available in maven central. so you can install with 
 | setSelectedTime(LocalTime time) | `void` | set the time to a specific value |
 | clearSelectedTime() | `void` | clear the selected time |
 | isTimeSelected() | `boolean` | check time is selected |
-| getSelectedTime() | `LocalTime` | get the selected time |
-| getSelectedTimeAsString() | `String` | get selected time as string |
+| getSelectedTime() | `LocalTime` | return the selected time |
+| getSelectedTimeAsString() | `String` | return selected time as string |
 | addTimeSelectionListener(TimeSelectionListener event) | `void` | add event time selection |
 | removeTimeSelectionListener(TimeSelectionListener event) | `void` | remove event time selection |
 | removeAllTimeSelectionListener() | `void` | remove all event tiem selection |
@@ -56,10 +58,37 @@ This project library do not available in maven central. so you can install with 
 | set24HourView(boolean hour24) | `void` | set time to 24h selection view |
 | is24HourView() | `boolean` | return `ture` is 24h selection view |
 | showPopup() | `void` | if time have editor, timepicker will show up with popup menu |
+| closePopup() | `void` | close editor popup |
 
 
 ## Usage DatePicker
-- Next Coming
+| Method | Return Value | Description |
+| ------------ | ------------ | ------------ |
+| now() | `void` | set the date to current local date |
+| setToBack() | `void` | slide panel to back with animation |
+| setToForward() | `void` | slide panel to forward with animation |
+| selectMonth() | `void` | show panel month slide with animation |
+| selectYear() | `void` | show panel year slide with animation |
+| slideTo(LocalDate date) | `void` | slide panel to specific date |
+| getDateSelectionMode() | `DateSelectionMode` | return the date selectionmode |
+| setDateSelectionMode(DateSelectionMode mode) | `void` | set mode `SINGLE_DATE_SELECTED` or `BETWEEN_DATE_SELECTED` |
+| setSelectedDate(LocalDate date) | `void` | set the date to a specific value |
+| setSelectedDateRange(LocalDate from, LocalDate to) | `void` | set the date range to a specific value |
+| setEditor(JFormattedTextField editor) | `void` | disply the selected date on the editor and allow to edit date |
+| setDateSelectionAble(DateSelectionAble dsb) | `void` | set date selectionable |
+| showPopup() | `void` | if date have editor, datepicker will show up with popup menu |
+| closePopup() | `void` | close editor popup |
+| setSeparator(String separator) | `void` | set separator to between date |
+| setUsePanelOption(boolean usePanelOption) | `void` | set datepicker use panel option |
+| setCloseAfterSelected(boolean closeAfterSelected) | `void` | if true popup will close after selected date |
+| clearSelectedDate() | `void` | clear the selected date |
+| isDateSelected() | `boolean` | check date is selected |
+| getSelectedDate() | `LocalDate` | return the selected date |
+| getSelectedDateRange() | `LocalDate[]` | return the selected date range |
+| getSelectedDateAsString() | `String` | return selected date as string |
+| addDateSelectionListener(DateSelectionListener event) | `void` | add event date selection |
+| removeDateSelectionListener(DateSelectionListener event) | `void` | remove event date selection |
+| removeAllDateSelectionListener() | `void` | remove all event date selection |
 
 ## Library Resources
 - [FlatLaf](https://github.com/JFormDesigner/FlatLaf) - FlatLaf library for the modern UI design theme
