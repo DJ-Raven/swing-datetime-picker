@@ -25,6 +25,11 @@ public class PanelDate extends JPanel {
         putClientProperty(FlatClientProperties.STYLE, "" +
                 "background:null");
         setLayout(new MigLayout("wrap 7,insets 3,gap 1,al center center", "fill", "[fill]10[fill][fill]"));
+        load();
+    }
+
+    protected void load() {
+        removeAll();
         createDateHeader();
         final int col = 7;
         final int row = 6;
@@ -37,8 +42,14 @@ public class PanelDate extends JPanel {
         calendar.add(Calendar.DATE, -startDay);
         int rowIndex = 0;
         for (int i = 1; i <= t; i++) {
+            SingleDate singleDate = new SingleDate(calendar);
+            boolean selectable = dateSelection.getDateSelectionAble() == null || dateSelection.getDateSelectionAble().isDateSelectedAble(singleDate.toLocalDate());
             boolean enable = calendar.get(Calendar.MONDAY) == month && calendar.get(Calendar.YEAR) == year;
-            add(createButton(new SingleDate(calendar), enable, rowIndex));
+            JButton button = createButton(new SingleDate(calendar), enable, rowIndex);
+            if (!selectable) {
+                button.setEnabled(false);
+            }
+            add(button);
             calendar.add(Calendar.DATE, 1);
             if (rowIndex == 6) {
                 rowIndex = 0;
@@ -61,8 +72,8 @@ public class PanelDate extends JPanel {
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text, JLabel.CENTER);
         label.putClientProperty(FlatClientProperties.STYLE, "" +
-                "[light]foreground:lighten(@foreground,30%);" +
-                "[dark]foreground:darken(@foreground,30%)");
+                "[light]foreground:lighten($Label.foreground,30%);" +
+                "[dark]foreground:darken($Label.foreground,30%)");
         return label;
     }
 

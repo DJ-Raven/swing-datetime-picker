@@ -44,8 +44,8 @@ public class DatePicker extends JPanel {
 
     private void init() {
         putClientProperty(FlatClientProperties.STYLE, "" +
-                "[light]background:darken(@background,2%);" +
-                "[dark]background:lighten(@background,2%);");
+                "[light]background:darken($Panel.background,2%);" +
+                "[dark]background:lighten($Panel.background,2%);");
         setLayout(new MigLayout("wrap,insets 10,fill", "[fill]"));
         panelSlider = new PanelSlider();
         header = new Header(getEventHeader());
@@ -251,6 +251,18 @@ public class DatePicker extends JPanel {
             installEditor(editor);
         }
         this.editor = editor;
+    }
+
+    public DateSelectionAble getDateSelectionAble() {
+        return dateSelection.getDateSelectionAble();
+    }
+
+    public void setDateSelectionAble(DateSelectionAble dateSelectionAble) {
+        this.dateSelection.setDateSelectionAble(dateSelectionAble);
+        Component com = panelSlider.getSlideComponent();
+        if (com instanceof PanelDate) {
+            ((PanelDate) com).load();
+        }
     }
 
     public void showPopup() {

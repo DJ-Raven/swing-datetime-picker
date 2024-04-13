@@ -71,14 +71,13 @@ public class ButtonDate extends JButton {
             putClientProperty(FlatClientProperties.STYLE, "" +
                     "margin:7,7,7,7;" +
                     "focusWidth:2;" +
-                    "selectedForeground:contrast($Component.accentColor,@background,#fff)");
+                    "selectedForeground:contrast($Component.accentColor,$Button.background,#fff)");
         } else {
             putClientProperty(FlatClientProperties.STYLE, "" +
                     "margin:7,7,7,7;" +
                     "focusWidth:2;" +
-                    "selectedForeground:contrast($Component.accentColor,@background,#fff);" +
-                    "[light]foreground:lighten(@foreground,40%);" +
-                    "[dark]foreground:darken(@foreground,40%);");
+                    "selectedForeground:contrast($Component.accentColor,$Button.background,#fff);" +
+                    "foreground:$Button.disabledText");
         }
     }
 

@@ -3,6 +3,7 @@ package raven.datetime.component.date;
 public class DateSelection {
 
     protected DatePicker.DateSelectionMode dateSelectionMode = DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED;
+    private DateSelectionAble dateSelectionAble;
     private SingleDate date;
     private SingleDate toDate;
     private SingleDate hoverDate;
@@ -59,5 +60,13 @@ public class DateSelection {
                 datePicker.runEventDateChanged();
             }
         }
+    }
+
+    public void setDateSelectionAble(DateSelectionAble dateSelectionAble) {
+        this.dateSelectionAble = dateSelectionAble;
+    }
+
+    public DateSelectionAble getDateSelectionAble() {
+        return dateSelectionAble;
     }
 }
