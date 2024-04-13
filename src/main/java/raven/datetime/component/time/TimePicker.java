@@ -79,8 +79,8 @@ public class TimePicker extends JPanel {
 
     private void init() {
         putClientProperty(FlatClientProperties.STYLE, "" +
-                "[light]background:darken(@background,2%);" +
-                "[dark]background:lighten(@background,2%);");
+                "[light]background:darken($Panel.background,2%);" +
+                "[dark]background:lighten($Panel.background,2%);");
         layout = new MigLayout("wrap,fill,insets 3", "fill", "fill");
         setLayout(layout);
         header = new Header(getEventHeader());
@@ -228,7 +228,6 @@ public class TimePicker extends JPanel {
         }
         return timeSelectionListener;
     }
-
 
     private void runEventTimeChanged() {
         SwingUtilities.invokeLater(() -> {

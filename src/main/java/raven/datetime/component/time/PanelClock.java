@@ -122,7 +122,7 @@ public class PanelClock extends JPanel {
         putClientProperty(FlatClientProperties.STYLE, "" +
                 "border:5,15,5,15;" +
                 "background:null;" +
-                "foreground:contrast($Component.accentColor,@background,#fff)");
+                "foreground:contrast($Component.accentColor,$Panel.background,#fff)");
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {

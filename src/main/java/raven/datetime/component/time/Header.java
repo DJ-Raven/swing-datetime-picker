@@ -105,7 +105,7 @@ public class Header extends JPanel {
         button.putClientProperty(FlatClientProperties.STYLE, "" +
                 "font:+15;" +
                 "toolbar.margin:3,5,3,5;" +
-                "foreground:contrast($Component.accentColor,@background,#fff);" +
+                "foreground:contrast($Component.accentColor,$ToggleButton.background,#fff);" +
                 "background:null;" +
                 "toolbar.hoverBackground:null");
         return button;
@@ -122,7 +122,7 @@ public class Header extends JPanel {
         });
         button.putClientProperty(FlatClientProperties.STYLE, "" +
                 "font:+1;" +
-                "foreground:contrast($Component.accentColor,@background,#fff);" +
+                "foreground:contrast($Component.accentColor,$ToggleButton.background,#fff);" +
                 "background:null;" +
                 "toolbar.hoverBackground:null");
         return button;
@@ -132,7 +132,7 @@ public class Header extends JPanel {
         JLabel label = new JLabel(":");
         label.putClientProperty(FlatClientProperties.STYLE, "" +
                 "font:+10;" +
-                "foreground:contrast($Component.accentColor,@background,#fff)");
+                "foreground:contrast($Component.accentColor,$Label.background,#fff)");
         return label;
     }
 

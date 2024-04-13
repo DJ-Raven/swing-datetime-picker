@@ -10,6 +10,7 @@ import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -34,6 +35,25 @@ public class InputUtils extends MaskFormatter {
         }
     }
 
+    public static LocalDate stringToDate(DateTimeFormatter format, String value) {
+        try {
+            return LocalDate.from(format.parse(value));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static LocalDate[] stringToDate(DateTimeFormatter format, String separator, String value) {
+        try {
+            String[] dates = value.split(separator);
+            LocalDate from = LocalDate.from(format.parse(dates[0]));
+            LocalDate to = LocalDate.from(format.parse(dates[1]));
+            return new LocalDate[]{from, to};
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static void useTimeInput(JFormattedTextField txt, boolean use24h, ValueCallback callback) {
         try {
             removePropertyChange(txt);
@@ -43,6 +63,28 @@ public class InputUtils extends MaskFormatter {
                 callback.valueChanged(null);
             });
             TimeInputFormat mask = new TimeInputFormat(use24h ? "##:##" : "##:## ??", use24h);
+            mask.setCommitsOnValidEdit(true);
+            mask.setPlaceholderCharacter('-');
+            DefaultFormatterFactory df = new DefaultFormatterFactory(mask);
+            txt.setFormatterFactory(df);
+
+            PropertyChangeListener propertyChangeListener = evt -> callback.valueChanged(txt.getValue());
+            txt.addPropertyChangeListener("value", propertyChangeListener);
+            putPropertyChange(txt, propertyChangeListener);
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public static void useDateInput(JFormattedTextField txt, boolean between, String separator, ValueCallback callback) {
+        try {
+            removePropertyChange(txt);
+            txt.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
+            txt.putClientProperty(FlatClientProperties.TEXT_FIELD_CLEAR_CALLBACK, (Consumer<Object>) o -> {
+                txt.setValue(null);
+                callback.valueChanged(null);
+            });
+            DateInputFormat mask = new DateInputFormat(between ? "##/##/####" + separator + "##/##/####" : "##/##/####", between, separator);
             mask.setCommitsOnValidEdit(true);
             mask.setPlaceholderCharacter('-');
             DefaultFormatterFactory df = new DefaultFormatterFactory(mask);
@@ -92,6 +134,36 @@ public class InputUtils extends MaskFormatter {
             DateFormat df = new SimpleDateFormat(use24h ? "HH:mm" : "hh:mm aa");
             df.setLenient(false);
             df.parse(value);
+        }
+    }
+
+    private static class DateInputFormat extends MaskFormatter {
+
+        private final boolean between;
+        private final String separator;
+
+        public DateInputFormat(String mark, boolean between, String separator) throws ParseException {
+            super(mark);
+            this.between = between;
+            this.separator = separator;
+        }
+
+        @Override
+        public Object stringToValue(String value) throws ParseException {
+            checkTime(value);
+            return super.stringToValue(value);
+        }
+
+        public void checkTime(String value) throws ParseException {
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            df.setLenient(false);
+            if (between) {
+                String[] values = value.split(separator);
+                df.parse(values[0]);
+                df.parse(values[1]);
+            } else {
+                df.parse(value);
+            }
         }
     }
 

@@ -6,7 +6,7 @@
 
     <groupId>raven.datetime</groupId>
     <artifactId>swing-datetime-picker</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -18,12 +18,12 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>3.2.5</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf-extras</artifactId>
-            <version>3.2.5</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>com.miglayout</groupId>
