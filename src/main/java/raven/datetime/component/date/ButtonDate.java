@@ -34,6 +34,7 @@ public class ButtonDate extends JButton {
         setContentAreaFilled(false);
         addActionListener(e -> {
             dateSelection.selectDate(date);
+            hover = false;
             PanelDate panelDate = (PanelDate) getParent();
             panelDate.checkSelection();
             getParent().repaint();

@@ -8,7 +8,7 @@ public class DateSelection {
     private SingleDate toDate;
     private SingleDate hoverDate;
 
-    private final DatePicker datePicker;
+    protected final DatePicker datePicker;
 
     protected DateSelection(DatePicker datePicker) {
         this.datePicker = datePicker;
@@ -19,6 +19,9 @@ public class DateSelection {
     }
 
     public void setDate(SingleDate date) {
+        if (!checkSelection(date)) {
+            return;
+        }
         this.date = date;
         datePicker.runEventDateChanged();
     }
@@ -28,6 +31,9 @@ public class DateSelection {
     }
 
     public void setToDate(SingleDate toDate) {
+        if (!checkSelection(toDate)) {
+            return;
+        }
         this.toDate = toDate;
     }
 
@@ -40,14 +46,23 @@ public class DateSelection {
     }
 
     protected void setSelectDate(SingleDate from, SingleDate to) {
+        if (!checkSelection(from) || !checkSelection(to)) {
+            return;
+        }
         date = from;
         toDate = to;
         datePicker.runEventDateChanged();
     }
 
     protected void selectDate(SingleDate date) {
+        if (!checkSelection(date)) {
+            return;
+        }
         if (dateSelectionMode == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
             setDate(date);
+            if (datePicker.isCloseAfterSelected()) {
+                datePicker.closePopup();
+            }
         } else {
             if (getDate() == null || toDate != null) {
                 this.date = date;
@@ -58,6 +73,9 @@ public class DateSelection {
             } else {
                 toDate = date;
                 datePicker.runEventDateChanged();
+                if (datePicker.isCloseAfterSelected()) {
+                    datePicker.closePopup();
+                }
             }
         }
     }
@@ -68,5 +86,12 @@ public class DateSelection {
 
     public DateSelectionAble getDateSelectionAble() {
         return dateSelectionAble;
+    }
+
+    private boolean checkSelection(SingleDate date) {
+        if (dateSelectionAble != null) {
+            return date == null || dateSelectionAble.isDateSelectedAble(date.toLocalDate());
+        }
+        return true;
     }
 }

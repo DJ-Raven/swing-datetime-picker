@@ -50,7 +50,8 @@ public class TestDate extends JFrame {
                 }
             }
         });
-        datePicker.setDateSelectionAble((date) -> !date.isAfter(LocalDate.now()));
+
+        // datePicker.setDateSelectionAble((date) -> !date.isAfter(LocalDate.now()));
         datePicker.now();
         JFormattedTextField editor = new JFormattedTextField();
         datePicker.setEditor(editor);
@@ -96,8 +97,12 @@ public class TestDate extends JFrame {
         JCheckBox chDateOpt = new JCheckBox("Use Panel Option");
         chDateOpt.addActionListener(e -> datePicker.setUsePanelOption(chDateOpt.isSelected()));
 
+        JCheckBox chClose = new JCheckBox("Close after selected");
+        chClose.addActionListener(e -> datePicker.setCloseAfterSelected(chClose.isSelected()));
+
         panel.add(chBtw);
         panel.add(chDateOpt);
+        panel.add(chClose);
         add(panel);
     }
 

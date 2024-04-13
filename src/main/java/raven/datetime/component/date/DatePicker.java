@@ -28,6 +28,7 @@ public class DatePicker extends JPanel {
     private JPopupMenu popupMenu;
     private String separator = " to ";
     private boolean usePanelOption;
+    private boolean closeAfterSelected;
     private int month = 10;
     private int year = 2023;
 
@@ -276,6 +277,13 @@ public class DatePicker extends JPanel {
         popupMenu.show(editor, 0, editor.getHeight());
     }
 
+    public void closePopup() {
+        if (popupMenu != null) {
+            popupMenu.setVisible(false);
+            repaint();
+        }
+    }
+
     public void setSeparator(String separator) {
         if (separator == null) {
             throw new IllegalArgumentException("separator can't be null");
@@ -312,6 +320,14 @@ public class DatePicker extends JPanel {
                 }
             }
         }
+    }
+
+    public boolean isCloseAfterSelected() {
+        return closeAfterSelected;
+    }
+
+    public void setCloseAfterSelected(boolean closeAfterSelected) {
+        this.closeAfterSelected = closeAfterSelected;
     }
 
     public String getSeparator() {
