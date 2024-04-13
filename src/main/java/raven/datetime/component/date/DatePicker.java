@@ -94,7 +94,7 @@ public class DatePicker extends JPanel {
         };
     }
 
-    public PanelYear.EventYearChanged createEventYearChanged() {
+    private PanelYear.EventYearChanged createEventYearChanged() {
         return new PanelYear.EventYearChanged() {
             @Override
             public void yearSelected(int year) {

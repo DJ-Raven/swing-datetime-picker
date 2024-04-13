@@ -73,6 +73,13 @@ public class TimePicker extends JPanel {
         popupMenu.show(editor, 0, editor.getHeight());
     }
 
+    public void closePopup() {
+        if (popupMenu != null) {
+            popupMenu.setVisible(false);
+            repaint();
+        }
+    }
+
     public TimePicker() {
         init();
     }
