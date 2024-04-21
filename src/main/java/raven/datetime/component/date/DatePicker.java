@@ -226,6 +226,15 @@ public class DatePicker extends JPanel {
         }
     }
 
+    public void selectCurrentMonth() {
+        LocalDate date = LocalDate.now();
+        if (dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED) {
+            setSelectedDateRange(date.withDayOfMonth(1), date);
+        } else {
+            setSelectedDate(date);
+        }
+    }
+
     public void setSelectedDate(LocalDate date) {
         dateSelection.setDate(new SingleDate(date));
         if (dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED) {
