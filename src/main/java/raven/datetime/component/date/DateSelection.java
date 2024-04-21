@@ -72,11 +72,19 @@ public class DateSelection {
                 }
             } else {
                 this.toDate = date;
+                invertIfNecessaryToDate(date);
                 datePicker.runEventDateChanged();
                 if (datePicker.isCloseAfterSelected()) {
                     datePicker.closePopup();
                 }
             }
+        }
+    }
+
+    private void invertIfNecessaryToDate(SingleDate date) {
+        if (this.date.toLocalDate().isAfter(date.toLocalDate())) {
+            this.toDate = this.date;
+            this.date = date;
         }
     }
 
