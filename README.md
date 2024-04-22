@@ -10,15 +10,15 @@ This project provides a datetime picker component that can be easily integrated 
 <img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/datepicker-light.png" alt="datepicker light" width="300"/>
 ## Installation
 This project library do not available in maven central. so you can install with the jar library
-- Copy jar library file to the root project. exp : `library/swing-datetime-picker-1.1.0.jar`
+- Copy jar library file to the root project. exp : `library/swing-datetime-picker-1.1.1.jar`
 - Add this code to `pom.xml`
 ``` xml
 <dependency>
     <groupId>raven.datetime</groupId>
     <artifactId>swing-datetime-picker</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <scope>system</scope>
-    <systemPath>${basedir}/library/swing-datetime-picker-1.1.0.jar</systemPath>
+    <systemPath>${basedir}/library/swing-datetime-picker-1.1.1.jar</systemPath>
 </dependency>
 ```
 - Other library are use with this library
