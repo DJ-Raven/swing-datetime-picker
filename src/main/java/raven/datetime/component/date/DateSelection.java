@@ -64,19 +64,27 @@ public class DateSelection {
                 datePicker.closePopup();
             }
         } else {
-            if (getDate() == null || toDate != null) {
+            if (getDate() == null || getToDate() != null) {
                 this.date = date;
                 hoverDate = date;
-                if (toDate != null) {
-                    toDate = null;
+                if (getToDate() != null) {
+                    this.toDate = null;
                 }
             } else {
-                toDate = date;
+                this.toDate = date;
+                invertIfNecessaryToDate(date);
                 datePicker.runEventDateChanged();
                 if (datePicker.isCloseAfterSelected()) {
                     datePicker.closePopup();
                 }
             }
+        }
+    }
+
+    private void invertIfNecessaryToDate(SingleDate date) {
+        if (this.date.toLocalDate().isAfter(date.toLocalDate())) {
+            this.toDate = this.date;
+            this.date = date;
         }
     }
 
