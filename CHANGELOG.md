@@ -6,7 +6,8 @@
 
 #### Fixed bugs
 
-- Invert between date selected (when `date` is after `toDate`) (PR #2) 
+- Invert between date selected (when `date` is after `toDate`) (PR #2)
+- Fixed event time changed not work while `am` or `pm` changed in editor
 
 ## 1.1.0
 

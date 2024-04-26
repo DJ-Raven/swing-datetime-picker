@@ -42,6 +42,7 @@ public class Header extends JPanel {
         } else {
             buttonPm.setSelected(true);
         }
+        headerChanged.amPmChanged(isAm);
     }
 
     public void clearTime() {
