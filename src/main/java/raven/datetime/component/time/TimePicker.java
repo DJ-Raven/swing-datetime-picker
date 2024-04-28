@@ -22,6 +22,7 @@ public class TimePicker extends JPanel {
     private JPopupMenu popupMenu;
     private MigLayout layout;
     private int orientation = SwingConstants.VERTICAL;
+    private LookAndFeel oldThemes;
 
     public int getOrientation() {
         return orientation;
@@ -69,7 +70,10 @@ public class TimePicker extends JPanel {
                     "borderInsets:1,1,1,1");
             popupMenu.add(this);
         }
-        SwingUtilities.updateComponentTreeUI(popupMenu);
+        if (UIManager.getLookAndFeel() != oldThemes) {
+            SwingUtilities.updateComponentTreeUI(popupMenu);
+            oldThemes = UIManager.getLookAndFeel();
+        }
         popupMenu.show(editor, 0, editor.getHeight());
     }
 

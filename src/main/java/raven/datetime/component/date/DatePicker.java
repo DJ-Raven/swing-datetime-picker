@@ -31,6 +31,7 @@ public class DatePicker extends JPanel {
     private boolean closeAfterSelected;
     private int month = 10;
     private int year = 2023;
+    private LookAndFeel oldThemes;
 
     /**
      * 0 as Date select
@@ -282,7 +283,10 @@ public class DatePicker extends JPanel {
                     "borderInsets:1,1,1,1");
             popupMenu.add(this);
         }
-        SwingUtilities.updateComponentTreeUI(popupMenu);
+        if (UIManager.getLookAndFeel() != oldThemes) {
+            SwingUtilities.updateComponentTreeUI(popupMenu);
+            oldThemes = UIManager.getLookAndFeel();
+        }
         popupMenu.show(editor, 0, editor.getHeight());
     }
 
