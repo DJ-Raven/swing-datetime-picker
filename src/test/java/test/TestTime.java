@@ -49,6 +49,7 @@ public class TestTime extends JFrame {
         timePicker.setOrientation(SwingConstants.HORIZONTAL);
         timePicker.now();
         createThemeButton();
+        timePicker.setColor(new Color(20, 161, 108));
     }
 
     private void createThemeButton() {

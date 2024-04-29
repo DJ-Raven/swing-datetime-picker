@@ -284,6 +284,7 @@ public class DatePicker extends JPanel {
             popupMenu.add(this);
         }
         if (UIManager.getLookAndFeel() != oldThemes) {
+            // Component in popup not update UI when change themes, so need to update when popup show
             SwingUtilities.updateComponentTreeUI(popupMenu);
             oldThemes = UIManager.getLookAndFeel();
         }

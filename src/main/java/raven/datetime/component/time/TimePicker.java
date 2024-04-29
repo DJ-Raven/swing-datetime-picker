@@ -6,6 +6,7 @@ import net.miginfocom.swing.MigLayout;
 import raven.datetime.util.InputUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class TimePicker extends JPanel {
     private JPopupMenu popupMenu;
     private MigLayout layout;
     private int orientation = SwingConstants.VERTICAL;
+    private Color color;
     private LookAndFeel oldThemes;
 
     public int getOrientation() {
@@ -71,6 +73,7 @@ public class TimePicker extends JPanel {
             popupMenu.add(this);
         }
         if (UIManager.getLookAndFeel() != oldThemes) {
+            // Component in popup not update UI when change themes, so need to update when popup show
             SwingUtilities.updateComponentTreeUI(popupMenu);
             oldThemes = UIManager.getLookAndFeel();
         }
@@ -82,6 +85,16 @@ public class TimePicker extends JPanel {
             popupMenu.setVisible(false);
             repaint();
         }
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+        header.setColor(color);
+        panelClock.setColor(color);
     }
 
     public TimePicker() {

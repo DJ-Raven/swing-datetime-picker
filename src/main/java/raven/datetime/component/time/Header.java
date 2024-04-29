@@ -4,15 +4,18 @@ import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
 
-public class Header extends JPanel {
+public class Header extends JComponent {
 
     private MigLayout layout;
     private final EventHeaderChanged headerChanged;
     private final DecimalFormat format = new DecimalFormat("00");
-
     private boolean isAm;
+
+    private Color color;
 
     public void setOrientation(int orientation) {
         String c = orientation == SwingConstants.VERTICAL ? "pos b1.x2+rel 0.5al n n" : "pos 0.5al b1.y2+rel n n";
@@ -74,8 +77,7 @@ public class Header extends JPanel {
     }
 
     private void init() {
-        putClientProperty(FlatClientProperties.STYLE, "" +
-                "background:$Component.accentColor");
+        setOpaque(true);
         layout = new MigLayout("fill,insets 10", "center");
         setLayout(layout);
         add(createToolBar(), "id b1");
@@ -151,6 +153,40 @@ public class Header extends JPanel {
         amPmToolBar.add(buttonAm);
         amPmToolBar.add(buttonPm);
         return amPmToolBar;
+    }
+
+    /**
+     * Override this method to paint the background color
+     * Do not use the component background because the background reset while change themes
+     */
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g.create();
+        Color color = this.color;
+        if (color == null) {
+            color = UIManager.getColor("Component.accentColor");
+        }
+        g2.setColor(color);
+        g2.fill(new Rectangle2D.Double(0, 0, getWidth(), getHeight()));
+        g2.dispose();
+        super.paintComponent(g);
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+
+    /**
+     * Override this method to return the background color to the JToolBar
+     * When JToolBar use null background, so it will paint the parent background.
+     */
+    @Override
+    public Color getBackground() {
+        if (color != null) {
+            return color;
+        }
+        return UIManager.getColor("Component.accentColor");
     }
 
     private JToggleButton buttonHour;

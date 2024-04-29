@@ -24,6 +24,7 @@ public class PanelClock extends JPanel {
     private AnimationChange animationChange;
     private final int margin12h = 20;
     private final int margin24h = 50;
+    private Color color;
 
     //  public method
 
@@ -258,6 +259,9 @@ public class PanelClock extends JPanel {
     }
 
     protected Color getSelectedColor() {
+        if (color != null) {
+            return color;
+        }
         return UIManager.getColor("Component.accentColor");
     }
 
@@ -390,6 +394,10 @@ public class PanelClock extends JPanel {
         float angleTarget = getAngleOf(hourSelectionView ? hour : minute, hourSelectionView);
         float marginTarget = getTargetMargin();
         animationChange.start(angleTarget, marginTarget);
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     protected interface EventClockChanged {

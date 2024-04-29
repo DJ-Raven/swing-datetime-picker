@@ -2,7 +2,8 @@
 
 #### New features and improvements
 
-- Add new method selectCurrentMonth (PR #2) 
+- Add new method selectCurrentMonth (PR #2)
+- Add new method `timepicker` setColor (issue #3)
 
 #### Fixed bugs
 
