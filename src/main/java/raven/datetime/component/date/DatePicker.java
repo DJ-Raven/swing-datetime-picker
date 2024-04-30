@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import net.miginfocom.swing.MigLayout;
 import raven.datetime.util.InputUtils;
+import raven.datetime.util.Utils;
 import raven.swing.slider.PanelSlider;
 import raven.swing.slider.SimpleTransition;
 
@@ -288,7 +289,8 @@ public class DatePicker extends JPanel {
             SwingUtilities.updateComponentTreeUI(popupMenu);
             oldThemes = UIManager.getLookAndFeel();
         }
-        popupMenu.show(editor, 0, editor.getHeight());
+        Point point = Utils.adjustPopupLocation(popupMenu, editor);
+        popupMenu.show(editor, point.x, point.y);
     }
 
     public void closePopup() {
