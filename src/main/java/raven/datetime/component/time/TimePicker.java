@@ -12,11 +12,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class TimePicker extends JPanel {
 
-    private final DateTimeFormatter format12h = DateTimeFormatter.ofPattern("hh:mm a");
-    private final DateTimeFormatter format24h = DateTimeFormatter.ofPattern("HH:mm");
+    private final DateTimeFormatter format12h = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
+    private final DateTimeFormatter format24h = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
     private final List<TimeSelectionListener> events = new ArrayList<>();
     private TimeSelectionListener timeSelectionListener;
     private InputUtils.ValueCallback valueCallback;
