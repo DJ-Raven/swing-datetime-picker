@@ -508,7 +508,7 @@ public class DatePicker extends JPanel {
                             LocalDate dates[] = getSelectedDateRange();
                             value = format.format(dates[0]) + separator + format.format(dates[1]);
                         }
-                        if (!editor.getText().toUpperCase().equals(value)) {
+                        if (!editor.getText().toLowerCase().equals(value.toLowerCase())) {
                             editor.setValue(value);
                         }
                     } else {

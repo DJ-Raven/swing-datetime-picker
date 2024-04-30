@@ -244,7 +244,7 @@ public class TimePicker extends JPanel {
                         } else {
                             value = format12h.format(getSelectedTime());
                         }
-                        if (!editor.getText().toUpperCase().equals(value)) {
+                        if (!editor.getText().toLowerCase().equals(value.toLowerCase())) {
                             editor.setValue(value);
                         }
                     } else {
