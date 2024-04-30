@@ -9,6 +9,7 @@
 
 - Invert between date selected (when `date` is after `toDate`) (PR #2)
 - Fixed event time changed not work while `am` or `pm` changed in editor
+- Fixed time format by use `Locale.ENGLISH` (issue #4)
 
 ## 1.1.0
 
