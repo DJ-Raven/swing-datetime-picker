@@ -26,6 +26,7 @@ public class DatePicker extends JPanel {
     private PanelDateOption panelDateOption;
     private InputUtils.ValueCallback valueCallback;
     private JFormattedTextField editor;
+    private Icon editorIcon;
     private JPopupMenu popupMenu;
     private String separator = " to ";
     private boolean usePanelOption;
@@ -33,6 +34,7 @@ public class DatePicker extends JPanel {
     private int month = 10;
     private int year = 2023;
     private LookAndFeel oldThemes = UIManager.getLookAndFeel();
+    private JButton editorButton;
 
     /**
      * 0 as Date select
@@ -265,6 +267,17 @@ public class DatePicker extends JPanel {
         this.editor = editor;
     }
 
+    public Icon getEditorIcon() {
+        return editorIcon;
+    }
+
+    public void setEditorIcon(Icon editorIcon) {
+        this.editorIcon = editorIcon;
+        if (editorButton != null) {
+            editorButton.setIcon(editorIcon);
+        }
+    }
+
     public DateSelectionAble getDateSelectionAble() {
         return dateSelection.getDateSelectionAble();
     }
@@ -450,9 +463,9 @@ public class DatePicker extends JPanel {
 
     private void installEditor(JFormattedTextField editor) {
         JToolBar toolBar = new JToolBar();
-        JButton button = new JButton(new FlatSVGIcon("raven/datetime/icon/calendar.svg", 0.8f));
-        toolBar.add(button);
-        button.addActionListener(e -> {
+        editorButton = new JButton(editorIcon != null ? editorIcon : new FlatSVGIcon("raven/datetime/icon/calendar.svg", 0.8f));
+        toolBar.add(editorButton);
+        editorButton.addActionListener(e -> {
             showPopup();
         });
         editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
@@ -464,6 +477,7 @@ public class DatePicker extends JPanel {
         if (editor != null) {
             editor.setFormatterFactory(null);
             editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, null);
+            editorButton = null;
             if (dateSelectionListener != null) {
                 removeDateSelectionListener(dateSelectionListener);
             }

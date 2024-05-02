@@ -22,11 +22,13 @@ public class TimePicker extends JPanel {
     private TimeSelectionListener timeSelectionListener;
     private InputUtils.ValueCallback valueCallback;
     private JFormattedTextField editor;
+    private Icon editorIcon;
     private JPopupMenu popupMenu;
     private MigLayout layout;
     private int orientation = SwingConstants.VERTICAL;
     private Color color;
     private LookAndFeel oldThemes = UIManager.getLookAndFeel();
+    private JButton editorButton;
 
     public int getOrientation() {
         return orientation;
@@ -98,6 +100,17 @@ public class TimePicker extends JPanel {
         this.color = color;
         header.setColor(color);
         panelClock.setColor(color);
+    }
+
+    public Icon getEditorIcon() {
+        return editorIcon;
+    }
+
+    public void setEditorIcon(Icon editorIcon) {
+        this.editorIcon = editorIcon;
+        if (editorButton != null) {
+            editorButton.setIcon(editorIcon);
+        }
     }
 
     public TimePicker() {
@@ -193,9 +206,9 @@ public class TimePicker extends JPanel {
 
     private void installEditor(JFormattedTextField editor) {
         JToolBar toolBar = new JToolBar();
-        JButton button = new JButton(new FlatSVGIcon("raven/datetime/icon/clock.svg", 0.8f));
-        toolBar.add(button);
-        button.addActionListener(e -> {
+        editorButton = new JButton(editorIcon != null ? editorIcon : new FlatSVGIcon("raven/datetime/icon/clock.svg", 0.8f));
+        toolBar.add(editorButton);
+        editorButton.addActionListener(e -> {
             showPopup();
         });
         editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
@@ -207,6 +220,7 @@ public class TimePicker extends JPanel {
         if (editor != null) {
             editor.setFormatterFactory(null);
             editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, null);
+            editorButton = null;
             if (timeSelectionListener != null) {
                 removeTimeSelectionListener(timeSelectionListener);
             }
