@@ -2,16 +2,22 @@
 
 #### New features and improvements
 
-- Add new method selectCurrentMonth (PR #2)
-- Add new method `timepicker` setColor (issue #3)
+- DatePicker:
+  - Add new method `selectCurrentMonth()` (PR #2)
+- TimePicker:
+  - Add new method `setColor(Color color)` (issue #3)
+
 - Popup menu will show inside the windows frame
+- Add new method `setEditorIcon(Icon icon)`
 
 #### Fixed bugs
 
-- Invert between date selected (when `date` is after `toDate`) (PR #2)
-- Fixed event time changed not work while `am` or `pm` changed in editor
-- Fixed time format by use `Locale.ENGLISH` (issue #4)
-- Fixed `datepicker` on `between date` resend value when editor value changed
+- DatePicker:
+  - Invert between date selected (when `date` is after `toDate`) (PR #2)
+  - Fixed `between date` resend value when editor value changed
+- TimePicker: 
+  - Fixed event time changed not work while `am` or `pm` changed in editor
+  - Fixed time format by use `Locale.ENGLISH` (issue #4)
 
 ## 1.1.0
 
