@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 
 public class InputUtils extends MaskFormatter {
 
-    private static Map<Component, PropertyChangeListener> inputMap;
+    private static Map<Component, OldEditorProperty> inputMap;
 
     public static LocalTime stringToTime(boolean use24h, String value) {
         try {
@@ -56,21 +56,13 @@ public class InputUtils extends MaskFormatter {
 
     public static void useTimeInput(JFormattedTextField txt, boolean use24h, ValueCallback callback) {
         try {
-            removePropertyChange(txt);
-            txt.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
-            txt.putClientProperty(FlatClientProperties.TEXT_FIELD_CLEAR_CALLBACK, (Consumer<Object>) o -> {
-                txt.setValue(null);
-                callback.valueChanged(null);
-            });
             TimeInputFormat mask = new TimeInputFormat(use24h ? "##:##" : "##:## ??", use24h);
-            mask.setCommitsOnValidEdit(true);
-            mask.setPlaceholderCharacter('-');
-            DefaultFormatterFactory df = new DefaultFormatterFactory(mask);
-            txt.setFormatterFactory(df);
+            OldEditorProperty oldEditorProperty = initEditor(txt, mask, callback);
 
             PropertyChangeListener propertyChangeListener = evt -> callback.valueChanged(txt.getValue());
             txt.addPropertyChangeListener("value", propertyChangeListener);
-            putPropertyChange(txt, propertyChangeListener);
+            oldEditorProperty.propertyChangeListener = propertyChangeListener;
+            putPropertyChange(txt, oldEditorProperty);
         } catch (ParseException e) {
             System.err.println(e.getMessage());
         }
@@ -78,40 +70,72 @@ public class InputUtils extends MaskFormatter {
 
     public static void useDateInput(JFormattedTextField txt, boolean between, String separator, ValueCallback callback) {
         try {
-            removePropertyChange(txt);
-            txt.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
-            txt.putClientProperty(FlatClientProperties.TEXT_FIELD_CLEAR_CALLBACK, (Consumer<Object>) o -> {
-                txt.setValue(null);
-                callback.valueChanged(null);
-            });
             DateInputFormat mask = new DateInputFormat(between ? "##/##/####" + separator + "##/##/####" : "##/##/####", between, separator);
-            mask.setCommitsOnValidEdit(true);
-            mask.setPlaceholderCharacter('-');
-            DefaultFormatterFactory df = new DefaultFormatterFactory(mask);
-            txt.setFormatterFactory(df);
+            OldEditorProperty oldEditorProperty = initEditor(txt, mask, callback);
 
             PropertyChangeListener propertyChangeListener = evt -> callback.valueChanged(txt.getValue());
             txt.addPropertyChangeListener("value", propertyChangeListener);
-            putPropertyChange(txt, propertyChangeListener);
+            oldEditorProperty.propertyChangeListener = propertyChangeListener;
+            putPropertyChange(txt, oldEditorProperty);
         } catch (ParseException e) {
             System.err.println(e.getMessage());
         }
     }
 
-    private static void putPropertyChange(JFormattedTextField txt, PropertyChangeListener events) {
+    public static void changeTimeFormatted(JFormattedTextField txt, boolean use24h) {
+        try {
+            TimeInputFormat mask = new TimeInputFormat(use24h ? "##:##" : "##:## ??", use24h);
+            mask.setCommitsOnValidEdit(true);
+            mask.setPlaceholderCharacter('-');
+            DefaultFormatterFactory df = new DefaultFormatterFactory(mask);
+            txt.setFormatterFactory(df);
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public static void changeDateFormatted(JFormattedTextField txt, boolean between, String separator) {
+        try {
+            DateInputFormat mask = new DateInputFormat(between ? "##/##/####" + separator + "##/##/####" : "##/##/####", between, separator);
+            mask.setCommitsOnValidEdit(true);
+            mask.setPlaceholderCharacter('-');
+            DefaultFormatterFactory df = new DefaultFormatterFactory(mask);
+            txt.setFormatterFactory(df);
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private static OldEditorProperty initEditor(JFormattedTextField txt, MaskFormatter format, ValueCallback callback) {
+        removePropertyChange(txt);
+        OldEditorProperty oldEditorProperty = OldEditorProperty.getFromOldEditor(txt);
+        format.setCommitsOnValidEdit(true);
+        format.setPlaceholderCharacter('-');
+        DefaultFormatterFactory df = new DefaultFormatterFactory(format);
+        txt.setFormatterFactory(df);
+
+        txt.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
+        txt.putClientProperty(FlatClientProperties.TEXT_FIELD_CLEAR_CALLBACK, (Consumer<Object>) o -> {
+            txt.setValue(null);
+            callback.valueChanged(null);
+        });
+        return oldEditorProperty;
+    }
+
+    private static void putPropertyChange(JFormattedTextField txt, OldEditorProperty oldEditorProperty) {
         if (inputMap == null) {
             inputMap = new HashMap<>();
         }
-        inputMap.put(txt, events);
+        inputMap.put(txt, oldEditorProperty);
     }
 
-    private static void removePropertyChange(JFormattedTextField txt) {
+    public static void removePropertyChange(JFormattedTextField txt) {
         if (inputMap == null) {
             return;
         }
-        PropertyChangeListener event = inputMap.get(txt);
-        if (event != null) {
-            txt.removePropertyChangeListener("value", event);
+        OldEditorProperty oldEditorProperty = inputMap.get(txt);
+        if (oldEditorProperty != null) {
+            oldEditorProperty.removeFromEditor(txt);
         }
     }
 
@@ -169,5 +193,34 @@ public class InputUtils extends MaskFormatter {
 
     public interface ValueCallback {
         void valueChanged(Object value);
+    }
+
+    private static class OldEditorProperty {
+
+        protected PropertyChangeListener propertyChangeListener;
+        protected Component oldTrailingComponent;
+        private boolean isShowClearButton;
+        private Consumer clearButtonCallback;
+        protected Object value;
+        protected JFormattedTextField.AbstractFormatterFactory formatter;
+
+        protected static OldEditorProperty getFromOldEditor(JFormattedTextField editor) {
+            OldEditorProperty oldEditorProperty = new OldEditorProperty();
+            oldEditorProperty.oldTrailingComponent = FlatClientProperties.clientProperty(editor, FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, null, Component.class);
+            oldEditorProperty.isShowClearButton = FlatClientProperties.clientPropertyBoolean(editor, FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, false);
+            oldEditorProperty.clearButtonCallback = FlatClientProperties.clientProperty(editor, FlatClientProperties.TEXT_FIELD_CLEAR_CALLBACK, null, Consumer.class);
+            oldEditorProperty.value = editor.getValue();
+            oldEditorProperty.formatter = editor.getFormatterFactory();
+            return oldEditorProperty;
+        }
+
+        protected void removeFromEditor(JFormattedTextField editor) {
+            editor.removePropertyChangeListener("value", propertyChangeListener);
+            editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, oldTrailingComponent);
+            editor.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, isShowClearButton);
+            editor.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, clearButtonCallback);
+            editor.setValue(value);
+            editor.setFormatterFactory(formatter);
+        }
     }
 }

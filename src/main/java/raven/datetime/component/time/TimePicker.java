@@ -45,13 +45,15 @@ public class TimePicker extends JPanel {
     }
 
     public void setEditor(JFormattedTextField editor) {
-        if (this.editor != null) {
-            uninstallEditor(this.editor);
+        if (editor != this.editor) {
+            if (this.editor != null) {
+                uninstallEditor(this.editor);
+            }
+            if (editor != null) {
+                installEditor(editor);
+            }
+            this.editor = editor;
         }
-        if (editor != null) {
-            installEditor(editor);
-        }
-        this.editor = editor;
     }
 
     public boolean is24HourView() {
@@ -63,7 +65,7 @@ public class TimePicker extends JPanel {
             panelClock.setUse24hour(hour24, header.isAm());
             header.setUse24hour(hour24);
             if (editor != null) {
-                InputUtils.useTimeInput(editor, hour24, getValueCallback());
+                InputUtils.changeTimeFormatted(editor, hour24);
                 runEventTimeChanged();
             }
         }
@@ -211,16 +213,15 @@ public class TimePicker extends JPanel {
         editorButton.addActionListener(e -> {
             showPopup();
         });
+        InputUtils.useTimeInput(editor, panelClock.isUse24hour(), getValueCallback());
         editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
         addTimeSelectionListener(getTimeSelectionListener());
-        InputUtils.useTimeInput(editor, panelClock.isUse24hour(), getValueCallback());
     }
 
     private void uninstallEditor(JFormattedTextField editor) {
         if (editor != null) {
-            editor.setFormatterFactory(null);
-            editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, null);
             editorButton = null;
+            InputUtils.removePropertyChange(editor);
             if (timeSelectionListener != null) {
                 removeTimeSelectionListener(timeSelectionListener);
             }
@@ -230,6 +231,7 @@ public class TimePicker extends JPanel {
     private InputUtils.ValueCallback getValueCallback() {
         if (valueCallback == null) {
             valueCallback = value -> {
+                System.out.println("tes " + value);
                 if (value == null && isTimeSelected()) {
                     clearSelectedTime();
                 } else {

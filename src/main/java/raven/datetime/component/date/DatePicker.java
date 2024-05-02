@@ -204,7 +204,7 @@ public class DatePicker extends JPanel {
         if (this.dateSelection.dateSelectionMode != dateSelectionMode) {
             this.dateSelection.dateSelectionMode = dateSelectionMode;
             if (editor != null) {
-                InputUtils.useDateInput(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
+                InputUtils.changeDateFormatted(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator);
                 clearSelectedDate();
             }
             repaint();
@@ -258,13 +258,15 @@ public class DatePicker extends JPanel {
     }
 
     public void setEditor(JFormattedTextField editor) {
-        if (this.editor != null) {
-            uninstallEditor(this.editor);
+        if (editor != this.editor) {
+            if (this.editor != null) {
+                uninstallEditor(this.editor);
+            }
+            if (editor != null) {
+                installEditor(editor);
+            }
+            this.editor = editor;
         }
-        if (editor != null) {
-            installEditor(editor);
-        }
-        this.editor = editor;
     }
 
     public Icon getEditorIcon() {
@@ -320,7 +322,7 @@ public class DatePicker extends JPanel {
         if (!this.separator.equals(separator)) {
             this.separator = separator;
             if (editor != null) {
-                InputUtils.useDateInput(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
+                InputUtils.changeDateFormatted(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator);
                 runEventDateChanged();
             }
         }
@@ -468,16 +470,15 @@ public class DatePicker extends JPanel {
         editorButton.addActionListener(e -> {
             showPopup();
         });
+        InputUtils.useDateInput(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
         editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
         addDateSelectionListener(getDateSelectionListener());
-        InputUtils.useDateInput(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
     }
 
     private void uninstallEditor(JFormattedTextField editor) {
         if (editor != null) {
-            editor.setFormatterFactory(null);
-            editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, null);
             editorButton = null;
+            InputUtils.removePropertyChange(editor);
             if (dateSelectionListener != null) {
                 removeDateSelectionListener(dateSelectionListener);
             }
