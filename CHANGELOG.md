@@ -6,7 +6,6 @@
   - Add new method `selectCurrentMonth()` (PR #2)
 - TimePicker:
   - Add new method `setColor(Color color)` (issue #3)
-
 - Popup menu will show inside the windows frame
 - Add new method `setEditorIcon(Icon icon)`
 
