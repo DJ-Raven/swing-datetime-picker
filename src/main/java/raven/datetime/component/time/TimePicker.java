@@ -26,7 +26,7 @@ public class TimePicker extends JPanel {
     private MigLayout layout;
     private int orientation = SwingConstants.VERTICAL;
     private Color color;
-    private LookAndFeel oldThemes;
+    private LookAndFeel oldThemes = UIManager.getLookAndFeel();
 
     public int getOrientation() {
         return orientation;

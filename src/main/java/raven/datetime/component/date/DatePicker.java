@@ -32,7 +32,7 @@ public class DatePicker extends JPanel {
     private boolean closeAfterSelected;
     private int month = 10;
     private int year = 2023;
-    private LookAndFeel oldThemes;
+    private LookAndFeel oldThemes = UIManager.getLookAndFeel();
 
     /**
      * 0 as Date select
