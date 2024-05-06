@@ -28,7 +28,9 @@ public class TestTime extends JFrame {
             public void timeSelected(TimeEvent timeEvent) {
                 if (timePicker.isTimeSelected()) {
                     DateTimeFormatter df = DateTimeFormatter.ofPattern("hh:mm a");
-                    System.out.println(timePicker.getSelectedTime().format(df));
+                    System.out.println("event selected : " + timePicker.getSelectedTime().format(df));
+                } else {
+                    System.out.println("event selected : null");
                 }
             }
         });
@@ -47,9 +49,10 @@ public class TestTime extends JFrame {
         add(editor, "width 200");
         add(change);
         timePicker.setOrientation(SwingConstants.HORIZONTAL);
+
+        // createThemeButton();
+        //timePicker.setColor(new Color(20, 161, 108));
         timePicker.now();
-        createThemeButton();
-        timePicker.setColor(new Color(20, 161, 108));
     }
 
     private void createThemeButton() {

@@ -29,6 +29,7 @@ public class TimePicker extends JPanel {
     private Color color;
     private LookAndFeel oldThemes = UIManager.getLookAndFeel();
     private JButton editorButton;
+    private LocalTime oldSelectedTime;
 
     public int getOrientation() {
         return orientation;
@@ -141,9 +142,9 @@ public class TimePicker extends JPanel {
     public void setSelectedTime(LocalTime time) {
         int hour = time.getHour();
         int minute = time.getMinute();
+        header.setAm(hour < 12);
         panelClock.setMinute(minute);
         panelClock.setHourAndFix(hour);
-        header.setAm(hour < 12);
     }
 
     public void clearSelectedTime() {
@@ -231,7 +232,6 @@ public class TimePicker extends JPanel {
     private InputUtils.ValueCallback getValueCallback() {
         if (valueCallback == null) {
             valueCallback = value -> {
-                System.out.println("tes " + value);
                 if (value == null && isTimeSelected()) {
                     clearSelectedTime();
                 } else {
@@ -273,7 +273,19 @@ public class TimePicker extends JPanel {
     }
 
     private void runEventTimeChanged() {
-        SwingUtilities.invokeLater(() -> {
+        if (events == null || events.isEmpty()) {
+            return;
+        }
+        LocalTime time = getSelectedTime();
+        if ((time == null && oldSelectedTime == null)) {
+            return;
+        } else if (time != null && oldSelectedTime != null) {
+            if (time.compareTo(oldSelectedTime) == 0) {
+                return;
+            }
+        }
+        oldSelectedTime = time;
+        EventQueue.invokeLater(() -> {
             for (TimeSelectionListener event : events) {
                 event.timeSelected(new TimeEvent(this));
             }
