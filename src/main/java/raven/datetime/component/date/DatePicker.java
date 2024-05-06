@@ -35,6 +35,8 @@ public class DatePicker extends JPanel {
     private int year = 2023;
     private LookAndFeel oldThemes = UIManager.getLookAndFeel();
     private JButton editorButton;
+    private LocalDate oldSelectedDate;
+    private LocalDate oldSelectedToDate;
 
     /**
      * 0 as Date select
@@ -183,7 +185,32 @@ public class DatePicker extends JPanel {
     }
 
     protected void runEventDateChanged() {
-        SwingUtilities.invokeLater(() -> {
+        if (events == null || events.isEmpty()) {
+            return;
+        }
+        LocalDate date;
+        LocalDate toDate = null;
+        if (dateSelection.dateSelectionMode == DateSelectionMode.SINGLE_DATE_SELECTED) {
+            date = getSelectedDate();
+        } else {
+            if (!isDateSelected()) {
+                oldSelectedToDate = null;
+                return;
+            }
+            LocalDate dates[] = getSelectedDateRange();
+            date = dates[0];
+            toDate = dates[1];
+        }
+        boolean date1 = checkDate(date, oldSelectedDate);
+        boolean date2 = checkDate(toDate, oldSelectedToDate);
+        if (dateSelection.dateSelectionMode == DateSelectionMode.SINGLE_DATE_SELECTED && !date1) {
+            return;
+        } else if (!(date1 || date2)) {
+            return;
+        }
+        oldSelectedDate = date;
+        oldSelectedToDate = toDate;
+        EventQueue.invokeLater(() -> {
             for (DateSelectionListener event : events) {
                 event.dateSelected(new DateEvent(this));
             }
@@ -191,6 +218,17 @@ public class DatePicker extends JPanel {
                 panelDateOption.setSelectedCustom();
             }
         });
+    }
+
+    private boolean checkDate(LocalDate date, LocalDate date1) {
+        if ((date == null && date1 == null)) {
+            return false;
+        } else if (date != null && date1 != null) {
+            if (date.compareTo(date1) == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private Header header;
