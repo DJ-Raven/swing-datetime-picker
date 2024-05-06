@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -24,13 +25,14 @@ public class InputUtils extends MaskFormatter {
     public static LocalTime stringToTime(boolean use24h, String value) {
         try {
             if (use24h) {
-                final DateTimeFormatter format24h = DateTimeFormatter.ofPattern("HH:mm");
+                final DateTimeFormatter format24h = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
                 return LocalTime.from(format24h.parse(value));
             } else {
-                final DateTimeFormatter format12h = DateTimeFormatter.ofPattern("hh:mm a");
+                final DateTimeFormatter format12h = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
                 return LocalTime.from(format12h.parse(value.toUpperCase()));
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
