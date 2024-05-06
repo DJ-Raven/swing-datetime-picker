@@ -10,15 +10,15 @@ This project provides a datetime picker component that can be easily integrated 
 <img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/datepicker-light.png" alt="datepicker light" width="300"/>
 ## Installation
 This project library do not available in maven central. so you can install with the jar library
-- Copy jar library file to the root project. exp : `library/swing-datetime-picker-1.1.1.jar`
+- Copy jar library file to the root project. exp : `library/swing-datetime-picker-1.2.0.jar`
 - Add this code to `pom.xml`
 ``` xml
 <dependency>
     <groupId>raven.datetime</groupId>
     <artifactId>swing-datetime-picker</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
     <scope>system</scope>
-    <systemPath>${basedir}/library/swing-datetime-picker-1.1.1.jar</systemPath>
+    <systemPath>${basedir}/library/swing-datetime-picker-1.2.0.jar</systemPath>
 </dependency>
 ```
 - Other library are use with this library
@@ -59,6 +59,8 @@ This project library do not available in maven central. so you can install with 
 | is24HourView() | `boolean` | return `ture` is 24h selection view |
 | showPopup() | `void` | if time have editor, timepicker will show up with popup menu |
 | closePopup() | `void` | close editor popup |
+| setColor(Color color) | `void` | change base color |
+| setEditorIcon(Icon icon) | `void` | change icon to editor |
 
 
 ## Usage DatePicker
@@ -89,6 +91,9 @@ This project library do not available in maven central. so you can install with 
 | addDateSelectionListener(DateSelectionListener event) | `void` | add event date selection |
 | removeDateSelectionListener(DateSelectionListener event) | `void` | remove event date selection |
 | removeAllDateSelectionListener() | `void` | remove all event date selection |
+| selectCurrentMonth() | `void` | select from first day to current day in current month |
+| setEditorIcon(Icon icon) | `void` | change icon to editor |
+
 
 ## Library Resources
 - [FlatLaf](https://github.com/JFormDesigner/FlatLaf) - FlatLaf library for the modern UI design theme
