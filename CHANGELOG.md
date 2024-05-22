@@ -1,3 +1,9 @@
+## 1.3.0
+
+#### Fixed bugs
+
+- PanelSlider `flush` image after end of animation
+
 ## 1.2.0
 
 #### New features and improvements
