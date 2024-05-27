@@ -70,9 +70,11 @@ public class InputUtils extends MaskFormatter {
         }
     }
 
-    public static void useDateInput(JFormattedTextField txt, boolean between, String separator, ValueCallback callback) {
+    public static void useDateInput(JFormattedTextField txt, String pattern, boolean between, String separator, ValueCallback callback) {
         try {
-            DateInputFormat mask = new DateInputFormat(between ? "##/##/####" + separator + "##/##/####" : "##/##/####", between, separator);
+            String format = datePatternToInputFormat(pattern);
+            System.out.println(pattern);
+            DateInputFormat mask = new DateInputFormat(between ? format + separator + format : format, between, separator, pattern);
             OldEditorProperty oldEditorProperty = initEditor(txt, mask, callback);
 
             PropertyChangeListener propertyChangeListener = evt -> callback.valueChanged(txt.getValue());
@@ -96,9 +98,10 @@ public class InputUtils extends MaskFormatter {
         }
     }
 
-    public static void changeDateFormatted(JFormattedTextField txt, boolean between, String separator) {
+    public static void changeDateFormatted(JFormattedTextField txt, String pattern, boolean between, String separator) {
         try {
-            DateInputFormat mask = new DateInputFormat(between ? "##/##/####" + separator + "##/##/####" : "##/##/####", between, separator);
+            String format = datePatternToInputFormat(pattern);
+            DateInputFormat mask = new DateInputFormat(between ? format + separator + format : format, between, separator, pattern);
             mask.setCommitsOnValidEdit(true);
             mask.setPlaceholderCharacter('-');
             DefaultFormatterFactory df = new DefaultFormatterFactory(mask);
@@ -106,6 +109,11 @@ public class InputUtils extends MaskFormatter {
         } catch (ParseException e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    private static String datePatternToInputFormat(String pattern) {
+        String regex = "[dmy]";
+        return pattern.toLowerCase().replaceAll(regex, "#");
     }
 
     private static OldEditorProperty initEditor(JFormattedTextField txt, MaskFormatter format, ValueCallback callback) {
@@ -167,11 +175,14 @@ public class InputUtils extends MaskFormatter {
 
         private final boolean between;
         private final String separator;
+        private DateFormat dateFormat;
 
-        public DateInputFormat(String mark, boolean between, String separator) throws ParseException {
+        public DateInputFormat(String mark, boolean between, String separator, String pattern) throws ParseException {
             super(mark);
             this.between = between;
             this.separator = separator;
+            this.dateFormat = new SimpleDateFormat(pattern);
+            dateFormat.setLenient(false);
         }
 
         @Override
@@ -181,14 +192,12 @@ public class InputUtils extends MaskFormatter {
         }
 
         public void checkTime(String value) throws ParseException {
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            df.setLenient(false);
             if (between) {
                 String[] values = value.split(separator);
-                df.parse(values[0]);
-                df.parse(values[1]);
+                dateFormat.parse(values[0]);
+                dateFormat.parse(values[1]);
             } else {
-                df.parse(value);
+                dateFormat.parse(value);
             }
         }
     }

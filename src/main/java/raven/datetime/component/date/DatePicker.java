@@ -17,7 +17,8 @@ import java.util.List;
 
 public class DatePicker extends JPanel {
 
-    private final DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private DateTimeFormatter format;
+    private String dateFormatPattern;
     private final List<DateSelectionListener> events = new ArrayList<>();
     private DateSelectionListener dateSelectionListener;
     private final DateSelection dateSelection = new DateSelection(this);
@@ -54,6 +55,8 @@ public class DatePicker extends JPanel {
                 "[light]background:darken($Panel.background,2%);" +
                 "[dark]background:lighten($Panel.background,2%);");
         setLayout(new MigLayout("wrap,insets 10,fill", "[fill]"));
+        dateFormatPattern = "dd/MM/yyyy";
+        format = DateTimeFormatter.ofPattern(dateFormatPattern);
         panelSlider = new PanelSlider();
         header = new Header(getEventHeader());
         eventMonthChanged = createEventMonthChanged();
@@ -242,7 +245,7 @@ public class DatePicker extends JPanel {
         if (this.dateSelection.dateSelectionMode != dateSelectionMode) {
             this.dateSelection.dateSelectionMode = dateSelectionMode;
             if (editor != null) {
-                InputUtils.changeDateFormatted(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator);
+                InputUtils.changeDateFormatted(editor, dateFormatPattern, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator);
                 clearSelectedDate();
             }
             repaint();
@@ -360,10 +363,22 @@ public class DatePicker extends JPanel {
         if (!this.separator.equals(separator)) {
             this.separator = separator;
             if (editor != null) {
-                InputUtils.changeDateFormatted(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator);
+                InputUtils.changeDateFormatted(editor, dateFormatPattern, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator);
                 runEventDateChanged();
             }
         }
+    }
+
+    public void setDateFormat(String format) {
+        this.format = DateTimeFormatter.ofPattern(format);
+        if (editor != null) {
+            InputUtils.changeDateFormatted(editor, format, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator);
+        }
+        this.dateFormatPattern = format;
+    }
+
+    public String getDateFormat() {
+        return this.dateFormatPattern;
     }
 
     public boolean isUsePanelOption() {
@@ -508,7 +523,7 @@ public class DatePicker extends JPanel {
         editorButton.addActionListener(e -> {
             showPopup();
         });
-        InputUtils.useDateInput(editor, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
+        InputUtils.useDateInput(editor, dateFormatPattern, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
         editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
         addDateSelectionListener(getDateSelectionListener());
     }
