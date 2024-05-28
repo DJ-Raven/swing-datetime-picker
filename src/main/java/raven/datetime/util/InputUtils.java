@@ -73,7 +73,6 @@ public class InputUtils extends MaskFormatter {
     public static void useDateInput(JFormattedTextField txt, String pattern, boolean between, String separator, ValueCallback callback) {
         try {
             String format = datePatternToInputFormat(pattern);
-            System.out.println(pattern);
             DateInputFormat mask = new DateInputFormat(between ? format + separator + format : format, between, separator, pattern);
             OldEditorProperty oldEditorProperty = initEditor(txt, mask, callback);
 
