@@ -8,6 +8,7 @@
 #### Fixed bugs
 
 - PanelSlider `flush` image after end of animation
+- Fixed editor popup error when using JDialog
 
 ## 1.2.0
 
