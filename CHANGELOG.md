@@ -3,7 +3,9 @@
 #### New features and improvements
 
 - DatePicker:
-  - Add new method `setDateFormat(String format)` to format date (issues #5)
+  - Add new method:
+    - `setDateFormat(String format)` to format date (issues #5)
+    - `setColor(Color color)` (issues #6)
 
 #### Fixed bugs
 

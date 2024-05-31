@@ -134,7 +134,8 @@ public class ButtonDate extends JButton {
                 float s = UIScale.scale(2);
                 area.subtract(new Area(new Ellipse2D.Double(x + s, y + s, size - s * 2, size - s * 2)));
             }
-            g2.setColor(isSelected ? getBorderColor(UIManager.getColor("Component.accentColor")) : UIManager.getColor("Component.accentColor"));
+            Color accentColor = getAccentColor();
+            g2.setColor(isSelected ? getBorderColor(accentColor) : accentColor);
             g2.fill(area);
         }
         g2.dispose();
@@ -164,7 +165,7 @@ public class ButtonDate extends JButton {
     protected Color getColor() {
         Color color = FlatUIUtils.getParentBackground(this);
         if (isDateSelected()) {
-            color = UIManager.getColor("Component.accentColor");
+            color = getAccentColor();
         }
         if (press) {
             return FlatLaf.isLafDark() ? ColorFunctions.lighten(color, 0.1f) : ColorFunctions.darken(color, 0.1f);
@@ -172,6 +173,13 @@ public class ButtonDate extends JButton {
             return FlatLaf.isLafDark() ? ColorFunctions.lighten(color, 0.03f) : ColorFunctions.darken(color, 0.03f);
         }
         return color;
+    }
+
+    protected Color getAccentColor() {
+        if (dateSelection.datePicker.getColor() != null) {
+            return dateSelection.datePicker.getColor();
+        }
+        return UIManager.getColor("Component.accentColor");
     }
 
     protected Color getBorderColor(Color color) {
@@ -189,7 +197,7 @@ public class ButtonDate extends JButton {
     protected Color getBetweenDateColor() {
         Color color = FlatUIUtils.getParentBackground(this);
         if (dateSelection.getToDate() != null) {
-            return ColorFunctions.mix(color, UIManager.getColor("Component.accentColor"), 0.9f);
+            return ColorFunctions.mix(color, getAccentColor(), 0.9f);
         }
         return FlatLaf.isLafDark() ? ColorFunctions.lighten(color, 0.03f) : ColorFunctions.darken(color, 0.03f);
     }

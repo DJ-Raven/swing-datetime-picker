@@ -34,6 +34,7 @@ public class DatePicker extends JPanel {
     private boolean closeAfterSelected;
     private int month = 10;
     private int year = 2023;
+    private Color color;
     private LookAndFeel oldThemes = UIManager.getLookAndFeel();
     private JButton editorButton;
     private LocalDate oldSelectedDate;
@@ -354,6 +355,15 @@ public class DatePicker extends JPanel {
             popupMenu.setVisible(false);
             repaint();
         }
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+        repaint();
     }
 
     public void setSeparator(String separator) {
