@@ -1,20 +1,20 @@
-## 1.3.0
+## [1.3.0]
 
-#### New features and improvements
+### New features and improvements
 
 - DatePicker:
   - Add new method:
     - `setDateFormat(String format)` to format date (issues #5)
     - `setColor(Color color)` (issues #6)
 
-#### Fixed bugs
+### Fixed bugs
 
 - PanelSlider `flush` image after end of animation
 - Fixed editor popup error when using JDialog
 
-## 1.2.0
+## [1.2.0] - 2024-05-06
 
-#### New features and improvements
+### New features and improvements
 
 - DatePicker:
   - Add new method `selectCurrentMonth()` (PR #2)
@@ -23,7 +23,7 @@
 - Popup menu will show inside the windows frame
 - Add new method `setEditorIcon(Icon icon)`
 
-#### Fixed bugs
+### Fixed bugs
 
 - DatePicker:
   - Invert between date selected (when `date` is after `toDate`) (PR #2)
@@ -34,13 +34,13 @@
 - Fixed reset old editor to default after changed new editor
 - Fixed event `SelectionListener` invoke only value changed
 
-## 1.1.0
+## [1.1.0] - 2024-04-13
 
-#### New features and improvements
+### New features and improvements
 
 - Add new datepicker (PR #1) 
 - Update style background in timepicker
 
-## 1.0.0
+## [1.0.0] - 2023-12-17
 
 - Initial release
