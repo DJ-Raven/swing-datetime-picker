@@ -1,4 +1,4 @@
-## [1.3.0]
+## [1.3.0] - 2024-07-05
 
 ### New features and improvements
 
