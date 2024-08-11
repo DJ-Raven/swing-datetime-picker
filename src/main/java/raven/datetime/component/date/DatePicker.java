@@ -4,12 +4,14 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import net.miginfocom.swing.MigLayout;
 import raven.datetime.util.InputUtils;
+import raven.datetime.util.InputValidationListener;
 import raven.datetime.util.Utils;
 import raven.swing.slider.PanelSlider;
 import raven.swing.slider.SimpleTransition;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class DatePicker extends JPanel {
     private String dateFormatPattern;
     private final List<DateSelectionListener> events = new ArrayList<>();
     private DateSelectionListener dateSelectionListener;
+    private InputValidationListener inputValidationListener;
     private final DateSelection dateSelection = new DateSelection(this);
     private PanelMonth.EventMonthChanged eventMonthChanged;
     private PanelYear.EventYearChanged eventYearChanged;
@@ -39,6 +42,10 @@ public class DatePicker extends JPanel {
     private JButton editorButton;
     private LocalDate oldSelectedDate;
     private LocalDate oldSelectedToDate;
+    private boolean editorValidation = true;
+    private boolean isValid;
+    private boolean validationOnNull;
+    private String defaultPlaceholder;
 
     /**
      * 0 as Date select
@@ -246,8 +253,10 @@ public class DatePicker extends JPanel {
         if (this.dateSelection.dateSelectionMode != dateSelectionMode) {
             this.dateSelection.dateSelectionMode = dateSelectionMode;
             if (editor != null) {
-                InputUtils.changeDateFormatted(editor, dateFormatPattern, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator);
+                InputUtils.changeDateFormatted(editor, dateFormatPattern, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getInputValidationListener());
+                this.defaultPlaceholder = null;
                 clearSelectedDate();
+                commitEdit();
             }
             repaint();
         }
@@ -308,6 +317,13 @@ public class DatePicker extends JPanel {
                 installEditor(editor);
             }
             this.editor = editor;
+            if (editor != null) {
+                if (editorValidation) {
+                    validChanged(editor, isValid);
+                } else {
+                    validChanged(editor, false);
+                }
+            }
         }
     }
 
@@ -373,7 +389,8 @@ public class DatePicker extends JPanel {
         if (!this.separator.equals(separator)) {
             this.separator = separator;
             if (editor != null) {
-                InputUtils.changeDateFormatted(editor, dateFormatPattern, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator);
+                InputUtils.changeDateFormatted(editor, dateFormatPattern, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getInputValidationListener());
+                this.defaultPlaceholder = null;
                 runEventDateChanged();
             }
         }
@@ -382,9 +399,38 @@ public class DatePicker extends JPanel {
     public void setDateFormat(String format) {
         this.format = DateTimeFormatter.ofPattern(format);
         if (editor != null) {
-            InputUtils.changeDateFormatted(editor, format, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator);
+            InputUtils.changeDateFormatted(editor, format, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getInputValidationListener());
+            this.defaultPlaceholder = null;
         }
         this.dateFormatPattern = format;
+    }
+
+    public boolean isEditorValidation() {
+        return editorValidation;
+    }
+
+    public void setEditorValidation(boolean editorValidation) {
+        if (this.editorValidation != editorValidation) {
+            this.editorValidation = editorValidation;
+            if (editor != null) {
+                if (editorValidation) {
+                    validChanged(editor, isValid);
+                } else {
+                    validChanged(editor, true);
+                }
+            }
+        }
+    }
+
+    public boolean isValidationOnNull() {
+        return validationOnNull;
+    }
+
+    public void setValidationOnNull(boolean validationOnNull) {
+        if (this.validationOnNull != validationOnNull) {
+            this.validationOnNull = validationOnNull;
+            commitEdit();
+        }
     }
 
     public String getDateFormat() {
@@ -533,7 +579,7 @@ public class DatePicker extends JPanel {
         editorButton.addActionListener(e -> {
             showPopup();
         });
-        InputUtils.useDateInput(editor, dateFormatPattern, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback());
+        InputUtils.useDateInput(editor, dateFormatPattern, dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback(), getInputValidationListener());
         editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
         addDateSelectionListener(getDateSelectionListener());
     }
@@ -596,6 +642,75 @@ public class DatePicker extends JPanel {
             };
         }
         return dateSelectionListener;
+    }
+
+    private InputValidationListener getInputValidationListener() {
+        if (inputValidationListener == null) {
+            inputValidationListener = new InputValidationListener() {
+
+                @Override
+                public boolean isValidation() {
+                    return dateSelection.getDateSelectionAble() != null;
+                }
+
+                @Override
+                public void inputChanged(boolean status) {
+                    checkValidation(status);
+                }
+
+                @Override
+                public boolean checkDateSelectionAble(LocalDate date) {
+                    if (dateSelection.getDateSelectionAble() == null) return true;
+                    return dateSelection.getDateSelectionAble().isDateSelectedAble(date);
+                }
+            };
+        }
+        return inputValidationListener;
+    }
+
+    private void checkValidation(boolean status) {
+        boolean valid = status || isEditorValidationOnNull();
+        if (isValid != valid) {
+            isValid = valid;
+            if (editor != null) {
+                if (editorValidation) {
+                    validChanged(editor, valid);
+                }
+            }
+        }
+    }
+
+    protected void validChanged(JFormattedTextField editor, boolean isValid) {
+        String style = isValid ? null : FlatClientProperties.OUTLINE_ERROR;
+        editor.putClientProperty(FlatClientProperties.OUTLINE, style);
+    }
+
+    private boolean isEditorValidationOnNull() {
+        if (validationOnNull) {
+            return false;
+        }
+        return editor != null && editor.getText().equals(getDefaultPlaceholder());
+    }
+
+    private String getDefaultPlaceholder() {
+        if (defaultPlaceholder == null) {
+            if (dateSelection.dateSelectionMode == DateSelectionMode.BETWEEN_DATE_SELECTED) {
+                String d = InputUtils.datePatternToInputFormat(dateFormatPattern, "-");
+                defaultPlaceholder = d + separator + d;
+            } else {
+                defaultPlaceholder = InputUtils.datePatternToInputFormat(dateFormatPattern, "-");
+            }
+        }
+        return defaultPlaceholder;
+    }
+
+    private void commitEdit() {
+        if (editor != null && editorValidation) {
+            try {
+                editor.commitEdit();
+            } catch (ParseException e) {
+            }
+        }
     }
 
     public enum DateSelectionMode {
