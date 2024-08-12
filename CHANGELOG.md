@@ -1,3 +1,12 @@
+# Changelog
+
+## [1.4.0]
+
+### New features and improvements
+
+- DatePicker:
+  - Add editor input validation (PR #9)
+
 ## [1.3.0] - 2024-07-05
 
 ### New features and improvements
