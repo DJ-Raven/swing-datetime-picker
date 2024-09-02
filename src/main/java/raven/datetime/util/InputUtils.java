@@ -219,7 +219,6 @@ public class InputUtils extends MaskFormatter {
 
                     // validate date selection able
                     if (inputValidationListener.isValidation()) {
-                        System.out.println("do Validation");
                         LocalDate d = dateToLocalDate(date);
                         if (!inputValidationListener.checkDateSelectionAble(d)) {
                             throw new ParseException("error selection able", 0);
