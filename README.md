@@ -9,37 +9,25 @@ This project provides a datetime picker component that can be easily integrated 
 <img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/datepicker-dark.png" alt="datepicker dark" width="300"/>&nbsp;
 <img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/datepicker-light.png" alt="datepicker light" width="300"/>
 ## Installation
-This project library do not available in maven central. so you can install with the jar library
-- Get jar library here: [latest-releases](https://github.com/DJ-Raven/swing-datetime-picker/releases/latest)
-- Copy jar library file to the root project. exp : `library/swing-datetime-picker-1.3.0.jar`
-- Add this code to `pom.xml`
+This library is available in `JitPack`
+
+[![](https://jitpack.io/v/DJ-Raven/swing-datetime-picker.svg)](https://jitpack.io/#DJ-Raven/swing-datetime-picker)
+
+Add the jitpack repository to your pom
 ``` xml
-<dependency>
-    <groupId>raven.datetime</groupId>
-    <artifactId>swing-datetime-picker</artifactId>
-    <version>1.3.0</version>
-    <scope>system</scope>
-    <systemPath>${basedir}/library/swing-datetime-picker-1.3.0.jar</systemPath>
-</dependency>
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
 ```
-- Other library are use with this library
+Then add the dependency
 ``` xml
 <dependency>
-  <groupId>com.formdev</groupId>
-  <artifactId>flatlaf</artifactId>
-  <version>3.4.1</version>
-</dependency>
-
-<dependency>
-  <groupId>com.formdev</groupId>
-  <artifactId>flatlaf-extras</artifactId>
-  <version>3.4.1</version>
-</dependency>
-
-<dependency>
-    <groupId>com.miglayout</groupId>
-    <artifactId>miglayout-swing</artifactId>
-    <version>11.3</version>
+    <groupId>com.github.DJ-Raven</groupId>
+    <artifactId>swing-datetime-picker</artifactId>
+    <version>1.4.0</version>
 </dependency>
 ```
 ## Usage TimePicker
