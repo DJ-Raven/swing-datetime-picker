@@ -1,11 +1,15 @@
 # Changelog
 
-## [1.4.0]
+## [1.4.0] - 2024-09-14
 
 ### New features and improvements
 
 - DatePicker:
   - Add editor input validation (PR #9)
+
+### Changed
+
+- Miglayout: back to v5.3 to support java 8
 
 ## [1.3.0] - 2024-07-05
 
