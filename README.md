@@ -12,7 +12,7 @@ This project provides a datetime picker component that can be easily integrated 
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.dj-raven/swing-datetime-picker?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.dj-raven/swing-datetime-picker)
 
-Add the mdependency
+Add the dependency
 ``` xml
 <dependency>
     <groupId>io.github.dj-raven</groupId>
