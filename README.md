@@ -9,23 +9,13 @@ This project provides a datetime picker component that can be easily integrated 
 <img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/datepicker-dark.png" alt="datepicker dark" width="300"/>&nbsp;
 <img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/datepicker-light.png" alt="datepicker light" width="300"/>
 ## Installation
-This library is available in `JitPack`
 
-[![](https://jitpack.io/v/DJ-Raven/swing-datetime-picker.svg)](https://jitpack.io/#DJ-Raven/swing-datetime-picker)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.dj-raven/swing-datetime-picker?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.dj-raven/swing-datetime-picker)
 
-Add the jitpack repository to your pom
-``` xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-```
-Then add the dependency
+Add the mdependency
 ``` xml
 <dependency>
-    <groupId>com.github.DJ-Raven</groupId>
+    <groupId>io.github.dj-raven</groupId>
     <artifactId>swing-datetime-picker</artifactId>
     <version>1.4.0</version>
 </dependency>
