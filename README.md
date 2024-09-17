@@ -10,7 +10,7 @@ This project provides a datetime picker component that can be easily integrated 
 <img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/datepicker-light.png" alt="datepicker light" width="300"/>
 ## Installation
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.dj-raven/swing-datetime-picker?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.dj-raven/swing-datetime-picker)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.dj-raven/swing-datetime-picker?label=Maven%20Central)](https://search.maven.org/artifact/io.github.dj-raven/swing-datetime-picker)
 
 Add the dependency
 ``` xml
