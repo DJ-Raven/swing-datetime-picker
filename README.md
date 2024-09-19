@@ -31,7 +31,7 @@ Add the dependency
 | getSelectedTimeAsString() | `String` | return selected time as string |
 | addTimeSelectionListener(TimeSelectionListener event) | `void` | add event time selection |
 | removeTimeSelectionListener(TimeSelectionListener event) | `void` | remove event time selection |
-| removeAllTimeSelectionListener() | `void` | remove all event tiem selection |
+| removeAllTimeSelectionListener() | `void` | remove all event time selection |
 | setOrientation(int orientation) | `void` | `SwingConstants.VERTICAL` or `SwingConstants.HORIZONTAL` |
 | setEditor(JFormattedTextField editor) | `void` | disply the selected time on the editor and allow to edit time |
 | set24HourView(boolean hour24) | `void` | set time to 24h selection view |
@@ -40,7 +40,6 @@ Add the dependency
 | closePopup() | `void` | close editor popup |
 | setColor(Color color) | `void` | change base color |
 | setEditorIcon(Icon icon) | `void` | change icon to editor |
-
 
 ## Usage DatePicker
 | Method | Return Value | Description |
@@ -51,7 +50,7 @@ Add the dependency
 | selectMonth() | `void` | show panel month slide with animation |
 | selectYear() | `void` | show panel year slide with animation |
 | slideTo(LocalDate date) | `void` | slide panel to specific date |
-| getDateSelectionMode() | `DateSelectionMode` | return the date selectionmode |
+| getDateSelectionMode() | `DateSelectionMode` | return the date selection mode |
 | setDateSelectionMode(DateSelectionMode mode) | `void` | set mode `SINGLE_DATE_SELECTED` or `BETWEEN_DATE_SELECTED` |
 | setSelectedDate(LocalDate date) | `void` | set the date to a specific value |
 | setSelectedDateRange(LocalDate from, LocalDate to) | `void` | set the date range to a specific value |
@@ -71,8 +70,11 @@ Add the dependency
 | removeDateSelectionListener(DateSelectionListener event) | `void` | remove event date selection |
 | removeAllDateSelectionListener() | `void` | remove all event date selection |
 | selectCurrentMonth() | `void` | select from first day to current day in current month |
+| setColor(Color color) | `void` | change base color |
 | setEditorIcon(Icon icon) | `void` | change icon to editor |
-
+| setDateFormat(String format) | `void` | change date format |
+| setEditorValidation(boolean validation) | `void` | validation editor |
+| void setValidationOnNull(boolean validationOnNull) | `void` | validation editor on null selection |
 
 ## Library Resources
 - [FlatLaf](https://github.com/JFormDesigner/FlatLaf) - FlatLaf library for the modern UI design theme
