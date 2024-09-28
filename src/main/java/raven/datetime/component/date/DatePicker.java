@@ -321,7 +321,7 @@ public class DatePicker extends JPanel {
                 if (editorValidation) {
                     validChanged(editor, isValid);
                 } else {
-                    validChanged(editor, false);
+                    validChanged(editor, true);
                 }
             }
         }
@@ -689,7 +689,7 @@ public class DatePicker extends JPanel {
         if (validationOnNull) {
             return false;
         }
-        return editor != null && editor.getText().equals(getDefaultPlaceholder());
+        return editor == null || editor.getText().equals(getDefaultPlaceholder());
     }
 
     private String getDefaultPlaceholder() {

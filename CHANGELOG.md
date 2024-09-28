@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1]
+
+### Fixed bugs
+
+- DatePicker:
+  - Fixed editor input validation
+
 ## [1.4.0] - 2024-09-14
 
 ### New features and improvements
