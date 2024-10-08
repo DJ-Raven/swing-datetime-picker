@@ -67,6 +67,9 @@ public class TimePicker extends JPanel {
             header.setUse24hour(hour24);
             if (editor != null) {
                 InputUtils.changeTimeFormatted(editor, hour24);
+                if (isTimeSelected()) {
+                    editor.setValue(getSelectedTimeAsString());
+                }
                 runEventTimeChanged();
             }
         }

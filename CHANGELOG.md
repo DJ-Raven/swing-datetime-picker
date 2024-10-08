@@ -6,6 +6,8 @@
 
 - DatePicker:
   - Fixed editor input validation
+- TimePicker:
+  - Fixed `editor` not changed value when switch between `24h` and `12h` view
 
 ## [1.4.0] - 2024-09-14
 
