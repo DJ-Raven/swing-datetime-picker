@@ -20,6 +20,27 @@ Add the dependency
     <version>1.4.0</version>
 </dependency>
 ```
+
+### Snapshots
+To get the latest updates before the release, you can use the snapshot version from [Sonatype OSS Snapshots](https://s01.oss.sonatype.org/content/repositories/snapshots/io/github/dj-raven/swing-datetime-picker/)
+
+``` xml
+<repositories>
+    <repository>
+        <id>sonatype-oss-snapshots</id>
+        <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
+</repositories>
+```
+Add the snapshot version
+``` xml
+<dependency>
+    <groupId>io.github.dj-raven</groupId>
+    <artifactId>swing-datetime-picker</artifactId>
+    <version>1.4.1-SNAPSHOT</version>
+</dependency>
+```
+
 ## Usage TimePicker
 | Method | Return Value | Description |
 | ------------ | ------------ | ------------ |
