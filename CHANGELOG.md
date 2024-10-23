@@ -2,6 +2,11 @@
 
 ## [1.4.1]-SNAPSHOT
 
+### New features and improvements
+
+- DatePicker:
+  - Add new option `animationEnabled`
+
 ### Fixed bugs
 
 - DatePicker:

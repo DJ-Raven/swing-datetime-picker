@@ -99,20 +99,24 @@ public class TestDate extends JFrame {
         JCheckBox chClose = new JCheckBox("Close after selected");
         chClose.addActionListener(e -> datePicker.setCloseAfterSelected(chClose.isSelected()));
 
-        JCheckBox chEditorValidation = new JCheckBox("Editor validation", true);
+        JCheckBox chEditorValidation = new JCheckBox("Editor validation", datePicker.isEditorValidation());
         JCheckBox chValidationOnNull = new JCheckBox("Validation on null");
+        JCheckBox chAnimationEnabled = new JCheckBox("Animation Enabled", datePicker.isAnimationEnabled());
+
         chEditorValidation.addActionListener(e -> {
             datePicker.setEditorValidation(chEditorValidation.isSelected());
             chValidationOnNull.setEnabled(chEditorValidation.isSelected());
         });
 
         chValidationOnNull.addActionListener(e -> datePicker.setValidationOnNull(chValidationOnNull.isSelected()));
+        chAnimationEnabled.addActionListener(e -> datePicker.setAnimationEnabled(chAnimationEnabled.isSelected()));
 
         panel.add(chBtw);
         panel.add(chDateOpt);
         panel.add(chClose);
         panel.add(chEditorValidation);
         panel.add(chValidationOnNull);
+        panel.add(chAnimationEnabled);
         add(panel);
     }
 

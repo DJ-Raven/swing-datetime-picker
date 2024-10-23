@@ -8,6 +8,7 @@ import raven.datetime.util.InputValidationListener;
 import raven.datetime.util.Utils;
 import raven.swing.slider.PanelSlider;
 import raven.swing.slider.SimpleTransition;
+import raven.swing.slider.SliderTransition;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,6 +36,7 @@ public class DatePicker extends JPanel {
     private String separator = " to ";
     private boolean usePanelOption;
     private boolean closeAfterSelected;
+    private boolean animationEnabled = true;
     private int month = 10;
     private int year = 2023;
     private Color color;
@@ -105,7 +107,7 @@ public class DatePicker extends JPanel {
             public void monthSelected(int month) {
                 DatePicker.this.month = month;
                 header.setDate(month, year);
-                panelSlider.addSlide(createPanelDate(month, year), SimpleTransition.get(SimpleTransition.SliderType.DOWN_TOP));
+                panelSlider.addSlide(createPanelDate(month, year), getSliderTransition(SimpleTransition.SliderType.DOWN_TOP));
                 panelSelect = 0;
             }
         };
@@ -117,7 +119,7 @@ public class DatePicker extends JPanel {
             public void yearSelected(int year) {
                 DatePicker.this.year = year;
                 header.setDate(month, year);
-                panelSlider.addSlide(createPanelMonth(month, year), SimpleTransition.get(SimpleTransition.SliderType.DOWN_TOP));
+                panelSlider.addSlide(createPanelMonth(month, year), getSliderTransition(SimpleTransition.SliderType.DOWN_TOP));
                 panelSelect = 1;
             }
         };
@@ -132,14 +134,14 @@ public class DatePicker extends JPanel {
                 month--;
             }
             header.setDate(month, year);
-            panelSlider.addSlide(createPanelDate(month, year), SimpleTransition.get(SimpleTransition.SliderType.BACK));
+            panelSlider.addSlide(createPanelDate(month, year), getSliderTransition(SimpleTransition.SliderType.BACK));
         } else if (panelSelect == 1) {
             year--;
             header.setDate(month, year);
-            panelSlider.addSlide(createPanelMonth(month, year), SimpleTransition.get(SimpleTransition.SliderType.BACK));
+            panelSlider.addSlide(createPanelMonth(month, year), getSliderTransition(SimpleTransition.SliderType.BACK));
         } else {
             PanelYear panelYear = (PanelYear) panelSlider.getComponent(1);
-            panelSlider.addSlide(createPanelYear(panelYear.getYear() - PanelYear.YEAR_CELL), SimpleTransition.get(SimpleTransition.SliderType.BACK));
+            panelSlider.addSlide(createPanelYear(panelYear.getYear() - PanelYear.YEAR_CELL), getSliderTransition(SimpleTransition.SliderType.BACK));
         }
     }
 
@@ -152,33 +154,33 @@ public class DatePicker extends JPanel {
                 month++;
             }
             header.setDate(month, year);
-            panelSlider.addSlide(createPanelDate(month, year), SimpleTransition.get(SimpleTransition.SliderType.FORWARD));
+            panelSlider.addSlide(createPanelDate(month, year), getSliderTransition(SimpleTransition.SliderType.FORWARD));
         } else if (panelSelect == 1) {
             year++;
             header.setDate(month, year);
-            panelSlider.addSlide(createPanelMonth(month, year), SimpleTransition.get(SimpleTransition.SliderType.FORWARD));
+            panelSlider.addSlide(createPanelMonth(month, year), getSliderTransition(SimpleTransition.SliderType.FORWARD));
         } else {
             PanelYear panelYear = (PanelYear) panelSlider.getComponent(1);
-            panelSlider.addSlide(createPanelYear(panelYear.getYear() + PanelYear.YEAR_CELL), SimpleTransition.get(SimpleTransition.SliderType.FORWARD));
+            panelSlider.addSlide(createPanelYear(panelYear.getYear() + PanelYear.YEAR_CELL), getSliderTransition(SimpleTransition.SliderType.FORWARD));
         }
     }
 
     public void selectMonth() {
         if (panelSelect != 1) {
-            panelSlider.addSlide(createPanelMonth(month, year), SimpleTransition.get(panelSelect == 0 ? SimpleTransition.SliderType.TOP_DOWN : SimpleTransition.SliderType.DOWN_TOP));
+            panelSlider.addSlide(createPanelMonth(month, year), getSliderTransition(panelSelect == 0 ? SimpleTransition.SliderType.TOP_DOWN : SimpleTransition.SliderType.DOWN_TOP));
             panelSelect = 1;
         } else {
-            panelSlider.addSlide(createPanelDate(month, year), SimpleTransition.get(SimpleTransition.SliderType.DOWN_TOP));
+            panelSlider.addSlide(createPanelDate(month, year), getSliderTransition(SimpleTransition.SliderType.DOWN_TOP));
             panelSelect = 0;
         }
     }
 
     public void selectYear() {
         if (panelSelect != 2) {
-            panelSlider.addSlide(createPanelYear(year), SimpleTransition.get(SimpleTransition.SliderType.TOP_DOWN));
+            panelSlider.addSlide(createPanelYear(year), getSliderTransition(SimpleTransition.SliderType.TOP_DOWN));
             panelSelect = 2;
         } else {
-            panelSlider.addSlide(createPanelDate(month, year), SimpleTransition.get(SimpleTransition.SliderType.DOWN_TOP));
+            panelSlider.addSlide(createPanelDate(month, year), getSliderTransition(SimpleTransition.SliderType.DOWN_TOP));
             panelSelect = 0;
         }
     }
@@ -470,6 +472,14 @@ public class DatePicker extends JPanel {
         this.closeAfterSelected = closeAfterSelected;
     }
 
+    public boolean isAnimationEnabled() {
+        return animationEnabled;
+    }
+
+    public void setAnimationEnabled(boolean animationEnabled) {
+        this.animationEnabled = animationEnabled;
+    }
+
     public String getSeparator() {
         return separator;
     }
@@ -528,9 +538,9 @@ public class DatePicker extends JPanel {
         int y = date.getYear();
         if (year != y || month != m) {
             if (year < y || (year <= y && month < m)) {
-                panelSlider.addSlide(createPanelDate(m, y), SimpleTransition.get(SimpleTransition.SliderType.FORWARD));
+                panelSlider.addSlide(createPanelDate(m, y), getSliderTransition(SimpleTransition.SliderType.FORWARD));
             } else {
-                panelSlider.addSlide(createPanelDate(m, y), SimpleTransition.get(SimpleTransition.SliderType.BACK));
+                panelSlider.addSlide(createPanelDate(m, y), getSliderTransition(SimpleTransition.SliderType.BACK));
             }
             month = m;
             year = y;
@@ -538,7 +548,7 @@ public class DatePicker extends JPanel {
             header.setDate(month, year);
         } else {
             if (panelSelect != 0) {
-                panelSlider.addSlide(createPanelDate(m, y), SimpleTransition.get(SimpleTransition.SliderType.DOWN_TOP));
+                panelSlider.addSlide(createPanelDate(m, y), getSliderTransition(SimpleTransition.SliderType.DOWN_TOP));
                 panelSelect = 0;
             }
         }
@@ -559,6 +569,13 @@ public class DatePicker extends JPanel {
         if (events != null) {
             events.clear();
         }
+    }
+
+    private SliderTransition getSliderTransition(SimpleTransition.SliderType type) {
+        if (!animationEnabled) {
+            return null;
+        }
+        return SimpleTransition.get(type);
     }
 
     private void updateSelected() {
