@@ -41,6 +41,15 @@ public class ButtonDate extends JButton {
         });
         addMouseListener(new MouseAdapter() {
             @Override
+            public void mouseClicked(MouseEvent e) {
+                if (dateSelection.datePicker.isCloseAfterSelected() == false && dateSelection.dateSelectionMode == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
+                    if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
+                        dateSelection.datePicker.closePopup();
+                    }
+                }
+            }
+
+            @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     press = true;
