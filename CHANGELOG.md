@@ -8,6 +8,10 @@
   - Add new option `animationEnabled`
   - Date popup in `SINGLE_DATE_SELECTED` mode, now auto close when double click
 
+### Changed
+
+- FlatLaf: update to v3.5.2
+
 ### Fixed bugs
 
 - DatePicker:
