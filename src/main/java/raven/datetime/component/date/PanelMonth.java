@@ -25,7 +25,7 @@ public class PanelMonth extends JPanel {
     private void init() {
         putClientProperty(FlatClientProperties.STYLE, "" +
                 "background:null");
-        setLayout(new MigLayout("wrap 3,insets 3,fillx,gap 3,al center center", "fill,sg main", "fill"));
+        setLayout(new MigLayout("novisualpadding,wrap 3,insets 0,fillx,gap 0,al center center", "fill,sg main", "fill"));
         int count = 12;
         for (int i = 0; i < count; i++) {
             final int month = i;

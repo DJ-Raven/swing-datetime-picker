@@ -12,6 +12,7 @@
 
 - DatePicker:
   - Fixed editor input validation
+  - Miglayout use `novisualpadding` and set slider fix size as `260,250`
 - TimePicker:
   - Fixed `editor` not changed value when switch between `24h` and `12h` view
 

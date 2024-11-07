@@ -72,7 +72,7 @@ public class DatePicker extends JPanel {
         eventMonthChanged = createEventMonthChanged();
         eventYearChanged = createEventYearChanged();
         add(header);
-        add(panelSlider, "width 260,height 250");
+        add(panelSlider, "width 260!,height 250!");
         initDate();
     }
 
