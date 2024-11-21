@@ -51,7 +51,8 @@ public class TestDate extends JFrame {
             }
         });
 
-        datePicker.setDateSelectionAble((date) -> !date.isAfter(LocalDate.now()));
+        // datePicker.setDateSelectionAble((date) -> !date.isAfter(LocalDate.now()));
+
         datePicker.now();
         JFormattedTextField editor = new JFormattedTextField();
         datePicker.setEditor(editor);
