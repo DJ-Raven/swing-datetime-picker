@@ -29,6 +29,7 @@ public class DatePicker extends JPanel {
     private PanelMonth.EventMonthChanged eventMonthChanged;
     private PanelYear.EventYearChanged eventYearChanged;
     private PanelDateOption panelDateOption;
+    private PanelDateOptionLabel panelDateOptionLabel;
     private InputUtils.ValueCallback valueCallback;
     private JFormattedTextField editor;
     private Icon editorIcon;
@@ -449,6 +450,7 @@ public class DatePicker extends JPanel {
             if (usePanelOption) {
                 if (panelDateOption == null) {
                     panelDateOption = new PanelDateOption(this);
+                    panelDateOption.installDateOptionLabel();
                 }
                 add(panelDateOption, "dock east,gap 0 10 10 10");
                 repaint();
@@ -461,6 +463,17 @@ public class DatePicker extends JPanel {
                     revalidate();
                 }
             }
+        }
+    }
+
+    public PanelDateOptionLabel getPanelDateOptionLabel() {
+        return panelDateOptionLabel;
+    }
+
+    public void setPanelDateOptionLabel(PanelDateOptionLabel panelDateOptionLabel) {
+        this.panelDateOptionLabel = panelDateOptionLabel;
+        if (panelDateOption != null) {
+            panelDateOption.installDateOptionLabel();
         }
     }
 

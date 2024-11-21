@@ -4,8 +4,9 @@ import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.time.LocalDate;
-import java.util.Calendar;
+import java.util.List;
 
 public class PanelDateOption extends JPanel {
 
@@ -20,66 +21,54 @@ public class PanelDateOption extends JPanel {
     private void init() {
         putClientProperty(FlatClientProperties.STYLE, "" +
                 "background:null");
-        setLayout(new MigLayout("wrap,insets 5,fillx", "[fill]", "[][][][][][][]push[]"));
-        add(new JSeparator(SwingConstants.VERTICAL), "dock west");
         buttonGroup = new ButtonGroup();
-        add(createButton("Today", 0));
-        add(createButton("Yesterday", -1));
-        add(createButton("Last 7 Days", -7));
-        add(createButton("Last 30 Days", -30));
-        add(createButton("This Month", 1, true));
-        add(createButton("Last Month", 2, true));
-        add(createButton("Last Year", 3, true));
-
-        add(createButton("Custom", -1, true));
     }
 
-    private JToggleButton createButton(String name, int date) {
-        return createButton(name, date, false);
+    public void installDateOptionLabel() {
+        removeAll();
+        PanelDateOptionLabel panelDateOptionLabel = datePicker.getPanelDateOptionLabel();
+        if (panelDateOptionLabel == null) {
+            panelDateOptionLabel = createDefaultPanelDateOptionLabel();
+        }
+        String layoutRowConstraints = "";
+        List<PanelDateOptionLabel.Item> items = panelDateOptionLabel.getListItems();
+        for (int i = 0; i < items.size(); i++) {
+            PanelDateOptionLabel.Item item = items.get(i);
+            add(createButton(item.getLabel(), item.getCallback()));
+            if (item.getCallback() == null) {
+                layoutRowConstraints += "push";
+            } else {
+                layoutRowConstraints += "[]";
+            }
+
+        }
+        layoutRowConstraints += "[]";
+        setLayout(new MigLayout("wrap,insets 5,fillx", "[fill]", layoutRowConstraints));
+        add(new JSeparator(SwingConstants.VERTICAL), "dock west,height 100%", 0);
+        repaint();
+        revalidate();
     }
 
-    private JToggleButton createButton(String name, int date, boolean useType) {
+    private JToggleButton createButton(String name, PanelDateOptionLabel.LabelCallback callback) {
         JToggleButton button = new JToggleButton(name);
         button.setHorizontalAlignment(SwingConstants.LEADING);
-
-        if (useType) {
-            button.addActionListener(e -> {
-                disableChange = true;
-                if (date == -1) {
-                    datePicker.clearSelectedDate();
-                } else if (date == 1) {
-                    // this month
-                    Calendar calendar = Calendar.getInstance();
-                    setSelectedDate(calendar);
-                } else if (date == 2) {
-                    // last month
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.MONTH, -1);
-                    setSelectedDate(calendar);
-                } else if (date == 3) {
-                    // last year
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.YEAR, -1);
-                    int year = calendar.get(Calendar.YEAR);
-                    if (datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
-                        datePicker.setSelectedDate(LocalDate.of(year, 1, 1));
-                    } else {
-                        datePicker.setSelectedDateRange(LocalDate.of(year, 1, 1), LocalDate.of(year, 12, 31));
-                    }
-                }
-            });
-
-        } else {
-            button.addActionListener(e -> {
-                disableChange = true;
-                if (date == 0 || date == -1 || datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
-                    datePicker.setSelectedDate(calculateDate(date));
-                } else {
-                    datePicker.setSelectedDateRange(calculateDate(date), LocalDate.now());
-                }
-            });
+        if (callback == null) {
+            button.setName("custom");
         }
-
+        button.addActionListener(e -> {
+            disableChange = true;
+            if (callback == null) {
+                datePicker.clearSelectedDate();
+            } else {
+                LocalDate[] dates = callback.getDate();
+                boolean singleDate = dates.length == 1 || datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED;
+                if (singleDate) {
+                    datePicker.setSelectedDate(dates[0]);
+                } else {
+                    datePicker.setSelectedDateRange(dates[0], dates[1]);
+                }
+            }
+        });
         button.putClientProperty(FlatClientProperties.STYLE, "" +
                 "arc:10;" +
                 "borderWidth:0;" +
@@ -91,37 +80,35 @@ public class PanelDateOption extends JPanel {
         return button;
     }
 
-    private void setSelectedDate(Calendar calendar) {
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int fromDay = 1;
-        int toDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        if (datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
-            datePicker.setSelectedDate(LocalDate.of(year, month, fromDay));
-        } else {
-            datePicker.setSelectedDateRange(LocalDate.of(year, month, fromDay), LocalDate.of(year, month, toDay));
-        }
-    }
-
-    private LocalDate calculateDate(int date) {
-        if (date == 0) {
-            return LocalDate.now();
-        } else {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DATE, date);
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH) + 1;
-            int day = calendar.get(Calendar.DATE);
-            return LocalDate.of(year, month, day);
-        }
-    }
-
     public void setSelectedCustom() {
         if (!disableChange) {
-            JToggleButton button = (JToggleButton) (getComponent(getComponentCount() - 1));
-            button.setSelected(true);
+            JToggleButton customButton = null;
+            for (Component com : getComponents()) {
+                String name = com.getName();
+                if (name != null && name.equals("custom")) {
+                    customButton = (JToggleButton) com;
+                    break;
+                }
+            }
+            if (customButton != null) {
+                customButton.setSelected(true);
+            }
         }
         disableChange = false;
+    }
+
+    private PanelDateOptionLabel createDefaultPanelDateOptionLabel() {
+        PanelDateOptionLabel defaultPanelDateOptionLabel = new PanelDateOptionLabel();
+        defaultPanelDateOptionLabel.add("Today", PanelDateOptionLabel.LabelCallback.TODAY);
+        defaultPanelDateOptionLabel.add("Yesterday", PanelDateOptionLabel.LabelCallback.YESTERDAY);
+        defaultPanelDateOptionLabel.add("Last 7 Days", PanelDateOptionLabel.LabelCallback.LAST_7_DAYS);
+        defaultPanelDateOptionLabel.add("Last 30 Days", PanelDateOptionLabel.LabelCallback.LAST_30_DAYS);
+        defaultPanelDateOptionLabel.add("This Month", PanelDateOptionLabel.LabelCallback.THIS_MONTH);
+        defaultPanelDateOptionLabel.add("Last Month", PanelDateOptionLabel.LabelCallback.LAST_MONTH);
+        defaultPanelDateOptionLabel.add("Last YEAR", PanelDateOptionLabel.LabelCallback.LAST_YEAR);
+        defaultPanelDateOptionLabel.add("Custom", PanelDateOptionLabel.LabelCallback.CUSTOM);
+
+        return defaultPanelDateOptionLabel;
     }
 
     private ButtonGroup buttonGroup;
