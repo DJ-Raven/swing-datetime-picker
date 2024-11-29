@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.4.1]-SNAPSHOT
+## [1.4.1] - 2024-11-29
 
 ### New features and improvements
 

@@ -17,7 +17,7 @@ Add the dependency
 <dependency>
     <groupId>io.github.dj-raven</groupId>
     <artifactId>swing-datetime-picker</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
 </dependency>
 ```
 
