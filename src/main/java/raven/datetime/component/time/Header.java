@@ -197,7 +197,7 @@ public class Header extends JComponent {
     public JToggleButton buttonAm;
     private JToggleButton buttonPm;
 
-    protected interface EventHeaderChanged {
+    public interface EventHeaderChanged {
 
         void hourMinuteChanged(boolean isHour);
 

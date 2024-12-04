@@ -2,6 +2,7 @@ package raven.datetime.component.date;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
+import raven.datetime.DatePicker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -108,7 +109,7 @@ public class PanelDateOption extends JPanel {
         defaultPanelDateOptionLabel.add("Last 30 Days", PanelDateOptionLabel.LabelCallback.LAST_30_DAYS);
         defaultPanelDateOptionLabel.add("This Month", PanelDateOptionLabel.LabelCallback.THIS_MONTH);
         defaultPanelDateOptionLabel.add("Last Month", PanelDateOptionLabel.LabelCallback.LAST_MONTH);
-        defaultPanelDateOptionLabel.add("Last YEAR", PanelDateOptionLabel.LabelCallback.LAST_YEAR);
+        defaultPanelDateOptionLabel.add("Last Year", PanelDateOptionLabel.LabelCallback.LAST_YEAR);
         defaultPanelDateOptionLabel.add("Custom", PanelDateOptionLabel.LabelCallback.CUSTOM);
 
         return defaultPanelDateOptionLabel;

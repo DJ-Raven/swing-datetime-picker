@@ -82,9 +82,11 @@ public class InputUtils extends MaskFormatter {
             DateInputFormat mask = new DateInputFormat(between ? format + separator + format : format, between, separator, pattern, inputValidationListener);
             OldEditorProperty oldEditorProperty = initEditor(txt, mask, callback);
 
-            PropertyChangeListener propertyChangeListener = evt -> callback.valueChanged(txt.getValue());
-            txt.addPropertyChangeListener("value", propertyChangeListener);
-            oldEditorProperty.propertyChangeListener = propertyChangeListener;
+            if (callback != null) {
+                PropertyChangeListener propertyChangeListener = evt -> callback.valueChanged(txt.getValue());
+                txt.addPropertyChangeListener("value", propertyChangeListener);
+                oldEditorProperty.propertyChangeListener = propertyChangeListener;
+            }
             putPropertyChange(txt, oldEditorProperty);
         } catch (ParseException e) {
             System.err.println(e.getMessage());
@@ -132,7 +134,9 @@ public class InputUtils extends MaskFormatter {
         txt.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
         txt.putClientProperty(FlatClientProperties.TEXT_FIELD_CLEAR_CALLBACK, (Consumer<Object>) o -> {
             txt.setValue(null);
-            callback.valueChanged(null);
+            if (callback != null) {
+                callback.valueChanged(null);
+            }
         });
         return oldEditorProperty;
     }
@@ -151,6 +155,7 @@ public class InputUtils extends MaskFormatter {
         OldEditorProperty oldEditorProperty = inputMap.get(txt);
         if (oldEditorProperty != null) {
             oldEditorProperty.removeFromEditor(txt);
+            inputMap.remove(txt);
         }
     }
 
@@ -205,6 +210,8 @@ public class InputUtils extends MaskFormatter {
                     Date fromDate = dateFormat.parse(values[0]);
                     Date toDate = dateFormat.parse(values[1]);
 
+                    if (inputValidationListener == null) return;
+
                     // validate date selection able
                     if (inputValidationListener.isValidation()) {
                         LocalDate date1 = dateToLocalDate(fromDate);
@@ -217,6 +224,8 @@ public class InputUtils extends MaskFormatter {
                 } else {
                     Date date = dateFormat.parse(value);
 
+                    if (inputValidationListener == null) return;
+
                     // validate date selection able
                     if (inputValidationListener.isValidation()) {
                         LocalDate d = dateToLocalDate(date);
@@ -227,7 +236,9 @@ public class InputUtils extends MaskFormatter {
                 }
                 inputValidationListener.inputChanged(true);
             } catch (ParseException e) {
-                inputValidationListener.inputChanged(false);
+                if (inputValidationListener != null) {
+                    inputValidationListener.inputChanged(false);
+                }
                 throw e;
             }
         }
@@ -240,32 +251,35 @@ public class InputUtils extends MaskFormatter {
     private static class OldEditorProperty {
 
         protected PropertyChangeListener propertyChangeListener;
+        protected JFormattedTextField.AbstractFormatterFactory formatter;
         protected Component oldTrailingComponent;
         private boolean isShowClearButton;
         private Consumer clearButtonCallback;
         private String outline;
         protected Object value;
-        protected JFormattedTextField.AbstractFormatterFactory formatter;
+        protected String text;
 
         protected static OldEditorProperty getFromOldEditor(JFormattedTextField editor) {
             OldEditorProperty oldEditorProperty = new OldEditorProperty();
+            oldEditorProperty.formatter = editor.getFormatterFactory();
             oldEditorProperty.oldTrailingComponent = FlatClientProperties.clientProperty(editor, FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, null, Component.class);
             oldEditorProperty.isShowClearButton = FlatClientProperties.clientPropertyBoolean(editor, FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, false);
             oldEditorProperty.clearButtonCallback = FlatClientProperties.clientProperty(editor, FlatClientProperties.TEXT_FIELD_CLEAR_CALLBACK, null, Consumer.class);
             oldEditorProperty.outline = FlatClientProperties.clientProperty(editor, FlatClientProperties.OUTLINE, null, String.class);
             oldEditorProperty.value = editor.getValue();
-            oldEditorProperty.formatter = editor.getFormatterFactory();
+            oldEditorProperty.text = editor.getText();
             return oldEditorProperty;
         }
 
         protected void removeFromEditor(JFormattedTextField editor) {
             editor.removePropertyChangeListener("value", propertyChangeListener);
+            editor.setFormatterFactory(formatter);
             editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, oldTrailingComponent);
             editor.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, isShowClearButton);
             editor.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, clearButtonCallback);
             editor.putClientProperty(FlatClientProperties.OUTLINE, outline);
             editor.setValue(value);
-            editor.setFormatterFactory(formatter);
+            editor.setText(text);
         }
     }
 }

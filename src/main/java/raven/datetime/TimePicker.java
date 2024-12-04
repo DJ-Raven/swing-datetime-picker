@@ -1,35 +1,55 @@
-package raven.datetime.component.time;
+package raven.datetime;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import net.miginfocom.swing.MigLayout;
+import raven.datetime.component.PanelPopupEditor;
+import raven.datetime.component.time.Header;
+import raven.datetime.component.time.PanelClock;
+import raven.datetime.component.time.event.TimeSelectionEvent;
+import raven.datetime.component.time.event.TimeSelectionListener;
 import raven.datetime.util.InputUtils;
-import raven.datetime.util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
-public class TimePicker extends JPanel {
+public class TimePicker extends PanelPopupEditor {
 
     private final DateTimeFormatter format12h = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
     private final DateTimeFormatter format24h = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
-    private final List<TimeSelectionListener> events = new ArrayList<>();
     private TimeSelectionListener timeSelectionListener;
     private InputUtils.ValueCallback valueCallback;
-    private JFormattedTextField editor;
     private Icon editorIcon;
-    private JPopupMenu popupMenu;
     private MigLayout layout;
     private int orientation = SwingConstants.VERTICAL;
     private Color color;
-    private LookAndFeel oldThemes = UIManager.getLookAndFeel();
     private JButton editorButton;
     private LocalTime oldSelectedTime;
+
+    private Header header;
+    private PanelClock panelClock;
+
+    public TimePicker() {
+        init();
+    }
+
+    private void init() {
+        putClientProperty(FlatClientProperties.STYLE, "" +
+                "[light]background:darken($Panel.background,2%);" +
+                "[dark]background:lighten($Panel.background,2%);");
+        layout = new MigLayout(
+                "wrap,fill,insets 3",
+                "fill",
+                "fill");
+        setLayout(layout);
+        header = new Header(getEventHeader());
+        panelClock = new PanelClock(getEventClock());
+        add(header, "width 120:120");
+        add(panelClock, "width 230:230, height 230:230");
+    }
 
     public int getOrientation() {
         return orientation;
@@ -50,10 +70,10 @@ public class TimePicker extends JPanel {
             if (this.editor != null) {
                 uninstallEditor(this.editor);
             }
+            this.editor = editor;
             if (editor != null) {
                 installEditor(editor);
             }
-            this.editor = editor;
         }
     }
 
@@ -67,34 +87,8 @@ public class TimePicker extends JPanel {
             header.setUse24hour(hour24);
             if (editor != null) {
                 InputUtils.changeTimeFormatted(editor, hour24);
-                if (isTimeSelected()) {
-                    editor.setValue(getSelectedTimeAsString());
-                }
-                runEventTimeChanged();
+                setEditorValue();
             }
-        }
-    }
-
-    public void showPopup() {
-        if (popupMenu == null) {
-            popupMenu = new JPopupMenu();
-            popupMenu.putClientProperty(FlatClientProperties.STYLE, "" +
-                    "borderInsets:1,1,1,1");
-            popupMenu.add(this);
-        }
-        if (UIManager.getLookAndFeel() != oldThemes) {
-            // Component in popup not update UI when change themes, so need to update when popup show
-            SwingUtilities.updateComponentTreeUI(popupMenu);
-            oldThemes = UIManager.getLookAndFeel();
-        }
-        Point point = Utils.adjustPopupLocation(popupMenu, editor);
-        popupMenu.show(editor, point.x, point.y);
-    }
-
-    public void closePopup() {
-        if (popupMenu != null) {
-            popupMenu.setVisible(false);
-            repaint();
         }
     }
 
@@ -117,22 +111,6 @@ public class TimePicker extends JPanel {
         if (editorButton != null) {
             editorButton.setIcon(editorIcon);
         }
-    }
-
-    public TimePicker() {
-        init();
-    }
-
-    private void init() {
-        putClientProperty(FlatClientProperties.STYLE, "" +
-                "[light]background:darken($Panel.background,2%);" +
-                "[dark]background:lighten($Panel.background,2%);");
-        layout = new MigLayout("wrap,fill,insets 3", "fill", "fill");
-        setLayout(layout);
-        header = new Header(getEventHeader());
-        panelClock = new PanelClock(getEventClock());
-        add(header, "width 120:120");
-        add(panelClock, "width 230:230, height 230:230");
     }
 
     /**
@@ -194,20 +172,12 @@ public class TimePicker extends JPanel {
         }
     }
 
-    public void addTimeSelectionListener(TimeSelectionListener event) {
-        events.add(event);
+    public void addTimeSelectionListener(TimeSelectionListener listener) {
+        listenerList.add(TimeSelectionListener.class, listener);
     }
 
-    public void removeTimeSelectionListener(TimeSelectionListener event) {
-        if (events != null) {
-            events.remove(event);
-        }
-    }
-
-    public void removeAllTimeSelectionListener() {
-        if (events != null) {
-            events.clear();
-        }
+    public void removeTimeSelectionListener(TimeSelectionListener listener) {
+        listenerList.remove(TimeSelectionListener.class, listener);
     }
 
     private void installEditor(JFormattedTextField editor) {
@@ -215,9 +185,11 @@ public class TimePicker extends JPanel {
         editorButton = new JButton(editorIcon != null ? editorIcon : new FlatSVGIcon("raven/datetime/icon/clock.svg", 0.8f));
         toolBar.add(editorButton);
         editorButton.addActionListener(e -> {
+            editor.grabFocus();
             showPopup();
         });
         InputUtils.useTimeInput(editor, panelClock.isUse24hour(), getValueCallback());
+        setEditorValue();
         editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
         addTimeSelectionListener(getTimeSelectionListener());
     }
@@ -252,33 +224,25 @@ public class TimePicker extends JPanel {
 
     private TimeSelectionListener getTimeSelectionListener() {
         if (timeSelectionListener == null) {
-            timeSelectionListener = new TimeSelectionListener() {
-
-                @Override
-                public void timeSelected(TimeEvent timeEvent) {
-                    if (isTimeSelected()) {
-                        String value;
-                        if (panelClock.isUse24hour()) {
-                            value = format24h.format(getSelectedTime());
-                        } else {
-                            value = format12h.format(getSelectedTime());
-                        }
-                        if (!editor.getText().toLowerCase().equals(value.toLowerCase())) {
-                            editor.setValue(value);
-                        }
-                    } else {
-                        editor.setValue(null);
-                    }
-                }
+            timeSelectionListener = timeSelectionEvent -> {
+                setEditorValue();
             };
         }
         return timeSelectionListener;
     }
 
-    private void runEventTimeChanged() {
-        if (events == null || events.isEmpty()) {
-            return;
+    private void setEditorValue() {
+        String value = getSelectedTimeAsString();
+        if (value != null) {
+            if (!editor.getText().toLowerCase().equals(value.toLowerCase())) {
+                editor.setValue(value);
+            }
+        } else {
+            editor.setValue(null);
         }
+    }
+
+    private void verifyTimeSelection() {
         LocalTime time = getSelectedTime();
         if ((time == null && oldSelectedTime == null)) {
             return;
@@ -288,11 +252,16 @@ public class TimePicker extends JPanel {
             }
         }
         oldSelectedTime = time;
-        EventQueue.invokeLater(() -> {
-            for (TimeSelectionListener event : events) {
-                event.timeSelected(new TimeEvent(this));
+        fireTimeSelectionChanged(new TimeSelectionEvent(this));
+    }
+
+    public void fireTimeSelectionChanged(TimeSelectionEvent event) {
+        Object[] listeners = listenerList.getListenerList();
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == TimeSelectionListener.class) {
+                ((TimeSelectionListener) listeners[i + 1]).timeSelected(event);
             }
-        });
+        }
     }
 
     private Header.EventHeaderChanged getEventHeader() {
@@ -304,7 +273,7 @@ public class TimePicker extends JPanel {
 
             @Override
             public void amPmChanged(boolean isAm) {
-                runEventTimeChanged();
+                verifyTimeSelection();
             }
         };
     }
@@ -314,13 +283,13 @@ public class TimePicker extends JPanel {
             @Override
             public void hourChanged(int hour) {
                 header.setHour(hour);
-                runEventTimeChanged();
+                verifyTimeSelection();
             }
 
             @Override
             public void minuteChanged(int minute) {
                 header.setMinute(minute);
-                runEventTimeChanged();
+                verifyTimeSelection();
             }
 
             @Override
@@ -331,11 +300,8 @@ public class TimePicker extends JPanel {
             @Override
             public void amPmChanged(boolean isAm) {
                 header.setAm(isAm);
-                runEventTimeChanged();
+                verifyTimeSelection();
             }
         };
     }
-
-    private Header header;
-    private PanelClock panelClock;
 }

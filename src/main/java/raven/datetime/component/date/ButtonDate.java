@@ -5,6 +5,8 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.ColorFunctions;
 import com.formdev.flatlaf.util.UIScale;
+import raven.datetime.DatePicker;
+import raven.datetime.util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,14 +18,14 @@ import java.awt.geom.Rectangle2D;
 
 public class ButtonDate extends JButton {
 
-    private final DateSelection dateSelection;
+    private final DatePicker datePicker;
     private final SingleDate date;
     private boolean press;
     private boolean hover;
     private int rowIndex;
 
-    public ButtonDate(DateSelection dateSelection, SingleDate date, boolean enable, int rowIndex) {
-        this.dateSelection = dateSelection;
+    public ButtonDate(DatePicker datePicker, SingleDate date, boolean enable, int rowIndex) {
+        this.datePicker = datePicker;
         this.date = date;
         this.rowIndex = rowIndex;
         setText(date.getDay() + "");
@@ -33,18 +35,17 @@ public class ButtonDate extends JButton {
     private void init(boolean enable) {
         setContentAreaFilled(false);
         addActionListener(e -> {
-            dateSelection.selectDate(date);
+            datePicker.getDateSelection().selectDate(date);
             hover = false;
             PanelDate panelDate = (PanelDate) getParent();
             panelDate.checkSelection();
-            getParent().repaint();
         });
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (dateSelection.datePicker.isCloseAfterSelected() == false && dateSelection.dateSelectionMode == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
+                if (isEnabled() && datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
                     if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
-                        dateSelection.datePicker.closePopup();
+                        datePicker.closePopup();
                     }
                 }
             }
@@ -66,9 +67,8 @@ public class ButtonDate extends JButton {
             @Override
             public void mouseEntered(MouseEvent e) {
                 hover = true;
-                if (dateSelection.dateSelectionMode == DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED && dateSelection.getDate() != null) {
-                    dateSelection.setHoverDate(date);
-                    getParent().repaint();
+                if (datePicker.getDateSelection().getDateSelectionMode() == DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED && datePicker.getDateSelection().getDate() != null) {
+                    datePicker.getDateSelection().setHoverDate(date);
                 }
             }
 
@@ -103,11 +103,12 @@ public class ButtonDate extends JButton {
 
         g2.setColor(getColor());
         g2.fill(new Ellipse2D.Double(x, y, size, size));
+        DateSelectionModel dateSelectionModel = datePicker.getDateSelection();
 
         //  paint date between selected
-        if (dateSelection.dateSelectionMode == DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED && dateSelection.getDate() != null) {
+        if (dateSelectionModel.getDateSelectionMode() == DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED && dateSelectionModel.getDate() != null) {
             g2.setColor(getBetweenDateColor());
-            if (date.between(dateSelection.getDate(), getToDate())) {
+            if (date.between(dateSelectionModel.getDate(), getToDate())) {
                 if (rowIndex == 0) {
                     g2.fill(getShape(x, y, width, size, true, true));
                 } else if (rowIndex == 6) {
@@ -116,16 +117,16 @@ public class ButtonDate extends JButton {
                     g2.fill(new Rectangle2D.Double(0, y, width, size));
                 }
             }
-            if (!dateSelection.getDate().same(getToDate())) {
-                boolean right = dateSelection.getDate().before(getToDate());
-                if (date.same(dateSelection.getDate())) {
+            if (!dateSelectionModel.getDate().same(getToDate())) {
+                boolean right = dateSelectionModel.getDate().before(getToDate());
+                if (date.same(dateSelectionModel.getDate())) {
                     if ((right && rowIndex != 6) || !right && rowIndex != 0) {
                         g2.fill(getShape(x, y, width, size, right, false));
                     }
                 }
                 if (date.same(getToDate())) {
                     if ((right && rowIndex != 0) || (!right && rowIndex != 6)) {
-                        g2.fill(getShape(x, y, width, size, !right, !hover && dateSelection.getToDate() == null));
+                        g2.fill(getShape(x, y, width, size, !right, !hover && dateSelectionModel.getToDate() == null));
                     }
                 }
             }
@@ -168,7 +169,29 @@ public class ButtonDate extends JButton {
     }
 
     private SingleDate getToDate() {
-        return dateSelection.getToDate() != null ? dateSelection.getToDate() : dateSelection.getHoverDate();
+        DateSelectionModel dateSelectionModel = datePicker.getDateSelection();
+        return dateSelectionModel.getToDate() != null ? dateSelectionModel.getToDate() : dateSelectionModel.getHoverDate();
+    }
+
+    protected boolean isDateSelected() {
+        DateSelectionModel dateSelectionModel = datePicker.getDateSelection();
+        if (dateSelectionModel.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
+            return date.same(dateSelectionModel.getDate());
+        } else {
+            return date.same(dateSelectionModel.getDate()) || date.same(dateSelectionModel.getToDate());
+        }
+    }
+
+    protected Color getBorderColor(Color color) {
+        return ColorFunctions.mix(color, getParent().getBackground(), 0.45f);
+    }
+
+    protected Color getBetweenDateColor() {
+        Color color = FlatUIUtils.getParentBackground(this);
+        if (datePicker.getDateSelection().getToDate() != null) {
+            return ColorFunctions.mix(color, getAccentColor(), 0.9f);
+        }
+        return FlatLaf.isLafDark() ? ColorFunctions.lighten(color, 0.03f) : ColorFunctions.darken(color, 0.03f);
     }
 
     protected Color getColor() {
@@ -176,39 +199,14 @@ public class ButtonDate extends JButton {
         if (isDateSelected()) {
             color = getAccentColor();
         }
-        if (press) {
-            return FlatLaf.isLafDark() ? ColorFunctions.lighten(color, 0.1f) : ColorFunctions.darken(color, 0.1f);
-        } else if (hover) {
-            return FlatLaf.isLafDark() ? ColorFunctions.lighten(color, 0.03f) : ColorFunctions.darken(color, 0.03f);
-        }
-        return color;
+        return Utils.getColor(color, press, hover);
     }
 
     protected Color getAccentColor() {
-        if (dateSelection.datePicker.getColor() != null) {
-            return dateSelection.datePicker.getColor();
+        if (datePicker.getColor() != null) {
+            return datePicker.getColor();
         }
         return UIManager.getColor("Component.accentColor");
-    }
-
-    protected Color getBorderColor(Color color) {
-        return ColorFunctions.mix(color, getParent().getBackground(), 0.45f);
-    }
-
-    protected boolean isDateSelected() {
-        if (dateSelection.dateSelectionMode == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
-            return date.same(dateSelection.getDate());
-        } else {
-            return date.same(dateSelection.getDate()) || date.same(dateSelection.getToDate());
-        }
-    }
-
-    protected Color getBetweenDateColor() {
-        Color color = FlatUIUtils.getParentBackground(this);
-        if (dateSelection.getToDate() != null) {
-            return ColorFunctions.mix(color, getAccentColor(), 0.9f);
-        }
-        return FlatLaf.isLafDark() ? ColorFunctions.lighten(color, 0.03f) : ColorFunctions.darken(color, 0.03f);
     }
 
     protected SingleDate getDate() {

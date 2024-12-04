@@ -7,9 +7,9 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.formdev.flatlaf.util.UIScale;
 import net.miginfocom.swing.MigLayout;
-import raven.datetime.component.time.TimeEvent;
-import raven.datetime.component.time.TimePicker;
-import raven.datetime.component.time.TimeSelectionListener;
+import raven.datetime.TimePicker;
+import raven.datetime.component.time.event.TimeSelectionEvent;
+import raven.datetime.component.time.event.TimeSelectionListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +25,7 @@ public class TestTime extends JFrame {
         TimePicker timePicker = new TimePicker();
         timePicker.addTimeSelectionListener(new TimeSelectionListener() {
             @Override
-            public void timeSelected(TimeEvent timeEvent) {
+            public void timeSelected(TimeSelectionEvent timeEvent) {
                 if (timePicker.isTimeSelected()) {
                     DateTimeFormatter df = DateTimeFormatter.ofPattern("hh:mm a");
                     System.out.println("event selected : " + timePicker.getSelectedTime().format(df));

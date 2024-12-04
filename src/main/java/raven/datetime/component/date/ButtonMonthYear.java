@@ -1,10 +1,10 @@
 package raven.datetime.component.date;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.ui.FlatUIUtils;
-import com.formdev.flatlaf.util.ColorFunctions;
 import com.formdev.flatlaf.util.UIScale;
+import raven.datetime.DatePicker;
+import raven.datetime.util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,20 +13,14 @@ import java.awt.event.MouseEvent;
 
 public class ButtonMonthYear extends JButton {
 
-    public int getValue() {
-        return value;
-    }
-
-    private final DateSelection dateSelection;
+    private final DatePicker datePicker;
     private final int value;
-    private final boolean isYear;
     private boolean press;
     private boolean hover;
 
-    public ButtonMonthYear(DateSelection dateSelection, int value, boolean isYear) {
-        this.dateSelection = dateSelection;
+    public ButtonMonthYear(DatePicker datePicker, int value) {
+        this.datePicker = datePicker;
         this.value = value;
-        this.isYear = isYear;
         init();
     }
 
@@ -62,6 +56,10 @@ public class ButtonMonthYear extends JButton {
                 "selectedForeground:contrast($Component.accentColor,$Button.background,#fff);");
     }
 
+    public int getValue() {
+        return value;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
@@ -80,17 +78,12 @@ public class ButtonMonthYear extends JButton {
 
     protected Color getColor() {
         Color color = isSelected() ? getAccentColor() : FlatUIUtils.getParentBackground(this);
-        if (press) {
-            return FlatLaf.isLafDark() ? ColorFunctions.lighten(color, 0.1f) : ColorFunctions.darken(color, 0.1f);
-        } else if (hover) {
-            return FlatLaf.isLafDark() ? ColorFunctions.lighten(color, 0.03f) : ColorFunctions.darken(color, 0.03f);
-        }
-        return color;
+        return Utils.getColor(color, press, hover);
     }
 
     protected Color getAccentColor() {
-        if (dateSelection.datePicker.getColor() != null) {
-            return dateSelection.datePicker.getColor();
+        if (datePicker.getColor() != null) {
+            return datePicker.getColor();
         }
         return UIManager.getColor("Component.accentColor");
     }
