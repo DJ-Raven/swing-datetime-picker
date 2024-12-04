@@ -3,11 +3,11 @@ A simple datetime picker implementation using Java Swing, built with the `flatla
 
 This project provides a datetime picker component that can be easily integrated into Java Swing applications. It leverages flatlaf for a modern look and miglayout for flexible and easy-to-use layout management.
 
-<img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/timepicker-dark.png" alt="timepicker dark" width="300"/>&nbsp;
-<img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/timepicker-light.png" alt="timepicker light" width="300"/>
+<img src="screenshot/timepicker-dark.png" alt="timepicker dark" width="300"/>&nbsp;
+<img src="screenshot/timepicker-light.png" alt="timepicker light" width="300"/>
 <br/>
-<img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/datepicker-dark.png" alt="datepicker dark" width="300"/>&nbsp;
-<img src="https://github.com/DJ-Raven/swing-datetime-picker/blob/main/screenshot/datepicker-light.png" alt="datepicker light" width="300"/>
+<img src="screenshot/datepicker-dark.png" alt="datepicker dark" width="300"/>&nbsp;
+<img src="screenshot/datepicker-light.png" alt="datepicker light" width="300"/>
 ## Installation
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.dj-raven/swing-datetime-picker?label=Maven%20Central)](https://search.maven.org/artifact/io.github.dj-raven/swing-datetime-picker)
@@ -37,7 +37,7 @@ Add the snapshot version
 <dependency>
     <groupId>io.github.dj-raven</groupId>
     <artifactId>swing-datetime-picker</artifactId>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
