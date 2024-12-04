@@ -400,7 +400,8 @@ public class PanelClock extends JPanel {
         this.color = color;
     }
 
-    protected interface EventClockChanged {
+    public interface EventClockChanged {
+
         void hourChanged(int hour);
 
         void minuteChanged(int minute);

@@ -7,9 +7,9 @@ import com.formdev.flatlaf.intellijthemes.FlatAllIJThemes;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.util.UIScale;
 import net.miginfocom.swing.MigLayout;
-import raven.datetime.component.date.DateEvent;
-import raven.datetime.component.date.DatePicker;
-import raven.datetime.component.date.DateSelectionListener;
+import raven.datetime.DatePicker;
+import raven.datetime.component.date.event.DateSelectionEvent;
+import raven.datetime.component.date.event.DateSelectionListener;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -30,7 +30,7 @@ public class TestDate extends JFrame {
         datePicker = new DatePicker();
         datePicker.addDateSelectionListener(new DateSelectionListener() {
             @Override
-            public void dateSelected(DateEvent dateEvent) {
+            public void dateSelected(DateSelectionEvent dateEvent) {
 
                 DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 if (datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
@@ -51,7 +51,7 @@ public class TestDate extends JFrame {
             }
         });
 
-        // datePicker.setDateSelectionAble((date) -> !date.isAfter(LocalDate.now()));
+        datePicker.setDateSelectionAble((date) -> !date.isAfter(LocalDate.now()));
 
         datePicker.now();
         JFormattedTextField editor = new JFormattedTextField();

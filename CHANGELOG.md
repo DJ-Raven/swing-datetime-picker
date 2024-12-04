@@ -1,13 +1,21 @@
 # Changelog
 
+## [2.0.0]-SNAPSHOT
+
+### Changed
+
+- Rewrote and refactored existing code for improved readability and performance
+- Move `raven.datetime.component.date.DatePicker` to `raven.datetime.DatePicker`
+- Move `raven.datetime.component.time.TimePicker` to `raven.datetime.TimePicker`
+
 ## [1.4.1] - 2024-11-29
 
 ### New features and improvements
 
 - DatePicker:
-  - Add new option `animationEnabled`
-  - Date popup in `SINGLE_DATE_SELECTED` mode, now auto close when double click
-  - Add `PanelDateOptionLabel` to custom panel date option (PR #10)
+    - Add new option `animationEnabled`
+    - Date popup in `SINGLE_DATE_SELECTED` mode, now auto close when double click
+    - Add `PanelDateOptionLabel` to custom panel date option (PR #10)
 
 ### Changed
 
@@ -16,17 +24,17 @@
 ### Fixed bugs
 
 - DatePicker:
-  - Fixed editor input validation
-  - Miglayout use `novisualpadding` and set slider fix size as `260,250`
+    - Fixed editor input validation
+    - Miglayout use `novisualpadding` and set slider fix size as `260,250`
 - TimePicker:
-  - Fixed `editor` not changed value when switch between `24h` and `12h` view
+    - Fixed `editor` not changed value when switch between `24h` and `12h` view
 
 ## [1.4.0] - 2024-09-14
 
 ### New features and improvements
 
 - DatePicker:
-  - Add editor input validation (PR #9)
+    - Add editor input validation (PR #9)
 
 ### Changed
 
@@ -37,9 +45,9 @@
 ### New features and improvements
 
 - DatePicker:
-  - Add new method:
-    - `setDateFormat(String format)` to format date (issues #5)
-    - `setColor(Color color)` (issues #6)
+    - Add new method:
+        - `setDateFormat(String format)` to format date (issues #5)
+        - `setColor(Color color)` (issues #6)
 
 ### Fixed bugs
 
@@ -51,20 +59,20 @@
 ### New features and improvements
 
 - DatePicker:
-  - Add new method `selectCurrentMonth()` (PR #2)
+    - Add new method `selectCurrentMonth()` (PR #2)
 - TimePicker:
-  - Add new method `setColor(Color color)` (issues #3)
+    - Add new method `setColor(Color color)` (issues #3)
 - Popup menu will show inside the windows frame
 - Add new method `setEditorIcon(Icon icon)`
 
 ### Fixed bugs
 
 - DatePicker:
-  - Invert between date selected (when `date` is after `toDate`) (PR #2)
-  - Fixed `between date` resend value when editor value changed
-- TimePicker: 
-  - Fixed event time changed not work while `am` or `pm` changed in editor
-  - Fixed time format by use `Locale.ENGLISH` (issues #4)
+    - Invert between date selected (when `date` is after `toDate`) (PR #2)
+    - Fixed `between date` resend value when editor value changed
+- TimePicker:
+    - Fixed event time changed not work while `am` or `pm` changed in editor
+    - Fixed time format by use `Locale.ENGLISH` (issues #4)
 - Fixed reset old editor to default after changed new editor
 - Fixed event `SelectionListener` invoke only value changed
 
@@ -72,7 +80,7 @@
 
 ### New features and improvements
 
-- Add new datepicker (PR #1) 
+- Add new datepicker (PR #1)
 - Update style background in timepicker
 
 ## [1.0.0] - 2023-12-17
