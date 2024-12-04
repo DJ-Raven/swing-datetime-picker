@@ -6,8 +6,8 @@ import net.miginfocom.swing.MigLayout;
 import raven.datetime.component.PanelPopupEditor;
 import raven.datetime.component.time.Header;
 import raven.datetime.component.time.PanelClock;
-import raven.datetime.component.time.event.TimeSelectionEvent;
-import raven.datetime.component.time.event.TimeSelectionListener;
+import raven.datetime.event.TimeSelectionEvent;
+import raven.datetime.event.TimeSelectionListener;
 import raven.datetime.util.InputUtils;
 
 import javax.swing.*;

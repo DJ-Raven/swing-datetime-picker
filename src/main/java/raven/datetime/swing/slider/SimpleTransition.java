@@ -1,4 +1,4 @@
-package raven.swing.slider;
+package raven.datetime.swing.slider;
 
 import java.awt.*;
 

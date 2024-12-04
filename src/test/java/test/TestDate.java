@@ -8,8 +8,8 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.util.UIScale;
 import net.miginfocom.swing.MigLayout;
 import raven.datetime.DatePicker;
-import raven.datetime.component.date.event.DateSelectionEvent;
-import raven.datetime.component.date.event.DateSelectionListener;
+import raven.datetime.event.DateSelectionEvent;
+import raven.datetime.event.DateSelectionListener;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

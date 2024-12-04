@@ -1,8 +1,7 @@
-package raven.datetime.component.date;
+package raven.datetime;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
-import raven.datetime.DatePicker;
 
 import javax.swing.*;
 import java.awt.*;
