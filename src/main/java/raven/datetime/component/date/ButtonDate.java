@@ -35,15 +35,17 @@ public class ButtonDate extends JButton {
     private void init(boolean enable) {
         setContentAreaFilled(false);
         addActionListener(e -> {
-            datePicker.getDateSelection().selectDate(date);
-            hover = false;
-            PanelDate panelDate = (PanelDate) getParent();
-            panelDate.checkSelection();
+            if (datePicker.isEnabled()) {
+                datePicker.getDateSelection().selectDate(date);
+                hover = false;
+                PanelDate panelDate = (PanelDate) getParent();
+                panelDate.checkSelection();
+            }
         });
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled() && datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
+                if (datePicker.isEnabled() && isEnabled() && datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
                     if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
                         datePicker.closePopup();
                     }
@@ -52,29 +54,33 @@ public class ButtonDate extends JButton {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
+                if (datePicker.isEnabled() && SwingUtilities.isLeftMouseButton(e)) {
                     press = true;
                 }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
+                if (datePicker.isEnabled() && SwingUtilities.isLeftMouseButton(e)) {
                     press = false;
                 }
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                hover = true;
-                if (datePicker.getDateSelection().getDateSelectionMode() == DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED && datePicker.getDateSelection().getDate() != null) {
-                    datePicker.getDateSelection().setHoverDate(date);
+                if (datePicker.isEnabled()) {
+                    hover = true;
+                    if (datePicker.getDateSelection().getDateSelectionMode() == DatePicker.DateSelectionMode.BETWEEN_DATE_SELECTED && datePicker.getDateSelection().getDate() != null) {
+                        datePicker.getDateSelection().setHoverDate(date);
+                    }
                 }
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                hover = false;
+                if (datePicker.isEnabled()) {
+                    hover = false;
+                }
             }
         });
         if (enable) {

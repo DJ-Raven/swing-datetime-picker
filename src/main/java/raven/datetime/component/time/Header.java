@@ -23,7 +23,6 @@ public class Header extends JComponent {
         layout.setComponentConstraints(amPmToolBar, c);
     }
 
-
     public void setHour(int hour) {
         buttonHour.setText(format.format(hour));
         if (amPmToolBar.isVisible()) {
@@ -187,6 +186,13 @@ public class Header extends JComponent {
             return color;
         }
         return UIManager.getColor("Component.accentColor");
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        buttonAm.setEnabled(enabled);
+        buttonPm.setEnabled(enabled);
     }
 
     private JToggleButton buttonHour;

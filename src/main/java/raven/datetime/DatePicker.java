@@ -11,11 +11,11 @@ import raven.datetime.component.date.event.DateSelectionModelEvent;
 import raven.datetime.component.date.event.DateSelectionModelListener;
 import raven.datetime.event.DateSelectionEvent;
 import raven.datetime.event.DateSelectionListener;
-import raven.datetime.util.InputUtils;
-import raven.datetime.util.InputValidationListener;
 import raven.datetime.swing.slider.PanelSlider;
 import raven.datetime.swing.slider.SimpleTransition;
 import raven.datetime.swing.slider.SliderTransition;
+import raven.datetime.util.InputUtils;
+import raven.datetime.util.InputValidationListener;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -537,8 +537,10 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
             editorButton = new JButton(editorIcon != null ? editorIcon : new FlatSVGIcon("raven/datetime/icon/calendar.svg", 0.8f));
             toolBar.add(editorButton);
             editorButton.addActionListener(e -> {
-                editor.grabFocus();
-                showPopup();
+                if (editor.isEnabled()) {
+                    editor.grabFocus();
+                    showPopup();
+                }
             });
             InputUtils.useDateInput(editor, dateFormatPattern, getDateSelectionMode() == DateSelectionMode.BETWEEN_DATE_SELECTED, separator, getValueCallback(), getInputValidationListener());
             setEditorValue();

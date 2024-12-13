@@ -2,6 +2,13 @@
 
 ## [2.0.0]-SNAPSHOT
 
+### New features and improvements
+
+- DatePicker:
+    - When disabled, users can no longer change the date selection
+- TimePicker:
+    - When disabled, users can no longer change the time selection
+
 ### Changed
 
 - Rewrote and refactored existing code for improved readability and performance

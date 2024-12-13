@@ -57,18 +57,25 @@ public class PanelDateOption extends JPanel {
         }
         button.addActionListener(e -> {
             disableChange = true;
+            boolean isEnable = datePicker.isEnabled();
             if (callback == null) {
-                datePicker.clearSelectedDate();
+                if (isEnable) {
+                    datePicker.clearSelectedDate();
+                }
             } else {
                 LocalDate[] dates = callback.getDate();
                 if (dates.length == 0) {
                     throw new IllegalArgumentException("Date option is empty so can't be select");
                 }
                 boolean singleDate = dates.length == 1 || datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED;
-                if (singleDate) {
-                    datePicker.setSelectedDate(dates[0]);
+                if (isEnable) {
+                    if (singleDate) {
+                        datePicker.setSelectedDate(dates[0]);
+                    } else {
+                        datePicker.setSelectedDateRange(dates[0], dates[1]);
+                    }
                 } else {
-                    datePicker.setSelectedDateRange(dates[0], dates[1]);
+                    datePicker.slideTo(dates[0]);
                 }
             }
         });

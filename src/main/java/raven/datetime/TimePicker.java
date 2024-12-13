@@ -185,8 +185,10 @@ public class TimePicker extends PanelPopupEditor {
         editorButton = new JButton(editorIcon != null ? editorIcon : new FlatSVGIcon("raven/datetime/icon/clock.svg", 0.8f));
         toolBar.add(editorButton);
         editorButton.addActionListener(e -> {
-            editor.grabFocus();
-            showPopup();
+            if (editor.isEnabled()) {
+                editor.grabFocus();
+                showPopup();
+            }
         });
         InputUtils.useTimeInput(editor, panelClock.isUse24hour(), getValueCallback());
         setEditorValue();
@@ -262,6 +264,13 @@ public class TimePicker extends PanelPopupEditor {
                 ((TimeSelectionListener) listeners[i + 1]).timeSelected(event);
             }
         }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        header.setEnabled(enabled);
+        panelClock.setEnabled(enabled);
     }
 
     private Header.EventHeaderChanged getEventHeader() {

@@ -127,31 +127,39 @@ public class PanelClock extends JPanel {
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                mouseChanged(e);
+                if (isEnabled()) {
+                    mouseChanged(e);
+                }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (hourSelectionView) {
-                    hourSelectionView = false;
-                    clockChanged.hourMinuteChanged(false);
-                    runAnimation();
-                    repaint();
+                if (isEnabled()) {
+                    if (hourSelectionView) {
+                        hourSelectionView = false;
+                        clockChanged.hourMinuteChanged(false);
+                        runAnimation();
+                        repaint();
+                    }
                 }
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                mouseChanged(e);
+                if (isEnabled()) {
+                    mouseChanged(e);
+                }
             }
 
             private void mouseChanged(MouseEvent e) {
-                if (hourSelectionView) {
-                    int hour = getValueOf(e.getPoint(), hourSelectionView);
-                    setHour(hour);
-                } else {
-                    int minute = getValueOf(e.getPoint(), hourSelectionView);
-                    setMinute(minute);
+                if (isEnabled()) {
+                    if (hourSelectionView) {
+                        int hour = getValueOf(e.getPoint(), hourSelectionView);
+                        setHour(hour);
+                    } else {
+                        int minute = getValueOf(e.getPoint(), hourSelectionView);
+                        setMinute(minute);
+                    }
                 }
             }
         };
