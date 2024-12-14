@@ -58,7 +58,7 @@ public class PanelYear extends JPanel {
     }
 
     protected boolean checkSelected(int year) {
-        DateSelectionModel dateSelectionModel = datePicker.getDateSelection();
+        DateSelectionModel dateSelectionModel = datePicker.getDateSelectionModel();
         if (dateSelectionModel.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED) {
             return dateSelectionModel.getDate() != null && year == dateSelectionModel.getDate().getYear();
         } else {

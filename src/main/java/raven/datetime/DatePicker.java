@@ -79,7 +79,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
         if (dateSelectionModel == null) {
             dateSelectionModel = createDefaultDateSelection();
         }
-        setDateSelection(dateSelectionModel);
+        setDateSelectionModel(dateSelectionModel);
 
         add(header);
         add(panelSlider, "width 260!,height 250!");
@@ -456,11 +456,11 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
         return header;
     }
 
-    public DateSelectionModel getDateSelection() {
+    public DateSelectionModel getDateSelectionModel() {
         return dateSelectionModel;
     }
 
-    public void setDateSelection(DateSelectionModel dateSelectionModel) {
+    public void setDateSelectionModel(DateSelectionModel dateSelectionModel) {
         if (dateSelectionModel == null) {
             throw new IllegalArgumentException("dateSelectionModel can't be null");
         }
