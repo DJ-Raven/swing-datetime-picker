@@ -2,76 +2,26 @@ package raven.datetime.component.time;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
+import raven.datetime.TimePicker;
+import raven.datetime.component.time.event.TimeActionListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 
 public class Header extends JComponent {
 
-    private MigLayout layout;
-    private final EventHeaderChanged headerChanged;
+    private final TimePicker timePicker;
+    private final TimeActionListener timeActionListener;
     private final DecimalFormat format = new DecimalFormat("00");
-    private boolean isAm;
-
+    private MigLayout layout;
     private Color color;
 
-    public void setOrientation(int orientation) {
-        String c = orientation == SwingConstants.VERTICAL ? "pos b1.x2+rel 0.5al n n" : "pos 0.5al b1.y2+rel n n";
-        amPmToolBar.setOrientation(orientation);
-        layout.setComponentConstraints(amPmToolBar, c);
-    }
-
-    public void setHour(int hour) {
-        buttonHour.setText(format.format(hour));
-        if (amPmToolBar.isVisible()) {
-            if (!buttonAm.isSelected() && !buttonPm.isSelected()) {
-                buttonAm.setSelected(true);
-                setAm(true);
-            }
-        }
-    }
-
-    public void setMinute(int minute) {
-        buttonMinute.setText(format.format(minute));
-    }
-
-    public void setAm(boolean isAm) {
-        this.isAm = isAm;
-        if (isAm) {
-            buttonAm.setSelected(true);
-        } else {
-            buttonPm.setSelected(true);
-        }
-        headerChanged.amPmChanged(isAm);
-    }
-
-    public void clearTime() {
-        group.clearSelection();
-        buttonHour.setText("--");
-        buttonMinute.setText("--");
-        buttonHour.setSelected(true);
-    }
-
-    public boolean isAm() {
-        return isAm;
-    }
-
-    public void setHourSelect(boolean isHour) {
-        if (isHour) {
-            buttonHour.setSelected(true);
-        } else {
-            buttonMinute.setSelected(true);
-        }
-    }
-
-    public void setUse24hour(boolean use24hour) {
-        amPmToolBar.setVisible(!use24hour);
-    }
-
-    public Header(EventHeaderChanged headerChanged) {
-        this.headerChanged = headerChanged;
+    public Header(TimePicker timePicker, TimeActionListener timeActionListener) {
+        this.timePicker = timePicker;
+        this.timeActionListener = timeActionListener;
         init();
     }
 
@@ -83,19 +33,73 @@ public class Header extends JComponent {
         add(createAmPm(), "pos b1.x2+rel 0.5al n n");
     }
 
+    public void updateHeader() {
+        int hour = timePicker.getTimeSelectionModel().getHour();
+        int minute = timePicker.getTimeSelectionModel().getMinute();
+
+        if (hour == -1 && minute == -1) {
+            buttonAm.setSelected(false);
+            buttonPm.setSelected(false);
+        } else {
+            if (hour >= 12) {
+                buttonAm.setSelected(false);
+                buttonPm.setSelected(true);
+            } else {
+                buttonAm.setSelected(true);
+                buttonPm.setSelected(false);
+            }
+        }
+
+        if (!timePicker.is24HourView()) {
+            if (hour >= 12) {
+                hour -= 12;
+            }
+            if (hour == 0) {
+                hour = 12;
+            }
+        }
+
+        String hourText = hour == -1 ? "--" : format.format(hour);
+        String minuteText = minute == -1 ? "--" : format.format(minute);
+        buttonHour.setText(hourText);
+        buttonMinute.setText(minuteText);
+    }
+
+    public void setOrientation(int orientation) {
+        String c = orientation == SwingConstants.VERTICAL ? "pos b1.x2+rel 0.5al n n" : "pos 0.5al b1.y2+rel n n";
+        amPmToolBar.setOrientation(orientation);
+        layout.setComponentConstraints(amPmToolBar, c);
+    }
+
+    public boolean isAm() {
+        return !buttonPm.isSelected();
+    }
+
+    public void setHourSelectionView(boolean hourSelectionView) {
+        if (hourSelectionView) {
+            buttonHour.setSelected(true);
+        } else {
+            buttonMinute.setSelected(true);
+        }
+    }
+
+    public void setUse24hour(boolean use24hour) {
+        amPmToolBar.setVisible(!use24hour);
+    }
+
     protected JToolBar createToolBar() {
         JToolBar toolBar = new JToolBar();
         toolBar.putClientProperty(FlatClientProperties.STYLE, "" +
                 "background:null;" +
-                "hoverButtonGroupBackground:null");
+                "hoverButtonGroupBackground:null;");
         buttonHour = createButton();
         buttonMinute = createButton();
         ButtonGroup group = new ButtonGroup();
         group.add(buttonHour);
         group.add(buttonMinute);
         buttonHour.setSelected(true);
-        buttonHour.addActionListener(e -> headerChanged.hourMinuteChanged(true));
-        buttonMinute.addActionListener(e -> headerChanged.hourMinuteChanged(false));
+        buttonHour.addActionListener(e -> timeActionListener.selectionViewChanged(true));
+        buttonMinute.addActionListener(e -> timeActionListener.selectionViewChanged(false));
         toolBar.add(buttonHour);
         toolBar.add(createSplit());
         toolBar.add(buttonMinute);
@@ -113,14 +117,24 @@ public class Header extends JComponent {
         return button;
     }
 
-    protected JToggleButton createAmPmButton(String text) {
-        JToggleButton button = new JToggleButton(text);
+    protected JButton createAmPmButton(boolean isAm) {
+        String[] amPM = DateFormatSymbols.getInstance().getAmPmStrings();
+        String amOrPm = isAm ? amPM[0] : amPM[1];
+        JButton button = new JButton(amOrPm);
         button.addActionListener(e -> {
-            boolean am = text.equals("AM");
-            if (isAm != am) {
-                isAm = am;
-                headerChanged.amPmChanged(am);
+            TimeSelectionModel timeSelectionModel = timePicker.getTimeSelectionModel();
+            int hour = timeSelectionModel.getHour();
+            int minute = timeSelectionModel.getMinute();
+            if (isAm) {
+                if (hour >= 12) {
+                    hour -= 12;
+                }
+            } else {
+                if (hour < 12) {
+                    hour += 12;
+                }
             }
+            timeSelectionModel.set(hour, minute);
         });
         button.putClientProperty(FlatClientProperties.STYLE, "" +
                 "font:+1;" +
@@ -144,11 +158,8 @@ public class Header extends JComponent {
         amPmToolBar.putClientProperty(FlatClientProperties.STYLE, "" +
                 "background:null;" +
                 "hoverButtonGroupBackground:null");
-        group = new ButtonGroup();
-        buttonAm = createAmPmButton("AM");
-        buttonPm = createAmPmButton("PM");
-        group.add(buttonAm);
-        group.add(buttonPm);
+        buttonAm = createAmPmButton(true);
+        buttonPm = createAmPmButton(false);
         amPmToolBar.add(buttonAm);
         amPmToolBar.add(buttonPm);
         return amPmToolBar;
@@ -175,7 +186,6 @@ public class Header extends JComponent {
         this.color = color;
     }
 
-
     /**
      * Override this method to return the background color to the JToolBar
      * When JToolBar use null background, so it will paint the parent background.
@@ -196,17 +206,9 @@ public class Header extends JComponent {
     }
 
     private JToggleButton buttonHour;
-    public JToggleButton buttonMinute;
+    private JToggleButton buttonMinute;
 
-    public JToolBar amPmToolBar;
-    public ButtonGroup group;
-    public JToggleButton buttonAm;
-    private JToggleButton buttonPm;
-
-    public interface EventHeaderChanged {
-
-        void hourMinuteChanged(boolean isHour);
-
-        void amPmChanged(boolean isAm);
-    }
+    private JToolBar amPmToolBar;
+    private JButton buttonAm;
+    private JButton buttonPm;
 }

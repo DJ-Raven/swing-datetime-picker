@@ -5,6 +5,8 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.ColorFunctions;
 import com.formdev.flatlaf.util.UIScale;
+import raven.datetime.TimePicker;
+import raven.datetime.component.time.event.TimeActionListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,59 +16,14 @@ import java.awt.geom.*;
 
 public class PanelClock extends JPanel {
 
-    private final EventClockChanged clockChanged;
+    private final TimePicker timePicker;
+    private final TimeActionListener timeActionListener;
     private boolean use24hour;
     private boolean hourSelectionView = true;
-    private int hour = -1;
-    private int minute = -1;
-
-    //  graphics option
     private AnimationChange animationChange;
     private final int margin12h = 20;
     private final int margin24h = 50;
     private Color color;
-
-    //  public method
-
-    public void setHourAndFix(int hour) {
-        if (!use24hour) {
-            if (hour == 0) {
-                hour = 12;
-            } else if (hour > 12) {
-                hour = hour - 12;
-            }
-        } else {
-            if (hour == 24) {
-                hour = 0;
-            }
-        }
-        setHour(hour);
-    }
-
-    public void setHour(int hour) {
-        if (this.hour != hour) {
-            this.hour = hour;
-            if (hourSelectionView) {
-                animationChange.set(getAngleOf(hour, true), getTargetMargin());
-            }
-            clockChanged.hourChanged(hour);
-            repaint();
-        }
-    }
-
-    public void setMinute(int minute) {
-        if (this.minute != minute) {
-            this.minute = minute;
-            if (!hourSelectionView) {
-                if (hour == -1) {
-                    setHour(12);
-                }
-                animationChange.set(getAngleOf(minute, false), getTargetMargin());
-            }
-            clockChanged.minuteChanged(minute);
-            repaint();
-        }
-    }
 
     public void setHourSelectionView(boolean hourSelectionView) {
         if (this.hourSelectionView != hourSelectionView) {
@@ -76,28 +33,9 @@ public class PanelClock extends JPanel {
         }
     }
 
-    public void setUse24hour(boolean use24hour, boolean isAm) {
+    public void setUse24hour(boolean use24hour) {
         if (this.use24hour != use24hour) {
             this.use24hour = use24hour;
-            repaint();
-            if ((hourSelectionView && hour != -1) || (!hourSelectionView && minute != -1)) {
-                if (use24hour) {
-                    if (!isAm) {
-                        if (hour < 12) {
-                            setHourAndFix(hour + 12);
-                        }
-                    } else if (hour == 12) {
-                        setHourAndFix(0);
-                    }
-                } else {
-                    clockChanged.amPmChanged(hour < 12);
-                    if (hour == 0) {
-                        setHour(12);
-                    } else if (hour > 12) {
-                        setHour(hour - 12);
-                    }
-                }
-            }
         }
     }
 
@@ -105,16 +43,9 @@ public class PanelClock extends JPanel {
         return use24hour;
     }
 
-    public int getHour() {
-        return hour;
-    }
-
-    public int getMinute() {
-        return minute;
-    }
-
-    public PanelClock(EventClockChanged clockChanged) {
-        this.clockChanged = clockChanged;
+    public PanelClock(TimePicker timePicker, TimeActionListener timeActionListener) {
+        this.timePicker = timePicker;
+        this.timeActionListener = timeActionListener;
         init();
     }
 
@@ -135,12 +66,7 @@ public class PanelClock extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (isEnabled()) {
-                    if (hourSelectionView) {
-                        hourSelectionView = false;
-                        clockChanged.hourMinuteChanged(false);
-                        runAnimation();
-                        repaint();
-                    }
+                    timeActionListener.selectionViewChanged(hourSelectionView);
                 }
             }
 
@@ -152,19 +78,25 @@ public class PanelClock extends JPanel {
             }
 
             private void mouseChanged(MouseEvent e) {
-                if (isEnabled()) {
-                    if (hourSelectionView) {
-                        int hour = getValueOf(e.getPoint(), hourSelectionView);
-                        setHour(hour);
-                    } else {
-                        int minute = getValueOf(e.getPoint(), hourSelectionView);
-                        setMinute(minute);
-                    }
+                int value = getValueOf(e.getPoint(), hourSelectionView);
+                if (hourSelectionView) {
+                    timePicker.getTimeSelectionModel().setHour(value);
+                } else {
+                    timePicker.getTimeSelectionModel().setMinute(value);
                 }
             }
         };
         addMouseListener(mouseAdapter);
         addMouseMotionListener(mouseAdapter);
+    }
+
+    public void updateClock() {
+        TimeSelectionModel timeSelectionModel = timePicker.getTimeSelectionModel();
+        if (hourSelectionView) {
+            animationChange.set(getAngleOf(timeSelectionModel.getHour(), true), getTargetMargin());
+        } else {
+            animationChange.set(getAngleOf(timeSelectionModel.getMinute(), false), getTargetMargin());
+        }
     }
 
     @Override
@@ -194,6 +126,7 @@ public class PanelClock extends JPanel {
     }
 
     protected void paintSelection(Graphics2D g2, int x, int y, int size) {
+        TimeSelectionModel timeSelectionModel = timePicker.getTimeSelectionModel();
         AffineTransform tran = g2.getTransform();
         size = size / 2;
         final float margin = UIScale.scale(animationChange.getMargin());
@@ -203,10 +136,10 @@ public class PanelClock extends JPanel {
         float unselectSize = UIScale.scale(4);
         float lineHeight = size - margin;
         Area area = new Area(new Ellipse2D.Float(x + size - (centerSize / 2), y + size - (centerSize / 2), centerSize, centerSize));
-        if ((hourSelectionView && hour != -1) || (!hourSelectionView && minute != -1)) {
+        if ((hourSelectionView && timeSelectionModel.getHour() != -1) || (!hourSelectionView && timeSelectionModel.getMinute() != -1)) {
             area.add(new Area(new RoundRectangle2D.Float(x + size - (lineSize / 2), y + margin, lineSize, lineHeight, lineSize, lineSize)));
             area.add(new Area(new Ellipse2D.Float(x + size - (selectSize / 2), y + margin - selectSize / 2, selectSize, selectSize)));
-            if (!hourSelectionView && !animationChange.isRunning() && (minute % 5 != 0)) {
+            if (!hourSelectionView && !animationChange.isRunning() && (timeSelectionModel.getMinute() % 5 != 0)) {
                 area.subtract(new Area(new Ellipse2D.Float(x + size - (unselectSize / 2), y + margin - unselectSize / 2, unselectSize, unselectSize)));
             }
         }
@@ -230,19 +163,22 @@ public class PanelClock extends JPanel {
         float angle = 360 / 12;
         for (int i = 1; i <= 12; i++) {
             float ag = angle * i - 90;
-            int num = fixHour((start + i * add), hourSelectionView);
+            int value = fixHour((start + i * add), hourSelectionView);
             float nx = (float) (center + (Math.cos(Math.toRadians(ag)) * (center - mg)));
             float ny = (float) (center + (Math.sin(Math.toRadians(ag)) * (center - mg)));
-            paintNumber(g2, x + nx, y + ny, fixNumberAndToString(num), isSelected(num));
+            boolean isSelectedAble = true;
+            paintNumber(g2, x + nx, y + ny, fixNumberAndToString(value), isSelected(value), isSelectedAble);
         }
     }
 
-    protected void paintNumber(Graphics2D g2, float x, float y, String num, boolean isSelected) {
+    protected void paintNumber(Graphics2D g2, float x, float y, String num, boolean isSelected, boolean isSelectedAble) {
         FontMetrics fm = g2.getFontMetrics();
         Rectangle2D rec = fm.getStringBounds(num, g2);
         x -= rec.getWidth() / 2;
         y -= rec.getHeight() / 2;
-        if (isSelected) {
+        if (!isSelectedAble) {
+            g2.setColor(UIManager.getColor("Label.disabledForeground"));
+        } else if (isSelected) {
             g2.setColor(getSelectedForeground());
         } else {
             g2.setColor(UIManager.getColor("Panel.foreground"));
@@ -258,11 +194,12 @@ public class PanelClock extends JPanel {
         }
     }
 
-    protected boolean isSelected(int num) {
+    protected boolean isSelected(int value) {
         if (hourSelectionView) {
-            return num == hour;
+            int hour = getHourValue(timePicker.getTimeSelectionModel().getHour());
+            return value == hour;
         } else {
-            return num == minute;
+            return value == timePicker.getTimeSelectionModel().getMinute();
         }
     }
 
@@ -285,7 +222,11 @@ public class PanelClock extends JPanel {
         float ag = angle / 360;
         int value = (int) (ag * (hourView ? 12 : 60));
         if (hourView) {
-            return value == 0 ? 12 : value;
+            if (isUse24hour()) {
+                return value == 0 ? 12 : value;
+            } else {
+                return value == 12 ? 0 : value;
+            }
         } else {
             return value == 60 ? 0 : value;
         }
@@ -298,8 +239,10 @@ public class PanelClock extends JPanel {
     private int getValueOf(Point point, boolean hourView) {
         float angle = getAngleOf(point) + (hourView ? 360 / 12 / 2 : 360 / 60 / 2);
         int value = getValueOf(angle, hourView);
-        if (hourView && use24hour && is24hourSelect(point)) {
-            return fixHour(value + 12, true);
+        if (hourView) {
+            boolean isAdd12Hour = (!use24hour && !timePicker.getHeader().isAm())
+                    || (use24hour && is24hourSelect(point));
+            return fixHour(value + (isAdd12Hour ? 12 : 0), true);
         } else {
             return value;
         }
@@ -348,7 +291,6 @@ public class PanelClock extends JPanel {
     /**
      * Make the angle is between 0 and 360-1
      */
-
     private float fixAngle(float angle) {
         if (angle > 360) {
             angle -= 360;
@@ -387,7 +329,17 @@ public class PanelClock extends JPanel {
         return num + "";
     }
 
+    private int getHourValue(int hour) {
+        if (isUse24hour()) {
+            return hour;
+        } else {
+            hour = (timePicker.getHeader().isAm() ? hour : hour - 12);
+            return hour == 0 ? 12 : hour;
+        }
+    }
+
     private boolean is24hour() {
+        int hour = timePicker.getTimeSelectionModel().getHour();
         return use24hour && (hour == 0 || hour > 12);
     }
 
@@ -399,23 +351,13 @@ public class PanelClock extends JPanel {
      * Start animation selection change
      */
     private void runAnimation() {
-        float angleTarget = getAngleOf(hourSelectionView ? hour : minute, hourSelectionView);
+        int value = hourSelectionView ? timePicker.getTimeSelectionModel().getHour() : timePicker.getTimeSelectionModel().getMinute();
+        float angleTarget = getAngleOf(value, hourSelectionView);
         float marginTarget = getTargetMargin();
         animationChange.start(angleTarget, marginTarget);
     }
 
     public void setColor(Color color) {
         this.color = color;
-    }
-
-    public interface EventClockChanged {
-
-        void hourChanged(int hour);
-
-        void minuteChanged(int minute);
-
-        void hourMinuteChanged(boolean isHour);
-
-        void amPmChanged(boolean isAm);
     }
 }

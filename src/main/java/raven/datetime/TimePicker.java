@@ -6,6 +6,10 @@ import net.miginfocom.swing.MigLayout;
 import raven.datetime.component.PanelPopupEditor;
 import raven.datetime.component.time.Header;
 import raven.datetime.component.time.PanelClock;
+import raven.datetime.component.time.TimeSelectionModel;
+import raven.datetime.component.time.event.TimeActionListener;
+import raven.datetime.component.time.event.TimeSelectionModelEvent;
+import raven.datetime.component.time.event.TimeSelectionModelListener;
 import raven.datetime.event.TimeSelectionEvent;
 import raven.datetime.event.TimeSelectionListener;
 import raven.datetime.util.InputUtils;
@@ -16,10 +20,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class TimePicker extends PanelPopupEditor {
+public class TimePicker extends PanelPopupEditor implements TimeSelectionModelListener {
 
     private final DateTimeFormatter format12h = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
     private final DateTimeFormatter format24h = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
+    private TimeSelectionModel timeSelectionModel;
     private TimeSelectionListener timeSelectionListener;
     private InputUtils.ValueCallback valueCallback;
     private Icon editorIcon;
@@ -33,10 +38,14 @@ public class TimePicker extends PanelPopupEditor {
     private PanelClock panelClock;
 
     public TimePicker() {
-        init();
+        this(null);
     }
 
-    private void init() {
+    public TimePicker(TimeSelectionModel model) {
+        init(model);
+    }
+
+    private void init(TimeSelectionModel model) {
         putClientProperty(FlatClientProperties.STYLE, "" +
                 "[light]background:darken($Panel.background,2%);" +
                 "[dark]background:lighten($Panel.background,2%);");
@@ -45,10 +54,16 @@ public class TimePicker extends PanelPopupEditor {
                 "fill",
                 "fill");
         setLayout(layout);
-        header = new Header(getEventHeader());
-        panelClock = new PanelClock(getEventClock());
+
+        if (model == null) {
+            model = createDefaultTimeSelection();
+        }
+        setTimeSelectionModel(model);
+
+        header = new Header(this, new HeaderActionListener());
+        panelClock = new PanelClock(this, new ClockActionListener());
         add(header, "width 120:120");
-        add(panelClock, "width 230:230, height 230:230");
+        add(panelClock, "width 230:230,height 230:230");
     }
 
     public int getOrientation() {
@@ -83,8 +98,11 @@ public class TimePicker extends PanelPopupEditor {
 
     public void set24HourView(boolean hour24) {
         if (panelClock.isUse24hour() != hour24) {
-            panelClock.setUse24hour(hour24, header.isAm());
+            panelClock.setUse24hour(hour24);
             header.setUse24hour(hour24);
+            panelClock.updateClock();
+            header.updateHeader();
+            repaint();
             if (editor != null) {
                 InputUtils.changeTimeFormatted(editor, hour24);
                 setEditorValue();
@@ -121,43 +139,25 @@ public class TimePicker extends PanelPopupEditor {
     }
 
     public void setSelectedTime(LocalTime time) {
-        int hour = time.getHour();
-        int minute = time.getMinute();
-        header.setAm(hour < 12);
-        panelClock.setMinute(minute);
-        panelClock.setHourAndFix(hour);
+        if (time == null) {
+            clearSelectedTime();
+        } else {
+            int hour = time.getHour();
+            int minute = time.getMinute();
+            timeSelectionModel.set(hour, minute);
+        }
     }
 
     public void clearSelectedTime() {
-        panelClock.setMinute(-1);
-        panelClock.setHour(-1);
-        panelClock.setHourSelectionView(true);
-        header.clearTime();
+        timeSelectionModel.set(-1, -1);
     }
 
     public boolean isTimeSelected() {
-        return panelClock.getHour() != -1 && panelClock.getMinute() != -1;
+        return timeSelectionModel.isSelected();
     }
 
     public LocalTime getSelectedTime() {
-        int hour = panelClock.getHour();
-        int minute = panelClock.getMinute();
-        if (!isTimeSelected()) {
-            return null;
-        }
-        if (panelClock.isUse24hour()) {
-            return LocalTime.of(hour, minute);
-        }
-        if (header.isAm()) {
-            if (hour == 12) {
-                hour = 0;
-            }
-        } else {
-            if (hour < 12) {
-                hour += 12;
-            }
-        }
-        return LocalTime.of(hour, minute);
+        return timeSelectionModel.getTime();
     }
 
     public String getSelectedTimeAsString() {
@@ -169,6 +169,28 @@ public class TimePicker extends PanelPopupEditor {
             }
         } else {
             return null;
+        }
+    }
+
+    protected TimeSelectionModel createDefaultTimeSelection() {
+        return new TimeSelectionModel();
+    }
+
+    public TimeSelectionModel getTimeSelectionModel() {
+        return timeSelectionModel;
+    }
+
+    public void setTimeSelectionModel(TimeSelectionModel timeSelectionModel) {
+        if (timeSelectionModel == null) {
+            throw new IllegalArgumentException("timeSelectionModel can't be null");
+        }
+        if (this.timeSelectionModel != timeSelectionModel) {
+            TimeSelectionModel old = this.timeSelectionModel;
+            if (old != null) {
+                old.removeTimePickerSelectionListener(this);
+            }
+            this.timeSelectionModel = timeSelectionModel;
+            this.timeSelectionModel.addTimePickerSelectionListener(this);
         }
     }
 
@@ -273,44 +295,38 @@ public class TimePicker extends PanelPopupEditor {
         panelClock.setEnabled(enabled);
     }
 
-    private Header.EventHeaderChanged getEventHeader() {
-        return new Header.EventHeaderChanged() {
-            @Override
-            public void hourMinuteChanged(boolean isHour) {
-                panelClock.setHourSelectionView(isHour);
-            }
-
-            @Override
-            public void amPmChanged(boolean isAm) {
-                verifyTimeSelection();
-            }
-        };
+    public Header getHeader() {
+        return header;
     }
 
-    private PanelClock.EventClockChanged getEventClock() {
-        return new PanelClock.EventClockChanged() {
-            @Override
-            public void hourChanged(int hour) {
-                header.setHour(hour);
-                verifyTimeSelection();
-            }
+    @Override
+    public void timeSelectionModelChanged(TimeSelectionModelEvent e) {
+        if (!timeSelectionModel.isSelected()) {
+            panelClock.setHourSelectionView(true);
+            header.setHourSelectionView(true);
+        }
+        panelClock.updateClock();
+        header.updateHeader();
+        repaint();
+        verifyTimeSelection();
+    }
 
-            @Override
-            public void minuteChanged(int minute) {
-                header.setMinute(minute);
-                verifyTimeSelection();
-            }
+    private class ClockActionListener implements TimeActionListener {
 
-            @Override
-            public void hourMinuteChanged(boolean isHour) {
-                header.setHourSelect(isHour);
+        @Override
+        public void selectionViewChanged(boolean isHourSelectionView) {
+            if (isHourSelectionView) {
+                panelClock.setHourSelectionView(false);
+                header.setHourSelectionView(false);
             }
+        }
+    }
 
-            @Override
-            public void amPmChanged(boolean isAm) {
-                header.setAm(isAm);
-                verifyTimeSelection();
-            }
-        };
+    private class HeaderActionListener implements TimeActionListener {
+
+        @Override
+        public void selectionViewChanged(boolean isHourSelectionView) {
+            panelClock.setHourSelectionView(isHourSelectionView);
+        }
     }
 }
