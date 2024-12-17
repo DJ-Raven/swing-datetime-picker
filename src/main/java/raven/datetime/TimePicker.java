@@ -13,6 +13,7 @@ import raven.datetime.component.time.event.TimeSelectionModelListener;
 import raven.datetime.event.TimeSelectionEvent;
 import raven.datetime.event.TimeSelectionListener;
 import raven.datetime.util.InputUtils;
+import raven.datetime.util.InputValidationListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +27,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
     private final DateTimeFormatter format24h = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
     private TimeSelectionModel timeSelectionModel;
     private TimeSelectionListener timeSelectionListener;
+    private InputValidationListener<LocalTime> inputValidationListener;
     private InputUtils.ValueCallback valueCallback;
     private Icon editorIcon;
     private MigLayout layout;
@@ -104,7 +106,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
             header.updateHeader();
             repaint();
             if (editor != null) {
-                InputUtils.changeTimeFormatted(editor, hour24);
+                InputUtils.changeTimeFormatted(editor, hour24, getInputValidationListener());
                 setEditorValue();
             }
         }
@@ -220,7 +222,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
                 showPopup();
             }
         });
-        InputUtils.useTimeInput(editor, panelClock.isUse24hour(), getValueCallback());
+        InputUtils.useTimeInput(editor, panelClock.isUse24hour(), getValueCallback(), getInputValidationListener());
         setEditorValue();
         editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
         addTimeSelectionListener(getTimeSelectionListener());
@@ -272,6 +274,30 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
         } else {
             editor.setValue(null);
         }
+    }
+
+    private InputValidationListener getInputValidationListener() {
+        if (inputValidationListener == null) {
+            inputValidationListener = new InputValidationListener<LocalTime>() {
+
+                @Override
+                public boolean isValidation() {
+                    return timeSelectionModel.getTimeSelectionAble() != null;
+                }
+
+                @Override
+                public void inputChanged(boolean status) {
+                }
+
+                @Override
+                public boolean checkSelectionAble(LocalTime time) {
+                    int hour = time.getHour();
+                    int minute = time.getMinute();
+                    return timeSelectionModel.checkSelection(hour, minute);
+                }
+            };
+        }
+        return inputValidationListener;
     }
 
     private void verifyTimeSelection() {

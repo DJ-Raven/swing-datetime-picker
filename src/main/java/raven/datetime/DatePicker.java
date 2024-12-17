@@ -30,7 +30,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
     private DateTimeFormatter format;
     private String dateFormatPattern = "dd/MM/yyyy";
     private DateSelectionListener dateSelectionListener;
-    private InputValidationListener inputValidationListener;
+    private InputValidationListener<LocalDate> inputValidationListener;
     private DateSelectionModel dateSelectionModel;
     private PanelDateOption panelDateOption;
     private PanelDateOptionLabel panelDateOptionLabel;
@@ -606,7 +606,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
 
     private InputValidationListener getInputValidationListener() {
         if (inputValidationListener == null) {
-            inputValidationListener = new InputValidationListener() {
+            inputValidationListener = new InputValidationListener<LocalDate>() {
 
                 @Override
                 public boolean isValidation() {
@@ -619,7 +619,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
                 }
 
                 @Override
-                public boolean checkDateSelectionAble(LocalDate date) {
+                public boolean checkSelectionAble(LocalDate date) {
                     if (dateSelectionModel.getDateSelectionAble() == null) return true;
                     return dateSelectionModel.getDateSelectionAble().isDateSelectedAble(date);
                 }
