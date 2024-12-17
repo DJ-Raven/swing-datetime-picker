@@ -53,10 +53,18 @@ public class TimeSelectionModel {
     }
 
     public void set(int hour, int minute) {
-        if (this.hour != hour || this.minute != minute) {
+        int action = 0;
+        if (this.hour != hour && this.minute != minute) {
+            action = TimeSelectionModelEvent.HOUR_MINUTE;
+        } else if (this.hour != hour) {
+            action = TimeSelectionModelEvent.HOUR;
+        } else if (this.minute != minute) {
+            action = TimeSelectionModelEvent.MINUTE;
+        }
+        if (action != 0) {
             this.hour = hour;
             this.minute = minute;
-            fireTimePickerChanged(new TimeSelectionModelEvent(this, TimeSelectionModelEvent.HOUR_MINUTE));
+            fireTimePickerChanged(new TimeSelectionModelEvent(this, action));
         }
     }
 

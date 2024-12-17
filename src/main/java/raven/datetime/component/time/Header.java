@@ -42,11 +42,9 @@ public class Header extends JComponent {
             buttonPm.setSelected(false);
         } else {
             if (hour >= 12) {
-                buttonAm.setSelected(false);
-                buttonPm.setSelected(true);
+                setSelectedAm(false);
             } else {
-                buttonAm.setSelected(true);
-                buttonPm.setSelected(false);
+                setSelectedAm(true);
             }
         }
 
@@ -122,9 +120,23 @@ public class Header extends JComponent {
         String amOrPm = isAm ? amPM[0] : amPM[1];
         JButton button = new JButton(amOrPm);
         button.addActionListener(e -> {
-            TimeSelectionModel timeSelectionModel = timePicker.getTimeSelectionModel();
-            int hour = timeSelectionModel.getHour();
-            int minute = timeSelectionModel.getMinute();
+            actionAmPmChanged(isAm);
+        });
+        button.putClientProperty(FlatClientProperties.STYLE, "" +
+                "font:+1;" +
+                "foreground:contrast($Component.accentColor,$ToggleButton.background,#fff);" +
+                "background:null;" +
+                "toolbar.hoverBackground:null");
+        return button;
+    }
+
+    private void actionAmPmChanged(boolean isAm) {
+        TimeSelectionModel timeSelectionModel = timePicker.getTimeSelectionModel();
+        int hour = timeSelectionModel.getHour();
+        int minute = timeSelectionModel.getMinute();
+        if (hour == -1 && minute == -1) {
+            setSelectedAm(isAm);
+        } else {
             if (isAm) {
                 if (hour >= 12) {
                     hour -= 12;
@@ -135,13 +147,12 @@ public class Header extends JComponent {
                 }
             }
             timeSelectionModel.set(hour, minute);
-        });
-        button.putClientProperty(FlatClientProperties.STYLE, "" +
-                "font:+1;" +
-                "foreground:contrast($Component.accentColor,$ToggleButton.background,#fff);" +
-                "background:null;" +
-                "toolbar.hoverBackground:null");
-        return button;
+        }
+    }
+
+    private void setSelectedAm(boolean isAm) {
+        buttonAm.setSelected(isAm);
+        buttonPm.setSelected(!isAm);
     }
 
     protected JLabel createSplit() {

@@ -301,7 +301,8 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
 
     @Override
     public void timeSelectionModelChanged(TimeSelectionModelEvent e) {
-        if (!timeSelectionModel.isSelected()) {
+        // check if user clear the time selection. so we set to the hour selection view
+        if (!timeSelectionModel.isSelected() && e.getAction() == TimeSelectionModelEvent.HOUR_MINUTE) {
             panelClock.setHourSelectionView(true);
             header.setHourSelectionView(true);
         }
