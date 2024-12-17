@@ -1,5 +1,6 @@
 package raven.datetime.component.time;
 
+import raven.datetime.TimeSelectionAble;
 import raven.datetime.component.time.event.TimeSelectionModelEvent;
 import raven.datetime.component.time.event.TimeSelectionModelListener;
 
@@ -9,10 +10,19 @@ import java.time.LocalTime;
 public class TimeSelectionModel {
 
     protected EventListenerList listenerList = new EventListenerList();
+    private TimeSelectionAble timeSelectionAble;
     private int hour = -1;
     private int minute = -1;
 
     public TimeSelectionModel() {
+    }
+
+    public TimeSelectionAble getTimeSelectionAble() {
+        return timeSelectionAble;
+    }
+
+    public void setTimeSelectionAble(TimeSelectionAble timeSelectionAble) {
+        this.timeSelectionAble = timeSelectionAble;
     }
 
     public int getHour() {
@@ -20,6 +30,9 @@ public class TimeSelectionModel {
     }
 
     public void setHour(int hour) {
+        if (!checkSelection(hour, minute)) {
+            return;
+        }
         if (this.hour != hour) {
             this.hour = hour;
             fireTimePickerChanged(new TimeSelectionModelEvent(this, TimeSelectionModelEvent.HOUR));
@@ -35,6 +48,9 @@ public class TimeSelectionModel {
             set(getDefaultSelectionHour(), minute);
         } else {
             if (this.minute != minute) {
+                if (!checkSelection(hour, minute)) {
+                    return;
+                }
                 this.minute = minute;
                 fireTimePickerChanged(new TimeSelectionModelEvent(this, TimeSelectionModelEvent.MINUTE));
             }
@@ -62,6 +78,9 @@ public class TimeSelectionModel {
             action = TimeSelectionModelEvent.MINUTE;
         }
         if (action != 0) {
+            if (!checkSelection(hour, minute)) {
+                return;
+            }
             this.hour = hour;
             this.minute = minute;
             fireTimePickerChanged(new TimeSelectionModelEvent(this, action));
@@ -75,6 +94,17 @@ public class TimeSelectionModel {
     public int getDefaultSelectionHour() {
         return 0;
     }
+
+    public boolean checkSelection(int hour, int minute) {
+        if (timeSelectionAble == null || hour == -1 || (minute == -1 && hour == -1)) {
+            return true;
+        }
+        if (minute == -1) {
+            minute = 0;
+        }
+        return timeSelectionAble.isTimeSelectedAble(LocalTime.of(hour, minute));
+    }
+
 
     public void addTimePickerSelectionListener(TimeSelectionModelListener listener) {
         listenerList.add(TimeSelectionModelListener.class, listener);

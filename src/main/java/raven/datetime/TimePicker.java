@@ -176,6 +176,14 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
         return new TimeSelectionModel();
     }
 
+    public TimeSelectionAble getTimeSelectionAble() {
+        return timeSelectionModel.getTimeSelectionAble();
+    }
+
+    public void setTimeSelectionAble(TimeSelectionAble timeSelectionAble) {
+        timeSelectionModel.setTimeSelectionAble(timeSelectionAble);
+    }
+
     public TimeSelectionModel getTimeSelectionModel() {
         return timeSelectionModel;
     }

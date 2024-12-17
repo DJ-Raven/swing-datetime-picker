@@ -9,6 +9,7 @@ import raven.datetime.TimePicker;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class TestTime extends TestFrame {
@@ -26,6 +27,14 @@ public class TestTime extends TestFrame {
                 System.out.println("event selected : null");
             }
         });
+
+        // set enable selection time from
+        // 0 to 19:30 or
+        // 12:00 am to 07:30 pm
+        timePicker.setTimeSelectionAble((time) -> !time.isAfter(LocalTime.of(19, 30)));
+
+        timePicker.now();
+
         JFormattedTextField editor = new JFormattedTextField();
         timePicker.setEditor(editor);
         add(editor, "width 200");

@@ -158,6 +158,7 @@ public class PanelClock extends JPanel {
     }
 
     protected void paintClockNumber(Graphics2D g2, int x, int y, int size, int margin, int start, int add) {
+        TimeSelectionModel timeSelectionModel = timePicker.getTimeSelectionModel();
         final int mg = UIScale.scale(margin);
         float center = size / 2f;
         float angle = 360 / 12;
@@ -166,7 +167,17 @@ public class PanelClock extends JPanel {
             int value = fixHour((start + i * add), hourSelectionView);
             float nx = (float) (center + (Math.cos(Math.toRadians(ag)) * (center - mg)));
             float ny = (float) (center + (Math.sin(Math.toRadians(ag)) * (center - mg)));
-            boolean isSelectedAble = true;
+
+            int hour;
+            int minute;
+            if (hourSelectionView) {
+                hour = valueToTime(value, true);
+                minute = 0;
+            } else {
+                hour = timeSelectionModel.getHour();
+                minute = value;
+            }
+            boolean isSelectedAble = timeSelectionModel.checkSelection(hour, minute);
             paintNumber(g2, x + nx, y + ny, fixNumberAndToString(value), isSelected(value), isSelectedAble);
         }
     }
@@ -336,6 +347,23 @@ public class PanelClock extends JPanel {
             hour = (timePicker.getHeader().isAm() ? hour : hour - 12);
             return hour == 0 ? 12 : hour;
         }
+    }
+
+    private int valueToTime(int value, boolean hourView) {
+        if (!hourView) {
+            return value;
+        }
+        if (!isUse24hour()) {
+            boolean isAm = timePicker.getHeader().isAm();
+            value += isAm ? 0 : 12;
+            if (isAm && value == 12) {
+                return 0;
+            }
+            if (!isAm && value == 24) {
+                return 12;
+            }
+        }
+        return value;
     }
 
     private boolean is24hour() {
