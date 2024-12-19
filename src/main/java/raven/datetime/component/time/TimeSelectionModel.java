@@ -92,6 +92,36 @@ public class TimeSelectionModel {
      * So we need set the default hour
      */
     public int getDefaultSelectionHour() {
+        int defaultHour = 0;
+        if (timeSelectionAble != null) {
+            defaultHour = getAvailableDefaultHour(defaultHour);
+        }
+        return defaultHour;
+    }
+
+    /**
+     * Default hour can be disabled by timeSelectionAble
+     * Use this method to get the available hour
+     */
+    private int getAvailableDefaultHour(int startHour) {
+        int hour = startHour;
+        for (int i = 0; i < 23; i++) {
+            if (checkSelection(hour, getDefaultMinuteCheck())) {
+                return hour;
+            }
+            hour++;
+            if (hour == 24) {
+                hour = 0;
+            }
+        }
+        return startHour;
+    }
+
+    /**
+     * When check time selection able but minute not set
+     * Use this for default minute to check the available hour
+     */
+    private int getDefaultMinuteCheck() {
         return 0;
     }
 
@@ -100,11 +130,10 @@ public class TimeSelectionModel {
             return true;
         }
         if (minute == -1) {
-            minute = 0;
+            minute = getDefaultMinuteCheck();
         }
         return timeSelectionAble.isTimeSelectedAble(LocalTime.of(hour, minute));
     }
-
 
     public void addTimePickerSelectionListener(TimeSelectionModelListener listener) {
         listenerList.add(TimeSelectionModelListener.class, listener);
