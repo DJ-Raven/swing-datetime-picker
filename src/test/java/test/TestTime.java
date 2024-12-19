@@ -31,7 +31,18 @@ public class TestTime extends TestFrame {
         // set enable selection time from
         // 0 to 19:30 or
         // 12:00 am to 07:30 pm
-        timePicker.setTimeSelectionAble((time) -> !time.isAfter(LocalTime.of(19, 30)));
+        // timePicker.setTimeSelectionAble((time, hourView) -> !time.isAfter(LocalTime.of(19, 30)));
+
+
+        // disable the past
+        timePicker.setTimeSelectionAble((time, hourView) -> {
+            LocalTime now = LocalTime.now().withSecond(0).withNano(0);
+            if (hourView) {
+                // use this to enable the hour selection on the PanelClock
+                return time.getHour() >= now.getHour();
+            }
+            return !time.isBefore(now);
+        });
 
         timePicker.now();
 

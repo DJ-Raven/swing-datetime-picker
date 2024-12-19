@@ -172,7 +172,7 @@ public class PanelClock extends JPanel {
             int minute;
             if (hourSelectionView) {
                 hour = valueToTime(value, true);
-                minute = 0;
+                minute = timeSelectionModel.getMinute();
             } else {
                 hour = timeSelectionModel.getHour();
                 minute = value;

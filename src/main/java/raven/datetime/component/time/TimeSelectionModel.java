@@ -45,7 +45,7 @@ public class TimeSelectionModel {
 
     public void setMinute(int minute) {
         if (hour == -1) {
-            set(getDefaultSelectionHour(), minute);
+            set(getDefaultSelectionHour(minute), minute);
         } else {
             if (this.minute != minute) {
                 if (!checkSelection(hour, minute)) {
@@ -91,10 +91,10 @@ public class TimeSelectionModel {
      * When hour unselected and user select the minute
      * So we need set the default hour
      */
-    public int getDefaultSelectionHour() {
+    public int getDefaultSelectionHour(int minute) {
         int defaultHour = 0;
         if (timeSelectionAble != null) {
-            defaultHour = getAvailableDefaultHour(defaultHour);
+            defaultHour = getAvailableDefaultHour(defaultHour, minute);
         }
         return defaultHour;
     }
@@ -103,10 +103,10 @@ public class TimeSelectionModel {
      * Default hour can be disabled by timeSelectionAble
      * Use this method to get the available hour
      */
-    private int getAvailableDefaultHour(int startHour) {
+    private int getAvailableDefaultHour(int startHour, int minute) {
         int hour = startHour;
         for (int i = 0; i < 23; i++) {
-            if (checkSelection(hour, getDefaultMinuteCheck())) {
+            if (checkSelection(hour, minute)) {
                 return hour;
             }
             hour++;
@@ -129,10 +129,13 @@ public class TimeSelectionModel {
         if (timeSelectionAble == null || hour == -1 || (minute == -1 && hour == -1)) {
             return true;
         }
+        // hourView true if only hour are set. use to display the hour on the PanelClock
+        boolean hourView = false;
         if (minute == -1) {
             minute = getDefaultMinuteCheck();
+            hourView = true;
         }
-        return timeSelectionAble.isTimeSelectedAble(LocalTime.of(hour, minute));
+        return timeSelectionAble.isTimeSelectedAble(LocalTime.of(hour, minute), hourView);
     }
 
     public void addTimePickerSelectionListener(TimeSelectionModelListener listener) {
