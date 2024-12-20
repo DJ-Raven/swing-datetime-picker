@@ -21,7 +21,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -30,7 +29,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
     private DateTimeFormatter format;
     private String dateFormatPattern = "dd/MM/yyyy";
     private DateSelectionListener dateSelectionListener;
-    private InputValidationListener inputValidationListener;
+    private InputValidationListener<LocalDate> inputValidationListener;
     private DateSelectionModel dateSelectionModel;
     private PanelDateOption panelDateOption;
     private PanelDateOptionLabel panelDateOptionLabel;
@@ -44,11 +43,6 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
     private int year = 2023;
     private Color color;
     private JButton editorButton;
-    private boolean editorValidation = true;
-    private boolean isValid;
-    private boolean validationOnNull;
-    private String defaultPlaceholder;
-
     private SelectionState selectionState = SelectionState.DATE;
     private PanelDate panelDate;
     private PanelMonth panelMonth;
@@ -243,6 +237,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
         if (selectionState == SelectionState.DATE) {
             panelDate.load();
         }
+        commitEdit();
     }
 
     public Color getColor() {
@@ -287,34 +282,6 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
                 this.defaultPlaceholder = null;
             }
             this.dateFormatPattern = format;
-        }
-    }
-
-    public boolean isEditorValidation() {
-        return editorValidation;
-    }
-
-    public void setEditorValidation(boolean editorValidation) {
-        if (this.editorValidation != editorValidation) {
-            this.editorValidation = editorValidation;
-            if (editor != null) {
-                if (editorValidation) {
-                    validChanged(editor, isValid);
-                } else {
-                    validChanged(editor, true);
-                }
-            }
-        }
-    }
-
-    public boolean isValidationOnNull() {
-        return validationOnNull;
-    }
-
-    public void setValidationOnNull(boolean validationOnNull) {
-        if (this.validationOnNull != validationOnNull) {
-            this.validationOnNull = validationOnNull;
-            commitEdit();
         }
     }
 
@@ -606,7 +573,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
 
     private InputValidationListener getInputValidationListener() {
         if (inputValidationListener == null) {
-            inputValidationListener = new InputValidationListener() {
+            inputValidationListener = new InputValidationListener<LocalDate>() {
 
                 @Override
                 public boolean isValidation() {
@@ -619,7 +586,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
                 }
 
                 @Override
-                public boolean checkDateSelectionAble(LocalDate date) {
+                public boolean checkSelectionAble(LocalDate date) {
                     if (dateSelectionModel.getDateSelectionAble() == null) return true;
                     return dateSelectionModel.getDateSelectionAble().isDateSelectedAble(date);
                 }
@@ -628,31 +595,8 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
         return inputValidationListener;
     }
 
-    private void checkValidation(boolean status) {
-        boolean valid = status || isEditorValidationOnNull();
-        if (isValid != valid) {
-            isValid = valid;
-            if (editor != null) {
-                if (editorValidation) {
-                    validChanged(editor, valid);
-                }
-            }
-        }
-    }
-
-    private void validChanged(JFormattedTextField editor, boolean isValid) {
-        String style = isValid ? null : FlatClientProperties.OUTLINE_ERROR;
-        editor.putClientProperty(FlatClientProperties.OUTLINE, style);
-    }
-
-    private boolean isEditorValidationOnNull() {
-        if (validationOnNull) {
-            return false;
-        }
-        return editor == null || editor.getText().equals(getDefaultPlaceholder());
-    }
-
-    private String getDefaultPlaceholder() {
+    @Override
+    protected String getDefaultPlaceholder() {
         if (defaultPlaceholder == null) {
             if (getDateSelectionMode() == DateSelectionMode.BETWEEN_DATE_SELECTED) {
                 String d = InputUtils.datePatternToInputFormat(dateFormatPattern, "-");
@@ -662,15 +606,6 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
             }
         }
         return defaultPlaceholder;
-    }
-
-    private void commitEdit() {
-        if (editor != null && editorValidation) {
-            try {
-                editor.commitEdit();
-            } catch (ParseException e) {
-            }
-        }
     }
 
     private void verifyDateSelection() {

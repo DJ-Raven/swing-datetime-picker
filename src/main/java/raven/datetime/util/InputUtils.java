@@ -10,10 +10,12 @@ import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -62,9 +64,9 @@ public class InputUtils extends MaskFormatter {
         }
     }
 
-    public static void useTimeInput(JFormattedTextField txt, boolean use24h, ValueCallback callback) {
+    public static void useTimeInput(JFormattedTextField txt, boolean use24h, ValueCallback callback, InputValidationListener inputValidationListener) {
         try {
-            TimeInputFormat mask = new TimeInputFormat(use24h ? "##:##" : "##:## ??", use24h);
+            TimeInputFormat mask = new TimeInputFormat(use24h ? "##:##" : "##:## ??", use24h, inputValidationListener);
             OldEditorProperty oldEditorProperty = initEditor(txt, mask, callback);
 
             PropertyChangeListener propertyChangeListener = evt -> callback.valueChanged(txt.getValue());
@@ -93,9 +95,9 @@ public class InputUtils extends MaskFormatter {
         }
     }
 
-    public static void changeTimeFormatted(JFormattedTextField txt, boolean use24h) {
+    public static void changeTimeFormatted(JFormattedTextField txt, boolean use24h, InputValidationListener inputValidationListener) {
         try {
-            TimeInputFormat mask = new TimeInputFormat(use24h ? "##:##" : "##:## ??", use24h);
+            TimeInputFormat mask = new TimeInputFormat(use24h ? "##:##" : "##:## ??", use24h, inputValidationListener);
             mask.setCommitsOnValidEdit(true);
             mask.setPlaceholderCharacter('-');
             DefaultFormatterFactory df = new DefaultFormatterFactory(mask);
@@ -161,11 +163,16 @@ public class InputUtils extends MaskFormatter {
 
     private static class TimeInputFormat extends MaskFormatter {
 
-        private final boolean use24h;
+        private InputValidationListener inputValidationListener;
+        private DateTimeFormatter timeFormat;
 
-        public TimeInputFormat(String mark, boolean use24h) throws ParseException {
+        public TimeInputFormat(String mark, boolean use24h, InputValidationListener inputValidationListener) throws ParseException {
             super(mark);
-            this.use24h = use24h;
+            this.inputValidationListener = inputValidationListener;
+            this.timeFormat = new DateTimeFormatterBuilder()
+                    .parseCaseInsensitive()
+                    .appendPattern(use24h ? "HH:mm" : "hh:mm a")
+                    .toFormatter(Locale.ENGLISH);
         }
 
         @Override
@@ -175,9 +182,24 @@ public class InputUtils extends MaskFormatter {
         }
 
         public void checkTime(String value) throws ParseException {
-            DateFormat df = new SimpleDateFormat(use24h ? "HH:mm" : "hh:mm aa");
-            df.setLenient(false);
-            df.parse(value);
+            try {
+                LocalTime time = LocalTime.parse(value, timeFormat);
+
+                if (inputValidationListener == null) return;
+
+                // validate time selection able
+                if (inputValidationListener.isValidation()) {
+                    if (!inputValidationListener.checkSelectionAble(time)) {
+                        throw new DateTimeException("error selection able");
+                    }
+                }
+                inputValidationListener.inputChanged(true);
+            } catch (DateTimeException e) {
+                if (inputValidationListener != null) {
+                    inputValidationListener.inputChanged(false);
+                }
+                throw new ParseException(e.getMessage(), 0);
+            }
         }
     }
 
@@ -216,8 +238,8 @@ public class InputUtils extends MaskFormatter {
                     if (inputValidationListener.isValidation()) {
                         LocalDate date1 = dateToLocalDate(fromDate);
                         LocalDate date2 = dateToLocalDate(toDate);
-                        if (!inputValidationListener.checkDateSelectionAble(date1) ||
-                                !inputValidationListener.checkDateSelectionAble(date2)) {
+                        if (!inputValidationListener.checkSelectionAble(date1) ||
+                                !inputValidationListener.checkSelectionAble(date2)) {
                             throw new ParseException("error selection able", 0);
                         }
                     }
@@ -229,7 +251,7 @@ public class InputUtils extends MaskFormatter {
                     // validate date selection able
                     if (inputValidationListener.isValidation()) {
                         LocalDate d = dateToLocalDate(date);
-                        if (!inputValidationListener.checkDateSelectionAble(d)) {
+                        if (!inputValidationListener.checkSelectionAble(d)) {
                             throw new ParseException("error selection able", 0);
                         }
                     }

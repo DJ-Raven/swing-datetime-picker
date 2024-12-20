@@ -13,6 +13,7 @@ import raven.datetime.component.time.event.TimeSelectionModelListener;
 import raven.datetime.event.TimeSelectionEvent;
 import raven.datetime.event.TimeSelectionListener;
 import raven.datetime.util.InputUtils;
+import raven.datetime.util.InputValidationListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +27,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
     private final DateTimeFormatter format24h = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
     private TimeSelectionModel timeSelectionModel;
     private TimeSelectionListener timeSelectionListener;
+    private InputValidationListener<LocalTime> inputValidationListener;
     private InputUtils.ValueCallback valueCallback;
     private Icon editorIcon;
     private MigLayout layout;
@@ -88,6 +90,11 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
             this.editor = editor;
             if (editor != null) {
                 installEditor(editor);
+                if (editorValidation) {
+                    validChanged(editor, isValid);
+                } else {
+                    validChanged(editor, true);
+                }
             }
         }
     }
@@ -104,7 +111,8 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
             header.updateHeader();
             repaint();
             if (editor != null) {
-                InputUtils.changeTimeFormatted(editor, hour24);
+                InputUtils.changeTimeFormatted(editor, hour24, getInputValidationListener());
+                this.defaultPlaceholder = null;
                 setEditorValue();
             }
         }
@@ -176,6 +184,15 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
         return new TimeSelectionModel();
     }
 
+    public TimeSelectionAble getTimeSelectionAble() {
+        return timeSelectionModel.getTimeSelectionAble();
+    }
+
+    public void setTimeSelectionAble(TimeSelectionAble timeSelectionAble) {
+        timeSelectionModel.setTimeSelectionAble(timeSelectionAble);
+        commitEdit();
+    }
+
     public TimeSelectionModel getTimeSelectionModel() {
         return timeSelectionModel;
     }
@@ -212,7 +229,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
                 showPopup();
             }
         });
-        InputUtils.useTimeInput(editor, panelClock.isUse24hour(), getValueCallback());
+        InputUtils.useTimeInput(editor, panelClock.isUse24hour(), getValueCallback(), getInputValidationListener());
         setEditorValue();
         editor.putClientProperty(FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT, toolBar);
         addTimeSelectionListener(getTimeSelectionListener());
@@ -264,6 +281,45 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
         } else {
             editor.setValue(null);
         }
+    }
+
+    private InputValidationListener getInputValidationListener() {
+        if (inputValidationListener == null) {
+            inputValidationListener = new InputValidationListener<LocalTime>() {
+
+                @Override
+                public boolean isValidation() {
+                    return timeSelectionModel.getTimeSelectionAble() != null;
+                }
+
+                @Override
+                public void inputChanged(boolean status) {
+                    checkValidation(status);
+                }
+
+                @Override
+                public boolean checkSelectionAble(LocalTime time) {
+                    int hour = time.getHour();
+                    int minute = time.getMinute();
+                    return timeSelectionModel.checkSelection(hour, minute);
+                }
+            };
+        }
+        return inputValidationListener;
+    }
+
+    @Override
+    protected String getDefaultPlaceholder() {
+        if (defaultPlaceholder == null) {
+            String pattern;
+            if (is24HourView()) {
+                pattern = "--:--";
+            } else {
+                pattern = "--:-- --";
+            }
+            defaultPlaceholder = pattern;
+        }
+        return defaultPlaceholder;
     }
 
     private void verifyTimeSelection() {

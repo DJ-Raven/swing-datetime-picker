@@ -136,6 +136,9 @@ public class Header extends JComponent {
         int minute = timeSelectionModel.getMinute();
         if (hour == -1 && minute == -1) {
             setSelectedAm(isAm);
+
+            // need to repaint the panel clock to update the paint text selection able
+            timePicker.repaint();
         } else {
             if (isAm) {
                 if (hour >= 12) {
