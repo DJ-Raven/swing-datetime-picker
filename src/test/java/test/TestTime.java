@@ -33,17 +33,6 @@ public class TestTime extends TestFrame {
         // 12:00 am to 07:30 pm
         // timePicker.setTimeSelectionAble((time, hourView) -> !time.isAfter(LocalTime.of(19, 30)));
 
-
-        // disable the past
-        timePicker.setTimeSelectionAble((time, hourView) -> {
-            LocalTime now = LocalTime.now().withSecond(0).withNano(0);
-            if (hourView) {
-                // use this to enable the hour selection on the PanelClock
-                return time.getHour() >= now.getHour();
-            }
-            return !time.isBefore(now);
-        });
-
         timePicker.now();
 
         JFormattedTextField editor = new JFormattedTextField();
@@ -57,15 +46,35 @@ public class TestTime extends TestFrame {
         panel.setBorder(new TitledBorder("Option"));
         JCheckBox ch24hourView = new JCheckBox("24 hour view");
         JCheckBox chHorizontal = new JCheckBox("Horizontal");
+        JCheckBox chDisablePast = new JCheckBox("Disable past");
         ch24hourView.addActionListener(e -> {
             timePicker.set24HourView(ch24hourView.isSelected());
         });
         chHorizontal.addActionListener(e -> timePicker.setOrientation(chHorizontal.isSelected() ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL));
+        chDisablePast.addActionListener(e -> {
+            boolean disable = chDisablePast.isSelected();
+            if (disable) {
+                disablePast();
+            } else {
+                timePicker.setTimeSelectionAble(null);
+            }
+        });
         panel.add(ch24hourView);
         panel.add(chHorizontal);
+        panel.add(chDisablePast);
         add(panel);
     }
 
+    private void disablePast() {
+        timePicker.setTimeSelectionAble((time, hourView) -> {
+            LocalTime now = LocalTime.now().withSecond(0).withNano(0);
+            if (hourView) {
+                // use this to enable the hour selection on the PanelClock
+                return time.getHour() >= now.getHour();
+            }
+            return !time.isBefore(now);
+        });
+    }
 
     public static void main(String[] args) {
         FlatRobotoFont.install();
