@@ -47,6 +47,8 @@ public class TestTime extends TestFrame {
         JCheckBox ch24hourView = new JCheckBox("24 hour view");
         JCheckBox chHorizontal = new JCheckBox("Horizontal");
         JCheckBox chDisablePast = new JCheckBox("Disable past");
+        JCheckBox chEditorValidation = new JCheckBox("Editor validation", timePicker.isEditorValidation());
+        JCheckBox chValidationOnNull = new JCheckBox("Validation on null");
         ch24hourView.addActionListener(e -> {
             timePicker.set24HourView(ch24hourView.isSelected());
         });
@@ -59,9 +61,18 @@ public class TestTime extends TestFrame {
                 timePicker.setTimeSelectionAble(null);
             }
         });
+        chEditorValidation.addActionListener(e -> {
+            timePicker.setEditorValidation(chEditorValidation.isSelected());
+            chValidationOnNull.setEnabled(chEditorValidation.isSelected());
+        });
+
+        chValidationOnNull.addActionListener(e -> timePicker.setValidationOnNull(chValidationOnNull.isSelected()));
+
         panel.add(ch24hourView);
         panel.add(chHorizontal);
         panel.add(chDisablePast);
+        panel.add(chEditorValidation);
+        panel.add(chValidationOnNull);
         add(panel);
     }
 

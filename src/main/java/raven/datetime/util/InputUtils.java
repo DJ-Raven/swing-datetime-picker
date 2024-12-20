@@ -163,13 +163,11 @@ public class InputUtils extends MaskFormatter {
 
     private static class TimeInputFormat extends MaskFormatter {
 
-        private final boolean use24h;
         private InputValidationListener inputValidationListener;
         private DateTimeFormatter timeFormat;
 
         public TimeInputFormat(String mark, boolean use24h, InputValidationListener inputValidationListener) throws ParseException {
             super(mark);
-            this.use24h = use24h;
             this.inputValidationListener = inputValidationListener;
             this.timeFormat = new DateTimeFormatterBuilder()
                     .parseCaseInsensitive()
@@ -192,7 +190,7 @@ public class InputUtils extends MaskFormatter {
                 // validate time selection able
                 if (inputValidationListener.isValidation()) {
                     if (!inputValidationListener.checkSelectionAble(time)) {
-                        throw new ParseException("error selection able", 0);
+                        throw new DateTimeException("error selection able");
                     }
                 }
                 inputValidationListener.inputChanged(true);

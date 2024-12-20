@@ -90,6 +90,11 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
             this.editor = editor;
             if (editor != null) {
                 installEditor(editor);
+                if (editorValidation) {
+                    validChanged(editor, isValid);
+                } else {
+                    validChanged(editor, true);
+                }
             }
         }
     }
@@ -107,6 +112,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
             repaint();
             if (editor != null) {
                 InputUtils.changeTimeFormatted(editor, hour24, getInputValidationListener());
+                this.defaultPlaceholder = null;
                 setEditorValue();
             }
         }
@@ -184,6 +190,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
 
     public void setTimeSelectionAble(TimeSelectionAble timeSelectionAble) {
         timeSelectionModel.setTimeSelectionAble(timeSelectionAble);
+        commitEdit();
     }
 
     public TimeSelectionModel getTimeSelectionModel() {
@@ -287,6 +294,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
 
                 @Override
                 public void inputChanged(boolean status) {
+                    checkValidation(status);
                 }
 
                 @Override
@@ -298,6 +306,20 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
             };
         }
         return inputValidationListener;
+    }
+
+    @Override
+    protected String getDefaultPlaceholder() {
+        if (defaultPlaceholder == null) {
+            String pattern;
+            if (is24HourView()) {
+                pattern = "--:--";
+            } else {
+                pattern = "--:-- --";
+            }
+            defaultPlaceholder = pattern;
+        }
+        return defaultPlaceholder;
     }
 
     private void verifyTimeSelection() {
