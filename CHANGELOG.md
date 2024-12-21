@@ -8,6 +8,7 @@
     - When disabled, users can no longer change the date selection
 - TimePicker:
     - When disabled, users can no longer change the time selection
+    - Add time selection able and editor input validation check (issue #14) and (PR #15)
 
 ### Changed
 
