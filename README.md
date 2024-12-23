@@ -17,7 +17,7 @@ Add the dependency
 <dependency>
     <groupId>io.github.dj-raven</groupId>
     <artifactId>swing-datetime-picker</artifactId>
-    <version>1.4.1</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -55,47 +55,52 @@ Add the snapshot version
 | removeAllTimeSelectionListener() | | remove all event time selection |
 | setOrientation(int orientation) | | `SwingConstants.VERTICAL` or `SwingConstants.HORIZONTAL` |
 | setEditor(JFormattedTextField editor) | | disply the selected time on the editor and allow to edit time |
+| setTimeSelectionAble(TimeSelectionAble dsb) | | set time selection able |
 | set24HourView(boolean hour24) | | set time to 24h selection view |
 | is24HourView() | `boolean` | return `ture` is 24h selection view |
 | showPopup() | | if time have editor, timepicker will show up with popup menu |
 | closePopup() | | close editor popup |
 | setColor(Color color) | | change base color |
 | setEditorIcon(Icon icon) | | change icon to editor |
-
-## Usage DatePicker
-| Method | Return Value | Description |
-| ------------ | ------------ | ------------ |
-| now() | | set the date to current local date |
-| setToBack() | | slide panel to back with animation |
-| setToForward() | | slide panel to forward with animation |
-| selectMonth() | | show panel month slide with animation |
-| selectYear() | | show panel year slide with animation |
-| slideTo(LocalDate date) | | slide panel to specific date |
-| getDateSelectionMode() | `DateSelectionMode` | return the date selection mode |
-| setDateSelectionMode(DateSelectionMode mode) | | set mode `SINGLE_DATE_SELECTED` or `BETWEEN_DATE_SELECTED` |
-| setSelectedDate(LocalDate date) | | set the date to a specific value |
-| setSelectedDateRange(LocalDate from, LocalDate to) | | set the date range to a specific value |
-| setEditor(JFormattedTextField editor) | | disply the selected date on the editor and allow to edit date |
-| setDateSelectionAble(DateSelectionAble dsb) | | set date selectionable |
-| showPopup() | | if date have editor, datepicker will show up with popup menu |
-| closePopup() | | close editor popup |
-| setSeparator(String separator) | | set separator to between date |
-| setUsePanelOption(boolean usePanelOption) | | set datepicker use panel option |
-| setCloseAfterSelected(boolean closeAfterSelected) | | if true popup will close after selected date |
-| clearSelectedDate() | | clear the selected date |
-| isDateSelected() | `boolean` | check date is selected |
-| getSelectedDate() | `LocalDate` | return the selected date |
-| getSelectedDateRange() | `LocalDate[]` | return the selected date range |
-| getSelectedDateAsString() | `String` | return selected date as string |
-| addDateSelectionListener(DateSelectionListener event) | | add event date selection |
-| removeDateSelectionListener(DateSelectionListener event) | | remove event date selection |
-| removeAllDateSelectionListener() | | remove all event date selection |
-| selectCurrentMonth() | | select from first day to current day in current month |
-| setColor(Color color) | | change base color |
-| setEditorIcon(Icon icon) | | change icon to editor |
-| setDateFormat(String format) | | change date format |
 | setEditorValidation(boolean validation) | | validation editor |
 | void setValidationOnNull(boolean validationOnNull) | | validation editor on null selection |
+
+## Usage DatePicker
+| Method                                                 | Return Value | Description |
+|--------------------------------------------------------| ------------ | ------------ |
+| now()                                                  | | set the date to current local date |
+| setToBack()                                            | | slide panel to back with animation |
+| setToForward()                                         | | slide panel to forward with animation |
+| selectMonth()                                          | | show panel month slide with animation |
+| selectYear()                                           | | show panel year slide with animation |
+| slideTo(LocalDate date)                                | | slide panel to specific date |
+| getDateSelectionMode()                                 | `DateSelectionMode` | return the date selection mode |
+| setDateSelectionMode(DateSelectionMode mode)           | | set mode `SINGLE_DATE_SELECTED` or `BETWEEN_DATE_SELECTED` |
+| setSelectedDate(LocalDate date)                        | | set the date to a specific value |
+| setSelectedDateRange(LocalDate from, LocalDate to)     | | set the date range to a specific value |
+| setEditor(JFormattedTextField editor)                  | | disply the selected date on the editor and allow to edit date |
+| setDateSelectionAble(DateSelectionAble dsb)            | | set date selection able |
+| showPopup()                                            | | if date have editor, datepicker will show up with popup menu |
+| closePopup()                                           | | close editor popup |
+| setSeparator(String separator)                         | | set separator to between date |
+| setUsePanelOption(boolean usePanelOption)              | | set datepicker use panel option |
+| setCloseAfterSelected(boolean closeAfterSelected)      | | if true popup will close after selected date |
+| clearSelectedDate()                                    | | clear the selected date |
+| isDateSelected()                                       | `boolean` | check date is selected |
+| getSelectedDate()                                      | `LocalDate` | return the selected date |
+| getSelectedDateRange()                                 | `LocalDate[]` | return the selected date range |
+| getSelectedDateAsString()                              | `String` | return selected date as string |
+| addDateSelectionListener(DateSelectionListener event)  | | add event date selection |
+| removeDateSelectionListener(DateSelectionListener event) | | remove event date selection |
+| removeAllDateSelectionListener()                       | | remove all event date selection |
+| selectCurrentMonth()                                   | | select from first day to current day in current month |
+| setColor(Color color)                                  | | change base color |
+| setEditorIcon(Icon icon)                               | | change icon to editor |
+| setDateFormat(String format)                           | | change date format |
+| setEditorValidation(boolean validation)                | | validation editor |
+| void setValidationOnNull(boolean validationOnNull)     | | validation editor on null selection |
+| void setAnimationEnabled(boolean animationEnabled)     | | enable or disabled the animation |
+| void setPanelDateOptionLabel(PanelDateOptionLabel opt) | | set new panel date option label |
 
 ## Library Resources
 - [FlatLaf](https://github.com/JFormDesigner/FlatLaf) - FlatLaf library for the modern UI design theme
