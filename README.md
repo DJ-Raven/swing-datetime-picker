@@ -52,7 +52,6 @@ Add the snapshot version
 | getSelectedTimeAsString() | `String` | return selected time as string |
 | addTimeSelectionListener(TimeSelectionListener event) | | add event time selection |
 | removeTimeSelectionListener(TimeSelectionListener event) | | remove event time selection |
-| removeAllTimeSelectionListener() | | remove all event time selection |
 | setOrientation(int orientation) | | `SwingConstants.VERTICAL` or `SwingConstants.HORIZONTAL` |
 | setEditor(JFormattedTextField editor) | | disply the selected time on the editor and allow to edit time |
 | setTimeSelectionAble(TimeSelectionAble dsb) | | set time selection able |
@@ -90,9 +89,8 @@ Add the snapshot version
 | getSelectedDate()                                      | `LocalDate` | return the selected date |
 | getSelectedDateRange()                                 | `LocalDate[]` | return the selected date range |
 | getSelectedDateAsString()                              | `String` | return selected date as string |
-| addDateSelectionListener(DateSelectionListener event)  | | add event date selection |
-| removeDateSelectionListener(DateSelectionListener event) | | remove event date selection |
-| removeAllDateSelectionListener()                       | | remove all event date selection |
+| addDateSelectionListener(DateSelectionListener evt)  | | add event date selection |
+| removeDateSelectionListener(DateSelectionListener evt) | | remove event date selection |
 | selectCurrentMonth()                                   | | select from first day to current day in current month |
 | setColor(Color color)                                  | | change base color |
 | setEditorIcon(Icon icon)                               | | change icon to editor |
