@@ -37,7 +37,7 @@ Add the snapshot version
 <dependency>
     <groupId>io.github.dj-raven</groupId>
     <artifactId>swing-datetime-picker</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -99,6 +99,7 @@ Add the snapshot version
 | void setValidationOnNull(boolean validationOnNull)     | | validation editor on null selection |
 | void setAnimationEnabled(boolean animationEnabled)     | | enable or disabled the animation |
 | void setPanelDateOptionLabel(PanelDateOptionLabel opt) | | set new panel date option label |
+| void setStartWeekOnMonday(boolean startWeekOnMonday)   | | show the monday is the start of the week |
 
 ## Library Resources
 - [FlatLaf](https://github.com/JFormDesigner/FlatLaf) - FlatLaf library for the modern UI design theme

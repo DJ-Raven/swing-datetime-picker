@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1]-SNAPSHOT
+
+### New features and improvements
+
+- DatePicker:
+    - Add new option `startWeekOnMonday` for show the monday is the start of the week (default `false`)
+
 ## [2.0.0] - 2024-12-24
 
 ### New features and improvements
