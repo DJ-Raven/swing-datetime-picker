@@ -39,7 +39,7 @@ public class PanelDate extends JPanel {
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONDAY, month);
         calendar.set(Calendar.DATE, 1);
-        int startDay = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        int startDay = calendar.get(Calendar.DAY_OF_WEEK) - (datePicker.isStartWeekOnMonday() ? 2 : 1);
         calendar.add(Calendar.DATE, -startDay);
         int rowIndex = 0;
         for (int i = 1; i <= t; i++) {
@@ -63,6 +63,14 @@ public class PanelDate extends JPanel {
 
     protected void createDateHeader() {
         String weekdays[] = DateFormatSymbols.getInstance().getShortWeekdays();
+        // swap monday to the start day of week
+        if (datePicker.isStartWeekOnMonday()) {
+            String sunday = weekdays[1];
+            for (int i = 2; i < weekdays.length; i++) {
+                weekdays[i - 1] = weekdays[i];
+            }
+            weekdays[weekdays.length - 1] = sunday;
+        }
         for (String week : weekdays) {
             if (!week.isEmpty()) {
                 add(createLabel(week));
