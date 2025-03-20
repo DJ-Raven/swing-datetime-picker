@@ -38,7 +38,7 @@ public class PanelSlider extends JLayeredPane {
         } else {
             Component oldComponent = getComponent(1);
             add(component);
-            if (transition != null) {
+            if (transition != null && isShowing()) {
                 doLayout();
                 component.doLayout();
                 Image oldImage = createImage(oldComponent);

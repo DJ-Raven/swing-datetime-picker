@@ -17,6 +17,8 @@ public class Header extends JPanel {
     protected Icon backIcon;
 
     protected Icon forwardIcon;
+    private int month;
+    private int year;
 
     public Header() {
         this(10, 2023);
@@ -27,6 +29,8 @@ public class Header extends JPanel {
     }
 
     private void init(int month, int year) {
+        this.month = month;
+        this.year = year;
         putClientProperty(FlatClientProperties.STYLE, "" +
                 "background:null");
         setLayout(new MigLayout("fill,insets 3", "[]push[][]push[]", "fill"));
@@ -94,6 +98,8 @@ public class Header extends JPanel {
     }
 
     public void setDate(int month, int year) {
+        this.month = month;
+        this.year = year;
         buttonMonth.setText(DateFormatSymbols.getInstance().getMonths()[month]);
         buttonYear.setText(year + "");
     }
@@ -112,5 +118,13 @@ public class Header extends JPanel {
 
     public void setForwardIcon(Icon forwardIcon) {
         this.forwardIcon = forwardIcon;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getYear() {
+        return year;
     }
 }
