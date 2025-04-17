@@ -16,6 +16,7 @@ public abstract class PanelPopupEditor extends JPanel {
     protected boolean isValid;
     protected boolean validationOnNull;
     protected String defaultPlaceholder;
+    protected Point popupSpace = new Point(1, 1);
 
     protected LookAndFeel oldThemes = UIManager.getLookAndFeel();
 
@@ -23,6 +24,10 @@ public abstract class PanelPopupEditor extends JPanel {
     }
 
     public void showPopup() {
+        showPopup(editor);
+    }
+
+    public void showPopup(Component component) {
         if (popupMenu == null) {
             popupMenu = new JPopupMenu();
             popupMenu.putClientProperty(FlatClientProperties.STYLE, "" +
@@ -35,8 +40,8 @@ public abstract class PanelPopupEditor extends JPanel {
             SwingUtilities.updateComponentTreeUI(popupMenu);
             oldThemes = UIManager.getLookAndFeel();
         }
-        Point point = Utils.adjustPopupLocation(popupMenu, editor);
-        popupMenu.show(editor, point.x, point.y);
+        Point point = Utils.adjustPopupLocation(popupMenu, component, popupSpace);
+        popupMenu.show(component, point.x, point.y);
     }
 
     public void closePopup() {
@@ -105,6 +110,14 @@ public abstract class PanelPopupEditor extends JPanel {
             } catch (ParseException e) {
             }
         }
+    }
+
+    public Point getPopupSpace() {
+        return popupSpace;
+    }
+
+    public void setPopupSpace(Point popupSpace) {
+        this.popupSpace = popupSpace;
     }
 
     protected abstract String getDefaultPlaceholder();

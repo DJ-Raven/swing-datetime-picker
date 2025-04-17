@@ -6,6 +6,14 @@
 
 - DatePicker:
     - Add new option `startWeekOnMonday` for show the monday is the start of the week (default `false`)
+- Date and Time Popup:
+    - Add new method:
+        - `showPopup(Component component)` to show datepicker with popup without editor
+        - `setPopupSpace(Point popupSpace)` to set the popup space with component or editor
+
+### Changed
+
+- Add popup frame insets default `(5,5,5,5)`
 
 ## [2.0.0] - 2024-12-24
 
