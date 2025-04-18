@@ -211,6 +211,15 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
         }
     }
 
+    public boolean isHourSelectionView() {
+        return panelClock.isHourSelectionView();
+    }
+
+    public void setHourSelectionView(boolean hourSelectionView) {
+        header.setHourSelectionView(hourSelectionView);
+        panelClock.setHourSelectionViewImmediately(hourSelectionView);
+    }
+
     public void addTimeSelectionListener(TimeSelectionListener listener) {
         listenerList.add(TimeSelectionListener.class, listener);
     }
@@ -320,6 +329,11 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
             defaultPlaceholder = pattern;
         }
         return defaultPlaceholder;
+    }
+
+    @Override
+    protected void popupOpen() {
+        setHourSelectionView(true);
     }
 
     private void verifyTimeSelection() {

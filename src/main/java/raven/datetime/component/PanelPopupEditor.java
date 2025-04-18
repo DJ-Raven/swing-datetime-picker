@@ -41,6 +41,7 @@ public abstract class PanelPopupEditor extends JPanel {
             oldThemes = UIManager.getLookAndFeel();
         }
         Point point = Utils.adjustPopupLocation(popupMenu, component, popupSpace);
+        popupOpen();
         popupMenu.show(component, point.x, point.y);
     }
 
@@ -121,4 +122,6 @@ public abstract class PanelPopupEditor extends JPanel {
     }
 
     protected abstract String getDefaultPlaceholder();
+
+    protected abstract void popupOpen();
 }

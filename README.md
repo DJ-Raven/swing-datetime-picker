@@ -65,6 +65,7 @@ Add the snapshot version
 | void setValidationOnNull(boolean validationOnNull) | | validation editor on null selection |
 | void showPopup(Component component) | | show timePicker with popup without editor |
 | void setPopupSpace(Point popupSpace) | | set the popup space with component or editor |
+| void toDateSelectionView() | | show date selection state |
 
 ## Usage DatePicker
 | Method                                                 | Return Value | Description |
@@ -104,6 +105,7 @@ Add the snapshot version
 | void setStartWeekOnMonday(boolean startWeekOnMonday)   | | show the monday is the start of the week |
 | void showPopup(Component component) | | show datePicker with popup without editor |
 | void setPopupSpace(Point popupSpace) | | set the popup space with component or editor |
+| void setHourSelectionView(boolean hourSelectionView) | | show hour or minute selection state |
 
 ## Library Resources
 - [FlatLaf](https://github.com/JFormDesigner/FlatLaf) - FlatLaf library for the modern UI design theme

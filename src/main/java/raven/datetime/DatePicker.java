@@ -177,6 +177,23 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
         }
     }
 
+    public void toDateSelectionView() {
+        LocalDate date = getSelectedDate();
+        if (date == null) {
+            date = LocalDate.now();
+        }
+        int m = date.getMonthValue() - 1;
+        int y = date.getYear();
+        if (selectionState != SelectionState.DATE || y != year || m != month) {
+            panelSlider.addSlide(createPanelDate(m, y), getSliderTransition(SimpleTransition.SliderType.DEFAULT));
+            month = m;
+            year = y;
+            selectionState = SelectionState.DATE;
+            header.setDate(month, year);
+            updateSelected();
+        }
+    }
+
     public void selectCurrentMonth() {
         LocalDate date = LocalDate.now();
         if (getDateSelectionMode() == DateSelectionMode.BETWEEN_DATE_SELECTED) {
@@ -621,6 +638,11 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
             }
         }
         return defaultPlaceholder;
+    }
+
+    @Override
+    protected void popupOpen() {
+        toDateSelectionView();
     }
 
     private void verifyDateSelection() {

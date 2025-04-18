@@ -6,6 +6,11 @@
 
 - DatePicker:
     - Add new option `startWeekOnMonday` for show the monday is the start of the week (default `false`)
+    - Add new method `toDateSelectionView()` for show date selection state (show as current selected date. if selected
+      date `null` show as system current date) and this method call by default when show with popup
+- TimePicker:
+    - Add new method `setHourSelectionView(boolean hourSelectionView)` if `true` show hour selection state. if `false`
+      show minute selection state. and this method call by default when show with popup
 - Date and Time Popup:
     - Add new method:
         - `showPopup(Component component)` to show datepicker or timePicker with popup without editor

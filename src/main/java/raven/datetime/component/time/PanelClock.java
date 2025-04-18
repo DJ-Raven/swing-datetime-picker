@@ -29,8 +29,20 @@ public class PanelClock extends JPanel {
         if (this.hourSelectionView != hourSelectionView) {
             this.hourSelectionView = hourSelectionView;
             repaint();
-            runAnimation();
+            runAnimation(true);
         }
+    }
+
+    public void setHourSelectionViewImmediately(boolean hourSelectionView) {
+        if (this.hourSelectionView != hourSelectionView) {
+            this.hourSelectionView = hourSelectionView;
+            repaint();
+            runAnimation(false);
+        }
+    }
+
+    public boolean isHourSelectionView() {
+        return hourSelectionView;
     }
 
     public void setUse24hour(boolean use24hour) {
@@ -378,11 +390,11 @@ public class PanelClock extends JPanel {
     /**
      * Start animation selection change
      */
-    private void runAnimation() {
+    private void runAnimation(boolean animate) {
         int value = hourSelectionView ? timePicker.getTimeSelectionModel().getHour() : timePicker.getTimeSelectionModel().getMinute();
         float angleTarget = getAngleOf(value, hourSelectionView);
         float marginTarget = getTargetMargin();
-        animationChange.start(angleTarget, marginTarget);
+        animationChange.start(angleTarget, marginTarget, animate);
     }
 
     public void setColor(Color color) {
