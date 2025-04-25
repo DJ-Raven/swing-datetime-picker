@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.1]-SNAPSHOT
+## [2.1.0] - 2025-04-25
 
 ### New features and improvements
 
