@@ -1,7 +1,5 @@
 package test;
 
-import com.formdev.flatlaf.FlatLaf;
-import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import net.miginfocom.swing.MigLayout;
 import raven.datetime.DatePicker;
@@ -88,9 +86,6 @@ public class TestDate extends TestFrame {
     }
 
     public static void main(String[] args) {
-        FlatRobotoFont.install();
-        FlatLaf.registerCustomDefaultsSource("themes");
-        UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
         FlatMacDarkLaf.setup();
         EventQueue.invokeLater(() -> new TestDate().setVisible(true));
     }

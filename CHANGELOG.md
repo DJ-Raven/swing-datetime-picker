@@ -20,6 +20,7 @@
 
 - Add popup frame insets default `(5,5,5,5)`
 - FlatLaf: update to `v3.6`
+- Test: removed `flatlaf-fonts-roboto` and style properties in resources
 
 ## [2.0.0] - 2024-12-24
 
