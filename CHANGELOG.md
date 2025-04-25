@@ -19,6 +19,7 @@
 ### Changed
 
 - Add popup frame insets default `(5,5,5,5)`
+- FlatLaf: update to `v3.6`
 
 ## [2.0.0] - 2024-12-24
 
