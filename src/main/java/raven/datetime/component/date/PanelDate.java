@@ -40,7 +40,7 @@ public class PanelDate extends JPanel {
         final int t = col * row;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONDAY, month);
+        calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DATE, 1);
         int startDay = calendar.get(Calendar.DAY_OF_WEEK) - (datePicker.isStartWeekOnMonday() ? 2 : 1);
         calendar.add(Calendar.DATE, -startDay);
@@ -48,7 +48,7 @@ public class PanelDate extends JPanel {
         for (int i = 1; i <= t; i++) {
             SingleDate singleDate = new SingleDate(calendar);
             boolean selectable = datePicker.getDateSelectionModel().getDateSelectionAble() == null || datePicker.getDateSelectionModel().getDateSelectionAble().isDateSelectedAble(singleDate.toLocalDate());
-            boolean enable = calendar.get(Calendar.MONDAY) == month && calendar.get(Calendar.YEAR) == year;
+            boolean enable = calendar.get(Calendar.MONTH) == month && calendar.get(Calendar.YEAR) == year;
             JButton button = createButton(new SingleDate(calendar), enable, rowIndex);
             if (!selectable) {
                 button.setEnabled(false);
