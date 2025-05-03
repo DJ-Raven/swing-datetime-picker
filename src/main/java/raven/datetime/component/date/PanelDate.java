@@ -24,8 +24,11 @@ public class PanelDate extends JPanel {
 
     private void init() {
         putClientProperty(FlatClientProperties.STYLE, "" +
-                "background:null");
-        setLayout(new MigLayout("novisualpadding,wrap 7,insets 3,gap 0,al center center", "fill", "[fill]10[fill][fill]"));
+                "background:null;");
+        setLayout(new MigLayout(
+                "novisualpadding,wrap 7,insets 3,gap 0,al center center",
+                "[fill]",
+                "[fill]10[fill][fill]"));
         load();
     }
 

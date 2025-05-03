@@ -66,7 +66,8 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
                 "[dark]background:lighten($Panel.background,2%);");
         setLayout(new MigLayout(
                 "wrap,insets 10,fill",
-                "[fill]"));
+                "[fill]",
+                "[top,grow 0][center,fill]"));
 
         format = DateTimeFormatter.ofPattern(dateFormatPattern);
         header.addDateControlListener(this);
@@ -77,7 +78,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
         setDateSelectionModel(dateSelectionModel);
 
         add(header);
-        add(panelSlider, "width 260!,height 250!");
+        add(panelSlider);
         initDate();
     }
 

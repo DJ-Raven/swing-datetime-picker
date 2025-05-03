@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1]-SNAPSHOT
+
+### Changed
+
+- DatePicker:
+    - Removed component fixed value size. (previous width:260, height:250)
+
 ## [2.1.0] - 2025-04-25
 
 ### New features and improvements
