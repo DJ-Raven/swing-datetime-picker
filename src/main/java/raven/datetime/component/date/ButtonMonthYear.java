@@ -65,7 +65,7 @@ public class ButtonMonthYear extends JButton {
         Graphics2D g2 = (Graphics2D) g.create();
         FlatUIUtils.setRenderingHints(g2);
         int border = UIScale.scale(6);
-        int arc = UIScale.scale(10);
+        float arc = UIScale.scale(datePicker.getSelectionArc());
         int width = getWidth() - border;
         int height = getHeight() - border;
         int x = (getWidth() - width) / 2;

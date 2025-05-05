@@ -107,6 +107,7 @@ Add the snapshot version
 | void showPopup(Component component) | | show datePicker with popup without editor |
 | void setPopupSpace(Point popupSpace) | | set the popup space with component or editor |
 | void setHourSelectionView(boolean hourSelectionView) | | show hour or minute selection state |
+| void setSelectionArc(float selectionArc) | | set date selection border arc |
 
 ## Library Resources
 - [FlatLaf](https://github.com/JFormDesigner/FlatLaf) - FlatLaf library for the modern UI design theme

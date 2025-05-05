@@ -40,6 +40,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
     private boolean closeAfterSelected;
     private boolean animationEnabled = true;
     private boolean startWeekOnMonday;
+    private float selectionArc = 999;
     private int month = 10;
     private int year = 2023;
     private Color color;
@@ -371,6 +372,17 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
                 // update the panel date
                 panelDate.load();
             }
+        }
+    }
+
+    public float getSelectionArc() {
+        return selectionArc;
+    }
+
+    public void setSelectionArc(float selectionArc) {
+        if (this.selectionArc != selectionArc) {
+            this.selectionArc = selectionArc;
+            updateSelected();
         }
     }
 

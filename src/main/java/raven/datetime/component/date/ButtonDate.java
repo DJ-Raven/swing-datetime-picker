@@ -13,7 +13,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
 public class ButtonDate extends JButton {
@@ -101,14 +100,15 @@ public class ButtonDate extends JButton {
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
         FlatUIUtils.setRenderingHints(g2);
-        double width = getWidth();
-        double height = getHeight();
-        double size = Math.min(width, height) - UIScale.scale(7);
-        double x = (width - size) / 2;
-        double y = (height - size) / 2;
+        float width = getWidth();
+        float height = getHeight();
+        float arc = UIScale.scale(datePicker.getSelectionArc());
+        float size = Math.min(width, height) - UIScale.scale(7);
+        float x = (width - size) / 2;
+        float y = (height - size) / 2;
 
         g2.setColor(getColor());
-        g2.fill(new Ellipse2D.Double(x, y, size, size));
+        g2.fill(FlatUIUtils.createComponentRectangle(x, y, size, size, arc));
         DateSelectionModel dateSelectionModel = datePicker.getDateSelectionModel();
 
         //  paint date between selected
@@ -116,39 +116,39 @@ public class ButtonDate extends JButton {
             g2.setColor(getBetweenDateColor());
             if (date.between(dateSelectionModel.getDate(), getToDate())) {
                 if (rowIndex == 0) {
-                    g2.fill(getShape(x, y, width, size, true, true));
+                    g2.fill(getShape(x, y, width, size, arc, true, true));
                 } else if (rowIndex == 6) {
-                    g2.fill(getShape(x, y, width, size, false, true));
+                    g2.fill(getShape(x, y, width, size, arc, false, true));
                 } else {
-                    g2.fill(new Rectangle2D.Double(0, y, width, size));
+                    g2.fill(new Rectangle2D.Float(0, y, width, size));
                 }
             }
             if (!dateSelectionModel.getDate().same(getToDate())) {
                 boolean right = dateSelectionModel.getDate().before(getToDate());
                 if (date.same(dateSelectionModel.getDate())) {
                     if ((right && rowIndex != 6) || !right && rowIndex != 0) {
-                        g2.fill(getShape(x, y, width, size, right, false));
+                        g2.fill(getShape(x, y, width, size, arc, right, false));
                     }
                 }
                 if (date.same(getToDate())) {
                     if ((right && rowIndex != 0) || (!right && rowIndex != 6)) {
-                        g2.fill(getShape(x, y, width, size, !right, !hover && dateSelectionModel.getToDate() == null));
+                        g2.fill(getShape(x, y, width, size, arc, !right, !hover && dateSelectionModel.getToDate() == null));
                     }
                 }
             }
         }
         if (date.same(new SingleDate())) {
             boolean isSelected = isDateSelected();
-            double space = Math.min(width, height) - UIScale.scale(isSelected ? 2 : 7);
-            double xx = (width - space) / 2;
-            double yy = (height - space) / 2;
-            Area area = new Area(new Ellipse2D.Double(xx, yy, space, space));
+            float space = Math.min(width, height) - UIScale.scale(isSelected ? 2 : 7);
+            float xx = (width - space) / 2f;
+            float yy = (height - space) / 2f;
+            Area area = new Area(FlatUIUtils.createComponentRectangle(xx, yy, space, space, arc));
             if (isSelected) {
-                float s = UIScale.scale(1);
-                area.subtract(new Area(new Ellipse2D.Double(x + s, y + s, size - s * 2, size - s * 2)));
+                float s = UIScale.scale(1f);
+                area.subtract(new Area(FlatUIUtils.createComponentRectangle(x + s, y + s, size - s * 2, size - s * 2, arc - (s + UIScale.scale(2f)) * 2f)));
             } else {
-                float s = UIScale.scale(2);
-                area.subtract(new Area(new Ellipse2D.Double(x + s, y + s, size - s * 2, size - s * 2)));
+                float s = UIScale.scale(2f);
+                area.subtract(new Area(FlatUIUtils.createComponentRectangle(x + s, y + s, size - s * 2, size - s * 2, arc - s * 2f)));
             }
             Color accentColor = getAccentColor();
             g2.setColor(isSelected ? getBorderColor(accentColor) : accentColor);
@@ -158,18 +158,18 @@ public class ButtonDate extends JButton {
         super.paintComponent(g);
     }
 
-    private Shape getShape(double x, double y, double width, double size, boolean right, boolean add) {
+    private Shape getShape(float x, float y, float width, float size, float arc, boolean right, boolean add) {
         Area area;
         if (right) {
-            area = new Area(new Rectangle2D.Double(width / 2, y, width / 2, size));
-            area.subtract(new Area(new Ellipse2D.Double(x, y, size, size)));
+            area = new Area(new Rectangle2D.Float(width / 2, y, width / 2, size));
+            area.subtract(new Area(FlatUIUtils.createComponentRectangle(x, y, size, size, arc)));
         } else {
-            area = new Area(new Rectangle2D.Double(0, y, width / 2, size));
+            area = new Area(new Rectangle2D.Float(0, y, width / 2, size));
         }
         if (add) {
-            area.add(new Area(new Ellipse2D.Double(x, y, size, size)));
+            area.add(new Area(FlatUIUtils.createComponentRectangle(x, y, size, size, arc)));
         } else {
-            area.subtract(new Area(new Ellipse2D.Double(x, y, size, size)));
+            area.subtract(new Area(FlatUIUtils.createComponentRectangle(x, y, size, size, arc)));
         }
         return area;
     }

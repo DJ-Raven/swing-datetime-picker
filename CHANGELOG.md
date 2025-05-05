@@ -6,6 +6,7 @@
 
 - DatePicker:
     - Removed component fixed value size. (previous width:260, height:250)
+    - Add new option `selectionArc` default `999f`
 
 ## [2.1.0] - 2025-04-25
 
