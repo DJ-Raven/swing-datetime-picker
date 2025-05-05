@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.1.1]-SNAPSHOT
+## [2.1.1] - 2025-05-05
 
 ### Changed
 
