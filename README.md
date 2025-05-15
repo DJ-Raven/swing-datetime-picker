@@ -38,7 +38,7 @@ Add the snapshot version
 <dependency>
     <groupId>io.github.dj-raven</groupId>
     <artifactId>swing-datetime-picker</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.1.2-SNAPSHOT</version>
 </dependency>
 ```
 
