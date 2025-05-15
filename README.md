@@ -70,7 +70,7 @@ Add the snapshot version
 
 ## Usage DatePicker
 | Method                                                 | Return Value | Description |
-|--------------------------------------------------------| ------------ | ------------ |
+|--------------------------------------------------------| ----------- | ------------ |
 | now()                                                  | | set the date to current local date |
 | setToBack()                                            | | slide panel to back with animation |
 | setToForward()                                         | | slide panel to forward with animation |
@@ -108,6 +108,7 @@ Add the snapshot version
 | void setPopupSpace(Point popupSpace) | | set the popup space with component or editor |
 | void setHourSelectionView(boolean hourSelectionView) | | show hour or minute selection state |
 | void setSelectionArc(float selectionArc) | | set date selection border arc |
+| void setDefaultDateCellRenderer(DefaultDateCellRenderer renderer) | | set date cell renderer to paint custom graphics |
 
 ## Library Resources
 - [FlatLaf](https://github.com/JFormDesigner/FlatLaf) - FlatLaf library for the modern UI design theme
