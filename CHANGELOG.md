@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2]-SNAPSHOT
+
+### New features and improvements
+
+- DatePicker:
+    - Add new option `defaultDateCellRenderer` to custom date cell renderer
+
 ## [2.1.1] - 2025-05-05
 
 ### Changed

@@ -50,6 +50,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
     private PanelMonth panelMonth;
     private PanelYear panelYear;
 
+    private DefaultDateCellRenderer defaultDateCellRenderer = new DefaultDateCellRenderer();
     private final Header header = new Header();
     private final PanelSlider panelSlider = new PanelSlider();
 
@@ -462,6 +463,15 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
 
     public void removeDateSelectionListener(DateSelectionListener listener) {
         listenerList.remove(DateSelectionListener.class, listener);
+    }
+
+    public DefaultDateCellRenderer getDefaultDateCellRenderer() {
+        return defaultDateCellRenderer;
+    }
+
+    public void setDefaultDateCellRenderer(DefaultDateCellRenderer defaultDateCellRenderer) {
+        this.defaultDateCellRenderer = defaultDateCellRenderer;
+        repaint();
     }
 
     public Header getHeader() {
