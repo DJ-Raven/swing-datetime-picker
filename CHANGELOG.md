@@ -7,6 +7,11 @@
 - DatePicker:
     - Add new option `defaultDateCellRenderer` to custom date cell renderer
 
+### Fixed bugs
+
+- TimePicker:
+    - Fixed incorrect selection location in 24 hour view.
+
 ## [2.1.1] - 2025-05-05
 
 ### Changed

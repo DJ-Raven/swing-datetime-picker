@@ -276,9 +276,9 @@ public class PanelClock extends JPanel {
         int width = getWidth() - (insets.left + insets.right);
         int height = getHeight() - (insets.top + insets.bottom);
         int size = Math.min(width, height) / 2;
-        int distanceTarget = (size - UIScale.scale(margin12h + 20));
-        float centerX = insets.left + size;
-        float centerY = insets.top + size;
+        int distanceTarget = (size - UIScale.scale(margin12h + 15));
+        float centerX = insets.left + width / 2f;
+        float centerY = insets.top + height / 2f;
         double distance = Math.sqrt(Math.pow((point.x - centerX), 2) + Math.pow((point.y - centerY), 2));
         return distance < distanceTarget;
     }
