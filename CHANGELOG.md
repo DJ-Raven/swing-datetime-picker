@@ -5,7 +5,7 @@
 ### New features and improvements
 
 - DatePicker:
-    - Add new option `defaultDateCellRenderer` to custom date cell renderer
+    - Add new option `defaultDateCellRenderer` to custom date cell renderer (issue #18) and (PR #19)
 
 ### Fixed bugs
 
