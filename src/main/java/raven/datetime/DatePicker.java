@@ -23,8 +23,11 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 
 public class DatePicker extends PanelPopupEditor implements DateSelectionModelListener, DateControlListener, ChangeListener {
+
+    private static String[] defaultWeekdays = null;
 
     private DateTimeFormatter format;
     private String dateFormatPattern = "dd/MM/yyyy";
@@ -732,6 +735,21 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
         PanelYear panelYear = new PanelYear(this, year);
         setPanelYear(panelYear);
         return panelYear;
+    }
+
+    public static void setDefaultWeekdays(String[] defaultWeekdays) {
+        if (defaultWeekdays == null) {
+            DatePicker.defaultWeekdays = null;
+        } else {
+            DatePicker.defaultWeekdays = Arrays.copyOf(defaultWeekdays, defaultWeekdays.length);
+        }
+    }
+
+    public static String[] getDefaultWeekdays() {
+        if (defaultWeekdays == null) {
+            return null;
+        }
+        return Arrays.copyOf(defaultWeekdays, defaultWeekdays.length);
     }
 
     public enum DateSelectionMode {
