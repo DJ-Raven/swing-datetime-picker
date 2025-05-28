@@ -22,7 +22,7 @@ Add the dependency
 ```
 
 ### Snapshots
-To get the latest updates before the release, you can use the snapshot version from [Sonatype OSS Snapshots](https://s01.oss.sonatype.org/content/repositories/snapshots/io/github/dj-raven/swing-datetime-picker/)
+To get the latest updates before the release, you can use the snapshot version from [Sonatype Central](https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/io/github/dj-raven/swing-datetime-picker/)
 
 ``` xml
 <repositories>
