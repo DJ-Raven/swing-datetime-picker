@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 public class Header extends JPanel {
 
@@ -114,7 +115,7 @@ public class Header extends JPanel {
     }
 
     protected JButton createAmPmButton(boolean isAm) {
-        String[] amPM = DateFormatSymbols.getInstance().getAmPmStrings();
+        String[] amPM = DateFormatSymbols.getInstance(Locale.ENGLISH).getAmPmStrings();
         String amOrPm = isAm ? amPM[0] : amPM[1];
         JButton button = new JButton(amOrPm);
         button.addActionListener(e -> {

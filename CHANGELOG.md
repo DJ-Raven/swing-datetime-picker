@@ -8,6 +8,11 @@
     - Add new option `defaultDateCellRenderer` to custom date cell renderer (issue #18) and (PR #19)
     - Add global `DatePicker.defaultWeekdays` for change the default label weekdays (issue #20)
 
+### Changed
+
+- TimePicker:
+    - Time header button AM and PM now use `Locale.ENGLISH` as string symbols
+
 ### Fixed bugs
 
 - TimePicker:
