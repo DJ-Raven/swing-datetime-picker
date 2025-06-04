@@ -42,7 +42,11 @@ public class PanelDate extends JPanel {
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DATE, 1);
-        int startDay = calendar.get(Calendar.DAY_OF_WEEK) - (datePicker.isStartWeekOnMonday() ? 2 : 1);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        if (datePicker.isStartWeekOnMonday() && dayOfWeek == Calendar.SUNDAY) {
+            dayOfWeek = 8;
+        }
+        int startDay = dayOfWeek - (datePicker.isStartWeekOnMonday() ? 2 : 1);
         calendar.add(Calendar.DATE, -startDay);
         int rowIndex = 0;
         for (int i = 1; i <= t; i++) {

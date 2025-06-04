@@ -375,6 +375,8 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
             if (selectionState == SelectionState.DATE && panelDate != null) {
                 // update the panel date
                 panelDate.load();
+                panelDate.repaint();
+                panelDate.revalidate();
             }
         }
     }
