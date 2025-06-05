@@ -109,6 +109,7 @@ Add the snapshot version
 | void setHourSelectionView(boolean hourSelectionView) | | show hour or minute selection state |
 | void setSelectionArc(float selectionArc) | | set date selection border arc |
 | void setDefaultDateCellRenderer(DefaultDateCellRenderer renderer) | | set date cell renderer to paint custom graphics |
+| public static void setDefaultWeekdays(String[] defaultWeekdays) | | `static` method for set default label week days |
 
 ## Library Resources
 - [FlatLaf](https://github.com/JFormDesigner/FlatLaf) - FlatLaf library for the modern UI design theme

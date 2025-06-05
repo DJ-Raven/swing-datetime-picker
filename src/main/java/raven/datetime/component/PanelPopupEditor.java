@@ -113,6 +113,10 @@ public abstract class PanelPopupEditor extends JPanel {
         }
     }
 
+    public JFormattedTextField getEditor() {
+        return editor;
+    }
+
     public Point getPopupSpace() {
         return popupSpace;
     }

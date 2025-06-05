@@ -7,6 +7,7 @@
 - DatePicker:
     - Add new option `defaultDateCellRenderer` to custom date cell renderer (issue #18) and (PR #19)
     - Add global `DatePicker.defaultWeekdays` for change the default label weekdays (issue #20)
+- Add new method `getEditor()` return as `JFormattedTextField` is editor has set
 
 ### Changed
 
