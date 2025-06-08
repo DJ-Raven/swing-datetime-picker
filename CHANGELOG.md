@@ -16,6 +16,8 @@
 
 ### Fixed bugs
 
+- DatePicker:
+    - Fixed incorrect start day of week when `startWeekOnMonday` is true (issue #21)
 - TimePicker:
     - Fixed incorrect selection location in 24 hour view.
 
