@@ -27,7 +27,7 @@ public class PanelDateOptionLabel {
         listItems.clear();
     }
 
-    public class Item {
+    public static class Item {
 
         public String getLabel() {
             return label;

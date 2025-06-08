@@ -43,30 +43,30 @@ Add the snapshot version
 ```
 
 ## Usage TimePicker
-| Method | Return Value | Description |
-| ------------ | ------------ | ------------ |
-| now() | | set the time to current local time |
-| setSelectedTime(LocalTime time) | | set the time to a specific value |
-| clearSelectedTime() | | clear the selected time |
-| isTimeSelected() | `boolean` | check time is selected |
-| getSelectedTime() | `LocalTime` | return the selected time |
-| getSelectedTimeAsString() | `String` | return selected time as string |
-| addTimeSelectionListener(TimeSelectionListener event) | | add event time selection |
-| removeTimeSelectionListener(TimeSelectionListener event) | | remove event time selection |
-| setOrientation(int orientation) | | `SwingConstants.VERTICAL` or `SwingConstants.HORIZONTAL` |
-| setEditor(JFormattedTextField editor) | | disply the selected time on the editor and allow to edit time |
-| setTimeSelectionAble(TimeSelectionAble dsb) | | set time selection able |
-| set24HourView(boolean hour24) | | set time to 24h selection view |
-| is24HourView() | `boolean` | return `ture` is 24h selection view |
-| showPopup() | | if time have editor, timepicker will show up with popup menu |
-| closePopup() | | close editor popup |
-| setColor(Color color) | | change base color |
-| setEditorIcon(Icon icon) | | change icon to editor |
-| setEditorValidation(boolean validation) | | validation editor |
-| void setValidationOnNull(boolean validationOnNull) | | validation editor on null selection |
-| void showPopup(Component component) | | show timePicker with popup without editor |
-| void setPopupSpace(Point popupSpace) | | set the popup space with component or editor |
-| void toDateSelectionView() | | show date selection state |
+| Method | Return Value | Description                                                    |
+| ------------ | ------------ |----------------------------------------------------------------|
+| now() | | set the time to current local time                             |
+| setSelectedTime(LocalTime time) | | set the time to a specific value                               |
+| clearSelectedTime() | | clear the selected time                                        |
+| isTimeSelected() | `boolean` | check time is selected                                         |
+| getSelectedTime() | `LocalTime` | return the selected time                                       |
+| getSelectedTimeAsString() | `String` | return selected time as string                                 |
+| addTimeSelectionListener(TimeSelectionListener event) | | add event time selection                                       |
+| removeTimeSelectionListener(TimeSelectionListener event) | | remove event time selection                                    |
+| setOrientation(int orientation) | | `SwingConstants.VERTICAL` or `SwingConstants.HORIZONTAL`       |
+| setEditor(JFormattedTextField editor) | | display the selected time on the editor and allow to edit time |
+| setTimeSelectionAble(TimeSelectionAble dsb) | | set time selection able                                        |
+| set24HourView(boolean hour24) | | set time to 24h selection view                                 |
+| is24HourView() | `boolean` | return `ture` is 24h selection view                            |
+| showPopup() | | if time have editor, timepicker will show up with popup menu   |
+| closePopup() | | close editor popup                                             |
+| setColor(Color color) | | change base color                                              |
+| setEditorIcon(Icon icon) | | change icon to editor                                          |
+| setEditorValidation(boolean validation) | | validation editor                                              |
+| void setValidationOnNull(boolean validationOnNull) | | validation editor on null selection                            |
+| void showPopup(Component component) | | show timePicker with popup without editor                      |
+| void setPopupSpace(Point popupSpace) | | set the popup space with component or editor                   |
+| void toDateSelectionView() | | show date selection state                                      |
 
 ## Usage DatePicker
 | Method                                                 | Return Value | Description |
@@ -81,7 +81,7 @@ Add the snapshot version
 | setDateSelectionMode(DateSelectionMode mode)           | | set mode `SINGLE_DATE_SELECTED` or `BETWEEN_DATE_SELECTED` |
 | setSelectedDate(LocalDate date)                        | | set the date to a specific value |
 | setSelectedDateRange(LocalDate from, LocalDate to)     | | set the date range to a specific value |
-| setEditor(JFormattedTextField editor)                  | | disply the selected date on the editor and allow to edit date |
+| setEditor(JFormattedTextField editor)                  | | display the selected date on the editor and allow to edit date |
 | setDateSelectionAble(DateSelectionAble dsb)            | | set date selection able |
 | showPopup()                                            | | if date have editor, datepicker will show up with popup menu |
 | closePopup()                                           | | close editor popup |

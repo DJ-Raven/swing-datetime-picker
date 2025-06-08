@@ -613,9 +613,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
 
     private DateSelectionListener getDateSelectionListener() {
         if (dateSelectionListener == null) {
-            dateSelectionListener = dateSelectionEvent -> {
-                setEditorValue();
-            };
+            dateSelectionListener = dateSelectionEvent -> setEditorValue();
         }
         return dateSelectionListener;
     }
@@ -623,7 +621,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
     private void setEditorValue() {
         String value = getSelectedDateAsString();
         if (value != null) {
-            if (!editor.getText().toLowerCase().equals(value.toLowerCase())) {
+            if (!editor.getText().equalsIgnoreCase(value)) {
                 editor.setValue(value);
             }
         } else {
@@ -631,7 +629,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
         }
     }
 
-    private InputValidationListener getInputValidationListener() {
+    private InputValidationListener<LocalDate> getInputValidationListener() {
         if (inputValidationListener == null) {
             inputValidationListener = new InputValidationListener<LocalDate>() {
 

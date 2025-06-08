@@ -173,7 +173,7 @@ public class PanelClock extends JPanel {
         TimeSelectionModel timeSelectionModel = timePicker.getTimeSelectionModel();
         final int mg = UIScale.scale(margin);
         float center = size / 2f;
-        float angle = 360 / 12;
+        float angle = 360 / 12f;
         for (int i = 1; i <= 12; i++) {
             float ag = angle * i - 90;
             int value = fixHour((start + i * add), hourSelectionView);
@@ -197,8 +197,8 @@ public class PanelClock extends JPanel {
     protected void paintNumber(Graphics2D g2, float x, float y, String num, boolean isSelected, boolean isSelectedAble) {
         FontMetrics fm = g2.getFontMetrics();
         Rectangle2D rec = fm.getStringBounds(num, g2);
-        x -= rec.getWidth() / 2;
-        y -= rec.getHeight() / 2;
+        float x1 = (float) (x - rec.getWidth() / 2f);
+        float y1 = (float) (y - rec.getHeight() / 2f);
         if (!isSelectedAble) {
             g2.setColor(UIManager.getColor("Label.disabledForeground"));
         } else if (isSelected) {
@@ -206,7 +206,7 @@ public class PanelClock extends JPanel {
         } else {
             g2.setColor(UIManager.getColor("Panel.foreground"));
         }
-        g2.drawString(num, x, y + fm.getAscent());
+        g2.drawString(num, x1, y1 + fm.getAscent());
     }
 
     protected Color getClockBackground() {
@@ -260,7 +260,7 @@ public class PanelClock extends JPanel {
      * Return value hour or minute
      */
     private int getValueOf(Point point, boolean hourView) {
-        float angle = getAngleOf(point) + (hourView ? 360 / 12 / 2 : 360 / 60 / 2);
+        float angle = getAngleOf(point) + (hourView ? 360 / 12f / 2f : 360 / 60f / 2f);
         int value = getValueOf(angle, hourView);
         if (hourView) {
             boolean isAdd12Hour = (!use24hour && !timePicker.getHeader().isAm())
@@ -288,7 +288,7 @@ public class PanelClock extends JPanel {
      * Return angle vales
      */
     private float getAngleOf(int number, boolean hourView) {
-        float ag = 360 / (hourView ? 12 : 60);
+        float ag = 360 / (hourView ? 12f : 60f);
         return fixAngle(ag * number);
     }
 
@@ -300,8 +300,8 @@ public class PanelClock extends JPanel {
         Insets insets = getInsets();
         int width = getWidth() - (insets.left + insets.right);
         int height = getHeight() - (insets.top + insets.bottom);
-        float centerX = insets.left + width / 2;
-        float centerY = insets.top + height / 2;
+        float centerX = insets.left + width / 2f;
+        float centerY = insets.top + height / 2f;
         float x = point.x - centerX;
         float y = point.y - centerY;
         double angle = Math.toDegrees(Math.atan2(y, x)) + 90;

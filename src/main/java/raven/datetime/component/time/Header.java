@@ -118,9 +118,7 @@ public class Header extends JPanel {
         String[] amPM = DateFormatSymbols.getInstance(Locale.ENGLISH).getAmPmStrings();
         String amOrPm = isAm ? amPM[0] : amPM[1];
         JButton button = new JButton(amOrPm);
-        button.addActionListener(e -> {
-            actionAmPmChanged(isAm);
-        });
+        button.addActionListener(e -> actionAmPmChanged(isAm));
         button.putClientProperty(FlatClientProperties.STYLE, "" +
                 "font:+1;" +
                 "foreground:contrast($Component.accentColor,$ToggleButton.background,#fff);" +

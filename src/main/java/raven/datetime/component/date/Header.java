@@ -67,13 +67,11 @@ public class Header extends JPanel {
     }
 
     protected Icon createDefaultBackIcon() {
-        FlatSVGIcon icon = new FlatSVGIcon("raven/datetime/icon/back.svg");
-        return icon;
+        return new FlatSVGIcon("raven/datetime/icon/back.svg");
     }
 
     protected Icon createDefaultForwardIcon() {
-        FlatSVGIcon icon = new FlatSVGIcon("raven/datetime/icon/forward.svg");
-        return icon;
+        return new FlatSVGIcon("raven/datetime/icon/forward.svg");
     }
 
     public void addDateControlListener(DateControlListener listener) {

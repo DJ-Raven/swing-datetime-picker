@@ -64,7 +64,7 @@ public class InputUtils extends MaskFormatter {
         }
     }
 
-    public static void useTimeInput(JFormattedTextField txt, boolean use24h, ValueCallback callback, InputValidationListener inputValidationListener) {
+    public static void useTimeInput(JFormattedTextField txt, boolean use24h, ValueCallback callback, InputValidationListener<LocalTime> inputValidationListener) {
         try {
             TimeInputFormat mask = new TimeInputFormat(use24h ? "##:##" : "##:## ??", use24h, inputValidationListener);
             OldEditorProperty oldEditorProperty = initEditor(txt, mask, callback);
@@ -78,7 +78,7 @@ public class InputUtils extends MaskFormatter {
         }
     }
 
-    public static void useDateInput(JFormattedTextField txt, String pattern, boolean between, String separator, ValueCallback callback, InputValidationListener inputValidationListener) {
+    public static void useDateInput(JFormattedTextField txt, String pattern, boolean between, String separator, ValueCallback callback, InputValidationListener<LocalDate> inputValidationListener) {
         try {
             String format = datePatternToInputFormat(pattern, "#");
             DateInputFormat mask = new DateInputFormat(between ? format + separator + format : format, between, separator, pattern, inputValidationListener);
@@ -95,7 +95,7 @@ public class InputUtils extends MaskFormatter {
         }
     }
 
-    public static void changeTimeFormatted(JFormattedTextField txt, boolean use24h, InputValidationListener inputValidationListener) {
+    public static void changeTimeFormatted(JFormattedTextField txt, boolean use24h, InputValidationListener<LocalTime> inputValidationListener) {
         try {
             TimeInputFormat mask = new TimeInputFormat(use24h ? "##:##" : "##:## ??", use24h, inputValidationListener);
             mask.setCommitsOnValidEdit(true);
@@ -107,7 +107,7 @@ public class InputUtils extends MaskFormatter {
         }
     }
 
-    public static void changeDateFormatted(JFormattedTextField txt, String pattern, boolean between, String separator, InputValidationListener inputValidationListener) {
+    public static void changeDateFormatted(JFormattedTextField txt, String pattern, boolean between, String separator, InputValidationListener<LocalDate> inputValidationListener) {
         try {
             String format = datePatternToInputFormat(pattern, "#");
             DateInputFormat mask = new DateInputFormat(between ? format + separator + format : format, between, separator, pattern, inputValidationListener);
@@ -134,7 +134,7 @@ public class InputUtils extends MaskFormatter {
         txt.setFormatterFactory(df);
 
         txt.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
-        txt.putClientProperty(FlatClientProperties.TEXT_FIELD_CLEAR_CALLBACK, (Consumer<Object>) o -> {
+        txt.putClientProperty(FlatClientProperties.TEXT_FIELD_CLEAR_CALLBACK, (Consumer<?>) o -> {
             txt.setValue(null);
             if (callback != null) {
                 callback.valueChanged(null);
@@ -163,10 +163,10 @@ public class InputUtils extends MaskFormatter {
 
     private static class TimeInputFormat extends MaskFormatter {
 
-        private InputValidationListener inputValidationListener;
-        private DateTimeFormatter timeFormat;
+        private final InputValidationListener<LocalTime> inputValidationListener;
+        private final DateTimeFormatter timeFormat;
 
-        public TimeInputFormat(String mark, boolean use24h, InputValidationListener inputValidationListener) throws ParseException {
+        public TimeInputFormat(String mark, boolean use24h, InputValidationListener<LocalTime> inputValidationListener) throws ParseException {
             super(mark);
             this.inputValidationListener = inputValidationListener;
             this.timeFormat = new DateTimeFormatterBuilder()
@@ -207,10 +207,10 @@ public class InputUtils extends MaskFormatter {
 
         private final boolean between;
         private final String separator;
-        private DateFormat dateFormat;
-        private InputValidationListener inputValidationListener;
+        private final DateFormat dateFormat;
+        private final InputValidationListener<LocalDate> inputValidationListener;
 
-        public DateInputFormat(String mark, boolean between, String separator, String pattern, InputValidationListener inputValidationListener) throws ParseException {
+        public DateInputFormat(String mark, boolean between, String separator, String pattern, InputValidationListener<LocalDate> inputValidationListener) throws ParseException {
             super(mark);
             this.between = between;
             this.separator = separator;
@@ -276,7 +276,7 @@ public class InputUtils extends MaskFormatter {
         protected JFormattedTextField.AbstractFormatterFactory formatter;
         protected Component oldTrailingComponent;
         private boolean isShowClearButton;
-        private Consumer clearButtonCallback;
+        private Consumer<?> clearButtonCallback;
         private String outline;
         protected Object value;
         protected String text;

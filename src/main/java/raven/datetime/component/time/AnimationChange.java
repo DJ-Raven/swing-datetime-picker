@@ -61,7 +61,7 @@ public class AnimationChange {
         return animator.isRunning();
     }
 
-    private class AnimationValue {
+    private static class AnimationValue {
 
         private float from;
         private float target;

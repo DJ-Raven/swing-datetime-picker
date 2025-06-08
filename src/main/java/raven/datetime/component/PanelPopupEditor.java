@@ -108,7 +108,7 @@ public abstract class PanelPopupEditor extends JPanel {
         if (editor != null && editorValidation) {
             try {
                 editor.commitEdit();
-            } catch (ParseException e) {
+            } catch (ParseException ignored) {
             }
         }
     }

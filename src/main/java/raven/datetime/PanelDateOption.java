@@ -40,7 +40,6 @@ public class PanelDateOption extends JPanel {
             } else {
                 layoutRowConstraints += "[]";
             }
-
         }
         layoutRowConstraints += "[]";
         setLayout(new MigLayout("wrap,insets 5,fillx", "[fill]", layoutRowConstraints));

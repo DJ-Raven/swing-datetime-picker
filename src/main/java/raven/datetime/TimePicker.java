@@ -274,9 +274,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
 
     private TimeSelectionListener getTimeSelectionListener() {
         if (timeSelectionListener == null) {
-            timeSelectionListener = timeSelectionEvent -> {
-                setEditorValue();
-            };
+            timeSelectionListener = timeSelectionEvent -> setEditorValue();
         }
         return timeSelectionListener;
     }
@@ -284,7 +282,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
     private void setEditorValue() {
         String value = getSelectedTimeAsString();
         if (value != null) {
-            if (!editor.getText().toLowerCase().equals(value.toLowerCase())) {
+            if (!editor.getText().equalsIgnoreCase(value)) {
                 editor.setValue(value);
             }
         } else {
@@ -292,7 +290,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
         }
     }
 
-    private InputValidationListener getInputValidationListener() {
+    private InputValidationListener<LocalTime> getInputValidationListener() {
         if (inputValidationListener == null) {
             inputValidationListener = new InputValidationListener<LocalTime>() {
 
@@ -341,7 +339,7 @@ public class TimePicker extends PanelPopupEditor implements TimeSelectionModelLi
         if ((time == null && oldSelectedTime == null)) {
             return;
         } else if (time != null && oldSelectedTime != null) {
-            if (time.compareTo(oldSelectedTime) == 0) {
+            if (time.equals(oldSelectedTime)) {
                 return;
             }
         }

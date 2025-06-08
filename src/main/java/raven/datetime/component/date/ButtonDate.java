@@ -13,9 +13,9 @@ public class ButtonDate extends JButton {
 
     private final DatePicker datePicker;
     private final SingleDate date;
+    private final int rowIndex;
     private boolean press;
     private boolean hover;
-    private int rowIndex;
 
     public ButtonDate(DatePicker datePicker, SingleDate date, boolean enable, int rowIndex) {
         this.datePicker = datePicker;
