@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.3] - SNAPSHOT
+
+### New features and improvements
+
+- DatePicker:
+    - Add global `DatePicker.defaultMonths` for change the default label months (issue #24) and (PR #23)
+
 ## [2.1.2] - 2025-06-08
 
 ### New features and improvements
