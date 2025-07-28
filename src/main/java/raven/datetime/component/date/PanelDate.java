@@ -70,9 +70,6 @@ public class PanelDate extends JPanel {
 
     protected void createDateHeader() {
         String[] weekdays = DatePicker.getDefaultWeekdays();
-        if (weekdays == null) {
-            weekdays = DateFormatSymbols.getInstance().getShortWeekdays();
-        }
         // swap monday to the start day of week
         if (datePicker.isStartWeekOnMonday()) {
             String sunday = weekdays[1];

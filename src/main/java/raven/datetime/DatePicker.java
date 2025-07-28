@@ -21,6 +21,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import java.util.Arrays;
 public class DatePicker extends PanelPopupEditor implements DateSelectionModelListener, DateControlListener, ChangeListener {
 
     private static String[] defaultWeekdays = null;
+    private static String[] defaultMonths = null;
 
     private DateTimeFormatter format;
     private String dateFormatPattern = "dd/MM/yyyy";
@@ -747,9 +749,24 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
 
     public static String[] getDefaultWeekdays() {
         if (defaultWeekdays == null) {
-            return null;
+            return DateFormatSymbols.getInstance().getShortWeekdays();
         }
         return Arrays.copyOf(defaultWeekdays, defaultWeekdays.length);
+    }
+
+    public static void setDefaultMonths(String[] defaultMonths) {
+        if (defaultMonths == null) {
+            DatePicker.defaultMonths = null;
+        } else {
+            DatePicker.defaultMonths = Arrays.copyOf(defaultMonths, defaultMonths.length);
+        }
+    }
+
+    public static String[] getDefaultMonths() {
+        if (defaultMonths == null) {
+            return DateFormatSymbols.getInstance().getMonths();
+        }
+        return Arrays.copyOf(defaultMonths, defaultMonths.length);
     }
 
     public enum DateSelectionMode {

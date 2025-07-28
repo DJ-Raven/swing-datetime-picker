@@ -3,6 +3,7 @@ package raven.datetime.component.date;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import net.miginfocom.swing.MigLayout;
+import raven.datetime.DatePicker;
 import raven.datetime.component.date.event.DateControlEvent;
 import raven.datetime.component.date.event.DateControlListener;
 
@@ -92,7 +93,7 @@ public class Header extends JPanel {
     }
 
     public void setDate(int month, int year) {
-        buttonMonth.setText(DateFormatSymbols.getInstance().getMonths()[month]);
+        buttonMonth.setText(DatePicker.getDefaultMonths()[month]);
         buttonYear.setText(year + "");
     }
 
