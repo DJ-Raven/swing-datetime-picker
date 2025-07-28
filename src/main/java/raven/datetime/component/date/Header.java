@@ -8,7 +8,6 @@ import raven.datetime.component.date.event.DateControlEvent;
 import raven.datetime.component.date.event.DateControlListener;
 
 import javax.swing.*;
-import java.text.DateFormatSymbols;
 
 public class Header extends JPanel {
 

@@ -6,7 +6,6 @@ import raven.datetime.DatePicker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
 public class PanelDate extends JPanel {
