@@ -66,11 +66,14 @@ public class PanelDateOption extends JPanel {
                 if (dates.length == 0) {
                     throw new IllegalArgumentException("Date option is empty so can't be select");
                 }
-                boolean singleDate = dates.length == 1 || datePicker.getDateSelectionMode() == DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED;
+                boolean singleDate = DatePicker.DateSelectionMode.SINGLE_DATE_SELECTED.equals(datePicker.getDateSelectionMode());
                 if (isEnable) {
                     if (singleDate) {
                         datePicker.setSelectedDate(dates[0]);
                     } else {
+                        if (dates.length < 2) {
+                            dates = new LocalDate[]{dates[0], dates[0]};
+                        }
                         datePicker.setSelectedDateRange(dates[0], dates[1]);
                     }
                 } else {
