@@ -7,6 +7,11 @@
 - DatePicker:
     - Add global `DatePicker.defaultMonths` for change the default label months (issue #24) and (PR #23)
 
+### Fixed bugs
+
+- DatePicker:
+    - Fixed click option in PanelDateOption not working for single date when use date between mode (PR #25)
+
 ## [2.1.2] - 2025-06-08
 
 ### New features and improvements
