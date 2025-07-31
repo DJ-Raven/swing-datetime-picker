@@ -1,6 +1,7 @@
 package raven.datetime.util;
 
 import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.ColorFunctions;
 import com.formdev.flatlaf.util.UIScale;
@@ -35,5 +36,9 @@ public class Utils {
             return FlatLaf.isLafDark() ? ColorFunctions.lighten(color, 0.03f) : ColorFunctions.darken(color, 0.03f);
         }
         return color;
+    }
+
+    public static Icon createIcon(String icon, float scale) {
+        return new FlatSVGIcon(icon, scale).setColorFilter(new FlatSVGIcon.ColorFilter((component, color) -> UIManager.getColor("Actions.Grey")));
     }
 }

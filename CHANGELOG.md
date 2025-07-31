@@ -7,6 +7,10 @@
 - DatePicker:
     - Add global `DatePicker.defaultMonths` for change the default label months (issue #24) and (PR #23)
 
+### Changed
+
+- Changed new datepicker and timepicker editor icon
+
 ### Fixed bugs
 
 - DatePicker:

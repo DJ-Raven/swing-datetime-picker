@@ -1,7 +1,6 @@
 package raven.datetime;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 import net.miginfocom.swing.MigLayout;
 import raven.datetime.component.PanelPopupEditor;
 import raven.datetime.component.date.*;
@@ -16,6 +15,7 @@ import raven.datetime.swing.slider.SimpleTransition;
 import raven.datetime.swing.slider.SliderTransition;
 import raven.datetime.util.InputUtils;
 import raven.datetime.util.InputValidationListener;
+import raven.datetime.util.Utils;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -563,7 +563,7 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
     private void installEditor(JFormattedTextField editor) {
         if (editor != null) {
             JToolBar toolBar = new JToolBar();
-            editorButton = new JButton(editorIcon != null ? editorIcon : new FlatSVGIcon("raven/datetime/icon/calendar.svg", 0.8f));
+            editorButton = new JButton(editorIcon != null ? editorIcon : Utils.createIcon("raven/datetime/icon/calendar.svg", 0.38f));
             toolBar.add(editorButton);
             editorButton.addActionListener(e -> {
                 if (editor.isEnabled()) {
