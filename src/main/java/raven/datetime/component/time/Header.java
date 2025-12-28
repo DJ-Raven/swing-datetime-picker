@@ -30,6 +30,7 @@ public class Header extends JPanel {
         setLayout(layout);
         add(createToolBar(), "id b1");
         add(createAmPm(), "pos b1.x2+rel 0.5al n n");
+        updateButtonColor();
     }
 
     public void updateHeader() {
@@ -104,14 +105,7 @@ public class Header extends JPanel {
     }
 
     protected JToggleButton createButton() {
-        JToggleButton button = new JToggleButton("--");
-        button.putClientProperty(FlatClientProperties.STYLE, "" +
-                "font:+15;" +
-                "toolbar.margin:3,5,3,5;" +
-                "foreground:contrast($Component.accentColor,$ToggleButton.background,#fff);" +
-                "background:null;" +
-                "toolbar.hoverBackground:null");
-        return button;
+        return new JToggleButton("--");
     }
 
     protected JButton createAmPmButton(boolean isAm) {
@@ -119,11 +113,6 @@ public class Header extends JPanel {
         String amOrPm = isAm ? amPM[0] : amPM[1];
         JButton button = new JButton(amOrPm);
         button.addActionListener(e -> actionAmPmChanged(isAm));
-        button.putClientProperty(FlatClientProperties.STYLE, "" +
-                "font:+1;" +
-                "foreground:contrast($Component.accentColor,$ToggleButton.background,#fff);" +
-                "background:null;" +
-                "toolbar.hoverBackground:null");
         return button;
     }
 
@@ -178,6 +167,7 @@ public class Header extends JPanel {
 
     public void setColor(Color color) {
         this.color = color;
+        updateButtonColor();
     }
 
     /**
@@ -197,6 +187,35 @@ public class Header extends JPanel {
         super.setEnabled(enabled);
         buttonAm.setEnabled(enabled);
         buttonPm.setEnabled(enabled);
+    }
+
+    private void updateButtonColor() {
+        String accentStyle;
+        if (color == null) {
+            accentStyle = "$Component.accentColor";
+        } else {
+            accentStyle = String.format("rgba(%d,%d,%d,%d)", color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        }
+        String styleDefault = "arc:10;" +
+                "foreground:contrast($Component.accentColor,$ToggleButton.background,#fff);" +
+                "[light]toolbar.selectedBackground:shade(" + accentStyle + ",20%);" +
+                "[light]toolbar.hoverBackground:shade(" + accentStyle + ",5%);" +
+                "[light]toolbar.pressedBackground:shade(" + accentStyle + ",40%);" +
+
+                "[dark]toolbar.selectedBackground:tint(" + accentStyle + ",20%);" +
+                "[dark]toolbar.hoverBackground:tint(" + accentStyle + ",5%);" +
+                "[dark]toolbar.pressedBackground:tint(" + accentStyle + ",40%);";
+        String styleAmPm = styleDefault +
+                "font:+1;";
+        String styleHour = styleDefault +
+                "font:+15;" +
+                "toolbar.margin:3,5,3,5;";
+
+        buttonAm.putClientProperty(FlatClientProperties.STYLE, styleAmPm);
+        buttonPm.putClientProperty(FlatClientProperties.STYLE, styleAmPm);
+
+        buttonHour.putClientProperty(FlatClientProperties.STYLE, styleHour);
+        buttonMinute.putClientProperty(FlatClientProperties.STYLE, styleHour);
     }
 
     private JToggleButton buttonHour;

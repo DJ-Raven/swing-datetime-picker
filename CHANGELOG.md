@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.4-SNAPSHOT]
+
+### Changed
+
+- TimePicker:
+    - Update header button background with accent-based light/dark styling
+
 ## [2.1.3] - 2025-07-31
 
 ### New features and improvements
