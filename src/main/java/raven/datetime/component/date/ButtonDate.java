@@ -27,6 +27,7 @@ public class ButtonDate extends JButton {
 
     private void init(boolean enable) {
         setContentAreaFilled(false);
+        setFocusable(false);
         addActionListener(e -> {
             if (datePicker.isEnabled()) {
                 datePicker.getDateSelectionModel().selectDate(date);

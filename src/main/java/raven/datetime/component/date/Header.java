@@ -56,6 +56,7 @@ public class Header extends JPanel {
 
     protected JButton createButton() {
         JButton button = new JButton();
+        button.setFocusable(false);
         button.putClientProperty(FlatClientProperties.STYLE, "" +
                 "background:null;" +
                 "arc:10;" +

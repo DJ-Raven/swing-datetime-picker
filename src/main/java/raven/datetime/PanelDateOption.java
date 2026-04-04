@@ -50,6 +50,7 @@ public class PanelDateOption extends JPanel {
 
     private JToggleButton createButton(String name, PanelDateOptionLabel.LabelCallback callback) {
         JToggleButton button = new JToggleButton(name);
+        button.setFocusable(false);
         button.setHorizontalAlignment(SwingConstants.LEADING);
         if (callback == null) {
             button.setName("custom");

@@ -26,6 +26,7 @@ public class ButtonMonthYear extends JButton {
 
     private void init() {
         setContentAreaFilled(false);
+        setFocusable(false);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {

@@ -4,6 +4,9 @@
 
 ### Changed
 
+- DatePicker:
+    - Disabled all focus buttons
+
 - TimePicker:
     - Update header button background with accent-based light/dark styling
 
