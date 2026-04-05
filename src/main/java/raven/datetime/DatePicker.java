@@ -212,7 +212,11 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
     }
 
     public void setSelectedDate(LocalDate date) {
-        dateSelectionModel.setDate(new SingleDate(date));
+        SingleDate singleDate = new SingleDate(date);
+        if (dateSelectionModel.equalsDate(dateSelectionModel.getDate(), singleDate)) {
+            return;
+        }
+        dateSelectionModel.setDate(singleDate);
         if (getDateSelectionMode() == DateSelectionMode.BETWEEN_DATE_SELECTED) {
             dateSelectionModel.setToDate(new SingleDate(date));
         }
@@ -223,7 +227,12 @@ public class DatePicker extends PanelPopupEditor implements DateSelectionModelLi
         if (getDateSelectionMode() == DateSelectionMode.SINGLE_DATE_SELECTED) {
             throw new IllegalArgumentException("Single date mode can't accept the range date");
         }
-        dateSelectionModel.setSelectDate(new SingleDate(from), new SingleDate(to));
+        SingleDate f = new SingleDate(from);
+        SingleDate t = new SingleDate(to);
+        if (dateSelectionModel.equalsDate(dateSelectionModel.getDate(), f) && dateSelectionModel.equalsDate(dateSelectionModel.getToDate(), t)) {
+            return;
+        }
+        dateSelectionModel.setSelectDate(f, t);
         slideTo(from);
     }
 
