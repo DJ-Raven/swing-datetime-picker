@@ -43,6 +43,18 @@ public class TestDate extends TestFrame {
         datePicker.setEditor(editor);
         add(editor, "width 250");
         createDateOption();
+
+        DatePicker datePicker2 = new DatePicker();
+
+        add(datePicker2);
+
+        JButton button = new JButton("Set");
+
+        button.addActionListener(e -> {
+        datePicker2.setSelectedDate(LocalDate.of(2026, 5, 1));
+        });
+
+        add(button);
     }
 
     private void createDateOption() {
