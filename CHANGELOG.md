@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.1.4-SNAPSHOT]
+## [2.1.4] - 2026-08-24
 
 ### Changed
 
